@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Select, { components } from 'react-select';
+import Select, { components, ControlProps } from 'react-select';
 import styles from '../../assets/css/components/iconSelect.module.css';
 
 type IconSelectProps = {
@@ -7,10 +7,18 @@ type IconSelectProps = {
   options: Array<{ value: string; label: string }>;
 };
 
+type OptionType = {
+  value: string;
+  label: string;
+};
+
 const IconSelect: React.FC<IconSelectProps> = ({ icon, options, ...props }) => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
-  const Control = ({ children, ...controlProps }) => (
+  const Control = ({
+    children,
+    ...controlProps
+  }: ControlProps<OptionType, false>) => (
     <components.Control {...controlProps} className={`${styles.select_cont}`}>
       <div
         className={`${styles.icon_cont} ${menuIsOpen ? styles.icon_open : ''}`}

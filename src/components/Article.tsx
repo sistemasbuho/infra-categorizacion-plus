@@ -22,11 +22,9 @@ function Article({
   setNewSelections,
 }: ArticleProps): JSX.Element {
   const [articleModified, setArticleModified] = useState(text);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
   const articleRef = useRef<HTMLParagraphElement>(null);
-  const [showCatText, setshowCatText] = useState(false);
 
-  const handleSelection = (event: MouseEvent<HTMLParagraphElement>) => {
+  const handleSelection = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -53,15 +51,13 @@ function Article({
         setNewSelections((prevSelections) => [
           ...prevSelections,
           {
+            id: Date.now(),
             startIndex,
             length,
             text: selectedText,
             selectionId: Date.now(),
           },
         ]);
-        setshowCatText(true);
-      } else {
-        setShowAlert(true);
       }
     }
   };

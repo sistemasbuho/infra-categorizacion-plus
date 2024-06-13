@@ -5,7 +5,7 @@ import generalStyles from '../assets/css/general.module.css';
 import Select from 'react-select';
 
 function GeneralCategorization() {
-  const [opciones, setOpciones] = useState([
+  const [opciones] = useState([
     { value: '1', label: 'Tema 1' },
     { value: '2', label: 'Tema 2' },
     { value: '3', label: 'Tema 3' },

@@ -16,7 +16,7 @@ interface CategorizationProps {
 function Categorization({ fragments, deleteFragment }: CategorizationProps) {
   const [selected, setSelected] = useState(1);
 
-  const [opciones, setOpciones] = useState([
+  const [opciones] = useState([
     { value: '1', label: 'Tema 1' },
     { value: '2', label: 'Tema 2' },
     { value: '3', label: 'Tema 3' },
