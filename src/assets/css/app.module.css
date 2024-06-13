@@ -1,0 +1,64 @@
+.cont_global {
+  display: grid;
+  grid-template-columns: 1fr 337px;
+  height: 100vh;
+  padding-inline: 2rem;
+}
+
+.cont_options_bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 337px;
+
+  opacity: 1;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.cont_options_bar header {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.cont_options_bar header button {
+  flex-grow: 1;
+  border: none;
+  font-size: 1.3rem;
+  background: transparent;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.cont_options_bar header button.selected {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  opacity: 1;
+  box-shadow: var(--box-shadow-style);
+  z-index: -1;
+}
+
+.cont_article_sections {
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cont_article_sections > div {
+  padding-right: 2rem;
+}
+
+.scrolled_section {
+  height: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

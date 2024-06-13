@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.7rem;
+}
+
+.container > div:first-child,
+.container > div:last-child {
+  border-radius: 5px;
+}
+
+.container > div:first-child {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--box-shadow-style);
+  background: var(--color-primary);
+}
+
+.container > div:first-child h2 {
+  font: normal normal 400 15px/20px Segoe UI;
+  letter-spacing: 1.75px;
+  color: #333333;
+  text-transform: uppercase;
+  opacity: 1;
+  margin: 0;
+}
+.container > div:first-child button {
+  border: none;
+  background: transparent;
+}

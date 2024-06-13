@@ -1,0 +1,52 @@
+:root {
+  --bg-body: #f5f7fa;
+  --color-primary: #fff;
+  --text-color: #333;
+  --color-section: #333333;
+  --color-secondary: #21232a;
+  --btn-color-select: #00c0b0;
+  --btn-color-basic: #1b2942;
+  --box-shadow-style: 0px 3px 6px #00000029;
+}
+
+/* :root {
+  --bg-body: #21232a;
+  --color-primary: whitesmoke;
+  --color-secondary: #21232a;
+  --btn-color-select: #00c0b0;
+  --btn-color-basic: #1b2942;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+  /* overflow-X: hidden; */
+  scroll-behavior: smooth;
+  background: var(--bg-body) !important;
+}
+
+body::-webkit-scrollbar {
+  width: 1rem;
+  background-color: #cccccc60;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.bg_sec {
+  background-color: var(--color-primary);
+  box-shadow: var(--box-shadow-style);
+  padding: 2.5rem 2rem;
+}

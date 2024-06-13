@@ -1,0 +1,20 @@
+.icon_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 38px;
+  aspect-ratio: 1/1;
+  background-color: var(--btn-color-basic);
+  color: whitesmoke;
+  font-size: 20px;
+  transition: background-color .2s ease;
+}
+
+
+.select_cont:hover .icon_cont {
+  background-color: var(--btn-color-select);
+}
+
+.icon_cont.icon_open{
+  background-color: var(--btn-color-select);
+}

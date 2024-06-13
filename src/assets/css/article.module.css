@@ -1,0 +1,23 @@
+/* 
+.cont_page::-webkit-scrollbar {
+  width: 12px;
+}
+
+.cont_page::-webkit-scrollbar-track {
+  background: #cccccc80;
+}
+
+.cont_page::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  border: none;
+} */
+
+.page {
+  border-radius: 10px;
+}
+
+.page > p {
+  letter-spacing: 0px;
+  color: var(--text-color);
+  white-space: pre-wrap;
+}
