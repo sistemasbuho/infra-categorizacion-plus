@@ -6,8 +6,12 @@ import styles from '../assets/css/components/headerBar.module.css';
 function HeaderBar() {
   return (
     <nav className={styles.container}>
-      <FontAwesomeIcon icon={faCaretLeft} />
-      <p>Atrás</p>
+      <div>
+        <FontAwesomeIcon icon={faCaretLeft} />
+        <p>Atrás</p>
+      </div>
+
+      <button className={styles.btn}>Finalizar</button>
     </nav>
   );
 }
