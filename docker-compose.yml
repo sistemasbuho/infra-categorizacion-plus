@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  prototipo-categorizacion:
+    build: .
+    image: buho/prototipo-categorizacion
+    container_name: prototipo-categorizacion
+    environment:
+      VIRTUAL_PORT: '81'
+      VIRTUAL_HOST: 'categorizacion.buho.media'
+      LETSENCRYPT_HOST: 'categorizacion.buho.media'
+      LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
+    volumes:
+      - ./my_custom_config/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dist:/usr/share/nginx/html
+    ports:
+      - 3030:81
+    networks:
+        - default
+        - nginx_proxy
+
+networks:
+  default:
+  nginx_proxy:
+    external: true
