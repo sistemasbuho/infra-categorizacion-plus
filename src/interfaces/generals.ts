@@ -1,3 +1,8 @@
+export interface article {
+  id: number;
+  text: string;
+}
+
 export interface GeneralRequestOptions {
   headers?: HeadersInit;
   body?: BodyInit;
@@ -18,4 +23,16 @@ export interface OverlappingProps {
   startIndex: number;
   length: number;
   allSelections: Selection[];
+}
+
+export interface generalRequestProps {
+  url: string;
+  method?: string;
+  options?: GeneralRequestOptions;
+}
+
+export interface generalRequestResponse {
+  message: string;
+  data: unknown;
+  error: boolean;
 }
