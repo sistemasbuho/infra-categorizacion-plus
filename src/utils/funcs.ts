@@ -1,5 +1,6 @@
-import { GeneralRequestOptions } from '../interfaces/generals';
 import { OverlappingProps } from '../interfaces/generals';
+
+import axios from 'axios';
 
 export const isOverlappingFragment = ({
   startIndex,
@@ -13,39 +14,68 @@ export const isOverlappingFragment = ({
   });
 };
 
-export const generalRequest = async (
-  url: string,
-  method: string = 'GET',
-  options: GeneralRequestOptions = {}
-) => {
-  try {
-    const { headers, body } = options;
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/${url}/`, {
-      method,
-      headers,
-      body,
-    });
+export async function reqtsApiForm(
+  urlApi,
+  withToken = false,
+  method,
+  params,
+  mSuccess,
+  mError,
+  multipart = false
+) {
+  // let formBody = multipart ? new FormData() : {};
+  let headers = {};
+  const token = withToken ? '' : '';
 
-    const data = await res.json();
+  // if (withToken) {
+  //   let response = getVarSsn();
+  //   token = response?.access;
+  // }
 
-    return {
-      data,
-      status: res.status,
-      error: false,
+  // if (multipart) {
+  //   for (const name in params) {
+  //     formBody.append(name, params[name]);
+  //   }
+  // } else {
+  //   formBody = params;
+  // }
+
+  if (token !== '') {
+    headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': multipart ? 'multipart/form-data' : 'application/json',
     };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        message: error.message,
-        error: true,
-        data: error,
-      };
-    } else {
-      return {
-        message: 'Unknown error occurred',
-        error: true,
-        data: error,
-      };
-    }
+  } else {
+    headers = {
+      'Content-Type': 'application/json',
+    };
   }
-};
+
+  try {
+    const response = await axios({
+      method: method,
+      url: `${import.meta.env.VITE_API_URL}/${urlApi}/`,
+      headers: headers,
+      timeout: 30000,
+      data: params,
+    });
+    return mSuccess(response.data);
+  } catch (error) {
+    console.error(error);
+    throw mError(error);
+  }
+}
+
+export async function GeneralRequest(route, type = 'GET', params = {}) {
+  const resp = await reqtsApiForm(
+    route,
+    true,
+    type,
+    params,
+    (data) => data,
+    (error) => {
+      throw error;
+    }
+  );
+  return resp;
+}
