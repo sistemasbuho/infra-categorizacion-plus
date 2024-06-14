@@ -1,4 +1,5 @@
 export interface article {
+  proyecto: number;
   id: number;
   text: string;
 }
