@@ -46,7 +46,7 @@ export async function getActivoPasivoCategorization(query: string) {
   });
 }
 
-export async function deleteFragment({ articleID, fragmentID }) {
+export async function deleteFragment(articleID: number, fragmentID: number) {
   return await GeneralRequest(
     `articulo/${articleID}/fragmentos/${fragmentID}}`,
     'POST',
