@@ -35,7 +35,7 @@
 
 .option_cont > div:nth-child(2) {
   height: 100%;
-  padding-right: .5rem;
+  padding-right: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
 }
@@ -48,31 +48,39 @@
   gap: 1rem;
 }
 
+.option_cont .controls .accept,
 .option_cont .controls .reject {
-  padding: 1rem;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  border: 1px solid #333333;
-  border-radius: 5px;
-  opacity: 1;
-  flex-grow: 1;
-  text-align: center;
+  padding: 0.5rem 1rem;
   font: normal normal bold 15px/20px Segoe UI;
+  border-width: 1px;
   letter-spacing: 0px;
+  border-style: solid;
+  flex-grow: 1;
+  border-radius: 5px;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.option_cont .controls .reject {
+  background: var(--btn-reject-color);
+  border-color: #333333;
   color: #333333;
-  opacity: 1;
 }
 
 .option_cont .controls .accept {
   border-color: #62769a;
-  border-style: solid;
-  flex-grow: 1;
-  padding: 1rem;
-  background: #62769a 0% 0% no-repeat padding-box;
-  border-radius: 5px;
-  opacity: 1;
-  text-align: center;
-  font: normal normal bold 15px/20px Segoe UI;
-  letter-spacing: 0px;
+  background-color: var(--btn-accept-color);
+  border-color: var(--btn-accept-color);
   color: #ffffff;
-  opacity: 1;
+}
+
+.option_cont .controls .accept:hover {
+  background-color: var(--btn-accept-color-hover);
+  border-color: var(--btn-accept-color-hover);
+}
+
+.option_cont .controls .reject:hover {
+  background-color: var(--btn-reject-color-hover);
+  border-color: var(--btn-reject-color-hover);
+  color: #fff;
 }
