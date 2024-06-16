@@ -5,7 +5,15 @@ import { Form } from 'react-bootstrap';
 import optionStyles from '../../../assets/css/components/menu/options.module.css';
 import Select from 'react-select';
 
-function Header() {
+interface Props {
+  tipo_articulo: number | { id: number; nombre: string };
+  fecha: string;
+  medio: { id: number; nombre: string };
+  autor: { id: number; nombre: string };
+  programa?: string;
+}
+
+function Header({ defaultData }: Props) {
   return (
     <>
       <div>
