@@ -7,7 +7,6 @@ import { GeneralRequest } from './funcs';
 */
 
 export async function getArticleData(id: string | number) {
-  console.log(GeneralRequest(`articulos/${id}/fragmentos`));
   return await GeneralRequest(`articulos/${id}/fragmentos`);
 }
 
@@ -44,4 +43,12 @@ export async function getActivoPasivoCategorization(query: string) {
     nombre: query,
     modelo: 'Actor',
   });
+}
+
+export async function deleteFragment({ articleID, fragmentID }) {
+  return await GeneralRequest(
+    `articulo/${articleID}/fragmentos/${fragmentID}}`,
+    'POST',
+    {}
+  );
 }
