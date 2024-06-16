@@ -1,3 +1,4 @@
+import { categorization } from '../interfaces/generals';
 import { GeneralRequest } from './funcs';
 
 /*
@@ -50,5 +51,17 @@ export async function deleteFragment({ articleID, fragmentID }) {
     `articulo/${articleID}/fragmentos/${fragmentID}}`,
     'POST',
     {}
+  );
+}
+
+export async function editFragment(
+  articleID: number,
+  fragmentID: number,
+  body: categorization
+) {
+  return await GeneralRequest(
+    `articulo/${articleID}/fragmentos/${fragmentID}}`,
+    'POST',
+    body
   );
 }
