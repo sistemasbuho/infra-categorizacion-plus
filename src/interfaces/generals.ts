@@ -4,6 +4,14 @@ export interface article {
   text: string;
 }
 
+export interface categorization {
+  tono: number;
+  tag?: number;
+  tema: number;
+  activo?: number;
+  pasivo?: number;
+}
+
 export interface GeneralRequestOptions {
   headers?: HeadersInit;
   body?: BodyInit;
