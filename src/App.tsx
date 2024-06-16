@@ -1,6 +1,5 @@
 import { getArticleData } from './utils/asyncFunc.ts';
-import { Selection, NewSelection } from './interfaces/generals.ts';
-
+import { Selection, NewSelection, article } from './interfaces/generals.ts';
 import { useEffect, useState } from 'react';
 
 import GeneralCategorization from './components/GeneralCategorization.tsx';
@@ -18,24 +17,26 @@ function App() {
   const [summaryText, setSummaryText] = useState<string>('');
   const [selections, setSelections] = useState<Selection[]>([]);
   const [newSelections, setNewSelections] = useState<NewSelection[]>([]);
+  const [article, setarticle] = useState<article>(null);
 
   useEffect(() => {
     async function fetchData() {
-      const { data } = await getArticleData(1204095);
-
-      setArticleText(data.articulo.texto);
-      setSummaryText(data.articulo.resumen);
-      setSelections(
-        data.fragmentos.map((fragment): Selection => {
-          return {
-            id: fragment.id,
-            startIndex: Number(fragment.start_index),
-            length: fragment.articulo.texto.length,
-            text: fragment.articulo.texto,
-          };
-        })
-      );
-      setsLoading(true);
+      await getArticleData(1204095).then((data) => {
+        setarticle(data.articulo);
+        setArticleText(data.articulo.texto);
+        setSummaryText(data.articulo.resumen);
+        setSelections(
+          data.fragmentos.map((fragment): Selection => {
+            return {
+              id: fragment.id,
+              startIndex: Number(fragment.start_index),
+              length: fragment.articulo.texto.length,
+              text: fragment.articulo.texto,
+            };
+          })
+        );
+        setsLoading(true);
+      });
     }
     fetchData();
   }, []);
@@ -84,6 +85,7 @@ function App() {
           </section>
 
           <Menu
+            articulo={article}
             fragments={[...selections, ...newSelections]}
             deleteFragment={deleteFragment}
           />

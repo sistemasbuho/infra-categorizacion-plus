@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { Selection } from '../../interfaces/generals';
+import { article, Selection } from '../../interfaces/generals';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 import styles from '../../assets/css/app.module.css';
@@ -10,11 +10,12 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 interface CategorizationProps {
+  articulo: article;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
 }
 
-function Menu({ fragments, deleteFragment }: CategorizationProps) {
+function Menu({ articulo, fragments, deleteFragment }: CategorizationProps) {
   const [currentOption, setCurrentOption] = useState(1);
 
   return (
@@ -46,10 +47,12 @@ function Menu({ fragments, deleteFragment }: CategorizationProps) {
           {currentOption === 1 && <Header />}
           {currentOption === 2 && (
             <Categorization
+              articulo={articulo}
               fragments={fragments}
               deleteFragment={deleteFragment}
             />
           )}
+
           {currentOption === 3 && <Config />}
         </div>
       </section>
