@@ -23,7 +23,7 @@ interface AsyncSelectActivoPasivoProps {
 const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   sendResponse,
   isMulti = false,
-  placeholder = 'Escribe el nombre del Tema',
+  placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
   clear,

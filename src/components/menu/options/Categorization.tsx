@@ -179,6 +179,7 @@ function Categorization({
                     </Form.Label>
                     <Select
                       options={sentimiento}
+                      placeholder={'Buscar'}
                       onChange={(e) => setTonoOption(e.value)}
                     />
                   </Form.Group>

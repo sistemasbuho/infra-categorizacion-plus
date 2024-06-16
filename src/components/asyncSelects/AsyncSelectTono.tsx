@@ -23,7 +23,7 @@ interface AsyncSelectTonoProps {
 const AsyncSelectTono: React.FC<AsyncSelectTonoProps> = ({
   sendResponse,
   isMulti = false,
-  placeholder = 'Escribe el nombre del Tema',
+  placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
   clear,

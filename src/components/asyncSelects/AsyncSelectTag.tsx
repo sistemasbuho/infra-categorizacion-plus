@@ -24,7 +24,7 @@ const AsyncSelectTag: React.FC<AsyncSelectTagProps> = ({
   projectId,
   sendResponse,
   isMulti = false,
-  placeholder = 'Escribe el nombre del Tag',
+  placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
   clear,
