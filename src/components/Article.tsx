@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { Selection, NewSelection } from '../interfaces/generals';
+import { Selection } from '../interfaces/generals';
 import { isOverlappingFragment } from '../utils/funcs';
 
 import globalStyles from '../assets/css/general.module.css';
@@ -10,8 +10,8 @@ interface ArticleProps {
   text: string;
   selections: Selection[];
   setSelections: Dispatch<SetStateAction<Selection[]>>;
-  newSelections: NewSelection[];
-  setNewSelections: Dispatch<SetStateAction<NewSelection[]>>;
+  newSelections: Selection[];
+  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
 }
 
 function Article({

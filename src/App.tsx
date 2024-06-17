@@ -1,5 +1,5 @@
 import { getArticleData } from './utils/asyncFunc.ts';
-import { Selection, NewSelection, article } from './interfaces/generals.ts';
+import { Selection, article } from './interfaces/generals.ts';
 import { useEffect, useState } from 'react';
 
 import GeneralCategorization from './components/GeneralCategorization.tsx';
@@ -17,7 +17,7 @@ function App() {
   const [articleText, setArticleText] = useState<string>('');
   const [summaryText, setSummaryText] = useState<string>('');
   const [selections, setSelections] = useState<Selection[]>([]);
-  const [newSelections, setNewSelections] = useState<NewSelection[]>([]);
+  const [newSelections, setNewSelections] = useState<Selection[]>([]);
   const [article, setarticle] = useState<article>(null);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function App() {
               startIndex: Number(fragment.start_index),
               length: fragment.article_fragment.length,
               text: fragment.article_fragment,
+              ...fragment,
             };
           })
         );
@@ -42,7 +43,7 @@ function App() {
     fetchData();
   }, []);
 
-  function deleteFragment(frag: NewSelection) {
+  function deleteFragment(frag: Selection) {
     setSelections((prev) => prev.filter((fragment) => fragment.id !== frag.id));
     setNewSelections((prev) =>
       prev.filter((fragment) => fragment.selectionId !== frag.selectionId)

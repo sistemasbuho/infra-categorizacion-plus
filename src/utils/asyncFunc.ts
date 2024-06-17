@@ -1,4 +1,4 @@
-import { newCategorization } from '../interfaces/generals';
+import { editCategorization, newCategorization } from '../interfaces/generals';
 import { GeneralRequest } from './funcs';
 
 /*
@@ -53,7 +53,7 @@ export async function postFragment(articleID: number, body: newCategorization) {
 export async function editFragment(
   articleID: number,
   fragmentID: number,
-  body: newCategorization
+  body: editCategorization
 ) {
   return await GeneralRequest(
     `articulo/${articleID}/fragmentos/${fragmentID}`,
@@ -70,19 +70,13 @@ export async function deleteFragment(articleID: number, fragmentID: number) {
   );
 }
 
-
-export async function postArticleCategorization(articleID: number, body: {tema: number[], tag: number[]}) {
-  return await GeneralRequest(
-    `articulos/${articleID}`,
-    'POST',
-    body
-  );
+export async function postArticleCategorization(
+  articleID: number,
+  body: { tema: number[]; tag: number[] }
+) {
+  return await GeneralRequest(`articulos/${articleID}`, 'POST', body);
 }
 
 export async function deleteArticleCategorization(articleID: number) {
-  return await GeneralRequest(
-    `articulo/${articleID}`,
-    'DELETE',
-    {}
-  );
+  return await GeneralRequest(`articulo/${articleID}`, 'DELETE', {});
 }

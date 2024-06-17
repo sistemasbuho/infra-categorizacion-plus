@@ -19,12 +19,12 @@ const Config: React.FC = () => {
           <p className="m-0">Tamaño letra</p>
 
           <div className="d-flex gap-2 align-items-center">
-            <button onClick={() => setFontSize((prev) => prev - 2)}>
+            <button onClick={() => setFontSize(fontSize - 2)}>
               <FontAwesomeIcon icon={faMinus} />
             </button>
 
             <h3>Aa</h3>
-            <button onClick={() => setFontSize((prev) => prev + 2)}>
+            <button onClick={() => setFontSize(fontSize + 2)}>
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>

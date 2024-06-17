@@ -15,6 +15,7 @@ interface AsyncSelectTemaProps {
     input: string
   ) => void;
   isMulti?: boolean;
+  defaultValue?: { nombre: string; id: number }[];
   placeholder?: string;
   name?: string;
   maxHeight?: number;

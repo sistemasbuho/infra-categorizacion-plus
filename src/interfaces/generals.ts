@@ -8,7 +8,7 @@ export interface headerArticle extends article {
   medio?: { id: number; nombre: string };
   autor?: { id: number; nombre: string };
   tipo_articulo?: { id: number; nombre: string };
-  programa?:{ id: number; nombre: string };
+  programa?: { id: number; nombre: string };
   fecha?: string;
 }
 
@@ -32,6 +32,14 @@ export interface newCategorization {
   pasivo: string[];
 }
 
+export interface editCategorization {
+  tag: number[];
+  tema: number[];
+  tono: number;
+  activo: string[];
+  pasivo: string[];
+}
+
 export interface GeneralRequestOptions {
   headers?: HeadersInit;
   body?: BodyInit;
@@ -42,10 +50,7 @@ export interface Selection {
   startIndex: number;
   length: number;
   text: string;
-}
-
-export interface NewSelection extends Selection {
-  selectionId: number;
+  selectionId?: number;
 }
 
 export interface OverlappingProps {

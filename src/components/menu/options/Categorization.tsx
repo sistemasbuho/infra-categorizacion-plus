@@ -1,7 +1,7 @@
 import {
   article,
+  editCategorization,
   newCategorization,
-  NewSelection,
   Selection,
 } from '../../../interfaces/generals';
 
@@ -9,6 +9,7 @@ import {
   postFragment,
   deleteFragment as delFragment,
   postArticleCategorization,
+  editFragment,
 } from '../../../utils/asyncFunc';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,7 +28,7 @@ import ButtonControls from '../../controls/ButtonControls';
 interface CategorizationProps {
   articulo: article;
   fragments: Selection[];
-  deleteFragment: (frag: Selection | NewSelection) => void;
+  deleteFragment: (frag: Selection) => void;
 }
 
 function Categorization({
@@ -37,9 +38,9 @@ function Categorization({
 }: CategorizationProps) {
   const [selected, setSelected] = useState(1);
 
-  const [currentFragment, setCurrentFragment] = useState<
-    Selection | NewSelection | null
-  >(null);
+  const [currentFragment, setCurrentFragment] = useState<Selection | null>(
+    null
+  );
 
   const [tagOptions, setTagOptions] = useState([]);
   const [temaOption, setTemaOption] = useState([]);
@@ -56,9 +57,7 @@ function Categorization({
     { value: '3', label: 'Negativo' },
   ];
 
-  async function sendCategorization(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  async function postCurrentFragment() {
     const update: newCategorization = {
       article_fragment: currentFragment.text,
       start_index: currentFragment.startIndex,
@@ -74,15 +73,30 @@ function Categorization({
     return await postFragment(articulo.id, update);
   }
 
+  async function editCurrentFragment() {
+    const update: editCategorization = {
+      tono: Number(tonoOption),
+      tema: temaOption.map((item) => item.id),
+      tag: tagOptions.map((item) => item.id),
+      activo: activoOption.map((item) => item.id),
+      pasivo: pasivoOption.map((item) => item.id),
+    };
+
+    return await editFragment(articulo.id, currentFragment.id, update);
+  }
+
+  function sendCategorization(e: React.FormEvent<HTMLFormElement>): void {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const isSavedFragment = !isNewFragment(currentFragment);
+    isSavedFragment ? editCurrentFragment() : postCurrentFragment();
+  }
+
   async function deleteCurrentFragment(frag: Selection) {
     deleteFragment(frag);
     return await delFragment(articulo.id, frag.id);
   }
-
-  // async function editFragment(e: React.FormEvent) {
-  //   e.stopPropagation();
-  //   alert('editando');
-  // }
 
   async function sendArticleCategorization(e: React.FormEvent) {
     e.preventDefault();
@@ -119,11 +133,19 @@ function Categorization({
     setTagGeneral(data);
   }
 
-  function isNewSelection(
-    selection: Selection | NewSelection
-  ): selection is NewSelection {
-    return (selection as NewSelection).selectionId !== undefined;
+  function isNewFragment(frag: Selection) {
+    return frag?.selectionId ? true : false;
   }
+
+  // useEffect(() => {
+  //   setTagOptions(currentFragment.)
+  //   setTemaOption(currentFragment.)
+  //   setActivoOption(currentFragment.)
+  //   setPasivoOption(currentFragment.)
+  //   setTonoOption(currentFragment.)
+
+  //   return () => {};
+  // }, [currentFragment]);
 
   return (
     <>
@@ -158,16 +180,9 @@ function Categorization({
                       fragments.map((frag, i) => (
                         <div
                           className={`${styles.fragment} ${
-                            !frag.selectionId && styles.fragment_saved
+                            !frag?.selectionId && styles.fragment_saved
                           }  ${
-                            currentFragment &&
-                            ((isNewSelection(currentFragment) &&
-                              isNewSelection(frag) &&
-                              currentFragment.selectionId ===
-                                frag.selectionId) ||
-                              (!isNewSelection(currentFragment) &&
-                                !isNewSelection(frag) &&
-                                currentFragment.id === frag.id)) &&
+                            currentFragment?.id === frag?.id &&
                             styles.fragment_selected
                           }`}
                           key={i}
