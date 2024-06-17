@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { article, Selection } from '../../interfaces/generals';
+import { headerArticle, Selection } from '../../interfaces/generals';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 import styles from '../../assets/css/app.module.css';
@@ -10,7 +10,7 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 interface CategorizationProps {
-  articulo: article;
+  articulo: headerArticle;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
 }
@@ -44,7 +44,7 @@ function Menu({ articulo, fragments, deleteFragment }: CategorizationProps) {
           </button>
         </header>
         <div className={optionStyles.option_cont}>
-          {currentOption === 1 && <Header />}
+          {currentOption === 1 && <Header articulo={articulo} />}
           {currentOption === 2 && (
             <Categorization
               articulo={articulo}

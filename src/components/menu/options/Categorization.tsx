@@ -1,4 +1,16 @@
-import { article, NewSelection, Selection } from '../../../interfaces/generals';
+import {
+  article,
+  newCategorization,
+  NewSelection,
+  Selection,
+} from '../../../interfaces/generals';
+
+import {
+  postFragment,
+  deleteFragment as delFragment,
+  postArticleCategorization,
+} from '../../../utils/asyncFunc';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -7,9 +19,10 @@ import { Form } from 'react-bootstrap';
 import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo';
 import AsyncSelectTema from '../../asyncSelects/AsyncSelectTema';
 import AsyncSelectTag from '../../asyncSelects/AsyncSelectTag';
-import optionStyles from '../../../assets/css/components/menu/options.module.css';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
+
+import ButtonControls from '../../controls/ButtonControls';
 
 interface CategorizationProps {
   articulo: article;
@@ -28,11 +41,14 @@ function Categorization({
     Selection | NewSelection | null
   >(null);
 
-  const [tagOptions, setTagOptions] = useState({});
-  const [temaOption, setTemaOption] = useState({});
-  const [activoOption, setActivoOption] = useState({});
-  const [pasivoOption, setPasivoOption] = useState({});
-  const [tonoOption, setTonoOption] = useState({});
+  const [tagOptions, setTagOptions] = useState([]);
+  const [temaOption, setTemaOption] = useState([]);
+  const [activoOption, setActivoOption] = useState([]);
+  const [pasivoOption, setPasivoOption] = useState([]);
+  const [tonoOption, setTonoOption] = useState<number>(null);
+
+  const [temaGeneral, setTemaGeneral] = useState([]);
+  const [tagGeneral, setTagGeneral] = useState([]);
 
   const sentimiento = [
     { value: '1', label: 'Positvo' },
@@ -40,18 +56,43 @@ function Categorization({
     { value: '3', label: 'Negativo' },
   ];
 
-  function sendCategorization(e: React.FormEvent<HTMLFormElement>) {
+  async function sendCategorization(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const update = {
-      tagOptions,
-      temaOption,
-      activoOption,
-      pasivoOption,
-      tonoOption,
+    const update: newCategorization = {
+      article_fragment: currentFragment.text,
+      start_index: currentFragment.startIndex,
+      end_index: currentFragment.startIndex + currentFragment.length,
+      articulo: articulo.id,
+      tag: tagOptions.map((item) => item.id),
+      tema: temaOption.map((item) => item.id),
+      tono: Number(tonoOption),
+      activo: activoOption.map((item) => item.id),
+      pasivo: pasivoOption.map((item) => item.id),
     };
 
-    console.log(update);
+    return await postFragment(articulo.id, update);
+  }
+
+  async function deleteCurrentFragment(frag: Selection) {
+    deleteFragment(frag);
+    return await delFragment(articulo.id, frag.id);
+  }
+
+  // async function editFragment(e: React.FormEvent) {
+  //   e.stopPropagation();
+  //   alert('editando');
+  // }
+
+  async function sendArticleCategorization(e: React.FormEvent) {
+    e.preventDefault();
+    const update = {
+      tema: temaGeneral.map((item) => item.id),
+      tag: tagGeneral.map((item) => item.id),
+    };
+
+    const response = await postArticleCategorization(articulo.id, update);
+    console.log(response);
   }
 
   function getAsyncTag(data) {
@@ -70,6 +111,14 @@ function Categorization({
     setPasivoOption(data);
   }
 
+  function getTemaGeneral(data) {
+    setTemaGeneral(data);
+  }
+
+  function getTagGeneral(data) {
+    setTagGeneral(data);
+  }
+
   function isNewSelection(
     selection: Selection | NewSelection
   ): selection is NewSelection {
@@ -82,7 +131,7 @@ function Categorization({
         <h2>CATEGORIZACIÓN</h2>
       </div>
 
-      <div className={styles.body}>
+      <div className={`${styles.body} p-0`}>
         <div className={styles.nav}>
           <button
             className={`${selected === 1 && styles.selected}`}
@@ -97,123 +146,146 @@ function Categorization({
             General
           </button>
         </div>
-        <div className={styles.section_body}>
+        <div className={`${styles.section_body} p-0`}>
           {selected === 1 && (
-            <div className={styles.fragments_cont}>
-              <div>
-                <h4>Fragmentos</h4>
+            <>
+              <div className={styles.fragments_cont}>
+                <div>
+                  <h4>Fragmentos</h4>
 
-                <div className={styles.list}>
-                  {fragments.length > 0 ? (
-                    fragments.map((frag, i) => (
-                      <div
-                        className={`${styles.fragment} ${
-                          currentFragment &&
-                          ((isNewSelection(currentFragment) &&
-                            isNewSelection(frag) &&
-                            currentFragment.selectionId === frag.selectionId) ||
-                            (!isNewSelection(currentFragment) &&
-                              !isNewSelection(frag) &&
-                              currentFragment.id === frag.id)) &&
-                          styles.fragment_selected
-                        }`}
-                        key={i}
-                        onClick={() => setCurrentFragment(frag)}
-                      >
-                        <p>{frag.text}</p>
-                        <button onClick={() => deleteFragment(frag)}>
-                          <FontAwesomeIcon icon={faClose} />
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="py-2 text">Aún no hay fragmentos</p>
-                  )}
+                  <div className={styles.list}>
+                    {fragments.length > 0 ? (
+                      fragments.map((frag, i) => (
+                        <div
+                          className={`${styles.fragment} ${
+                            !frag.selectionId && styles.fragment_saved
+                          }  ${
+                            currentFragment &&
+                            ((isNewSelection(currentFragment) &&
+                              isNewSelection(frag) &&
+                              currentFragment.selectionId ===
+                                frag.selectionId) ||
+                              (!isNewSelection(currentFragment) &&
+                                !isNewSelection(frag) &&
+                                currentFragment.id === frag.id)) &&
+                            styles.fragment_selected
+                          }`}
+                          key={i}
+                          onClick={() => setCurrentFragment(frag)}
+                        >
+                          <p>{frag.text}</p>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteCurrentFragment(frag);
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faClose} />
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center m-0">Aún no hay fragmentos</p>
+                    )}
+                  </div>
+
+                  <hr />
                 </div>
+                <div className={styles.form}>
+                  <Form
+                    id="categorization-form"
+                    onSubmit={sendCategorization}
+                    className="mb-3"
+                  >
+                    <Form.Group>
+                      <Form.Label>
+                        <h4>Tema</h4>
+                      </Form.Label>
+                      <AsyncSelectTema
+                        isMulti
+                        projectId={articulo.proyecto}
+                        sendResponse={getAsyncTema}
+                      />
+                    </Form.Group>
 
-                <hr />
-              </div>
-              <div className={styles.form}>
-                <Form
-                  id="categorization-form"
-                  onSubmit={sendCategorization}
-                  className="mb-3"
-                >
-                  <Form.Group>
-                    <Form.Label>
-                      <h4>Tema</h4>
-                    </Form.Label>
-                    <AsyncSelectTema
-                      projectId={articulo.proyecto}
-                      sendResponse={getAsyncTema}
-                    />
-                  </Form.Group>
+                    <Form.Group>
+                      <Form.Label>
+                        <h4>Tag</h4>
+                      </Form.Label>
+                      <AsyncSelectTag
+                        isMulti
+                        projectId={articulo.proyecto}
+                        sendResponse={getAsyncTag}
+                      />
+                    </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label>
-                      <h4>Tag</h4>
-                    </Form.Label>
-                    <AsyncSelectTag
-                      projectId={articulo.proyecto}
-                      sendResponse={getAsyncTag}
-                    />
-                  </Form.Group>
+                    <Form.Group>
+                      <Form.Label>
+                        <h4>Activo</h4>
+                      </Form.Label>
+                      <AsyncSelectActivoPasivo
+                        isMulti
+                        sendResponse={getAsyncActivo}
+                      />{' '}
+                    </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label>
-                      <h4>Activo</h4>
-                    </Form.Label>
-                    <AsyncSelectActivoPasivo sendResponse={getAsyncActivo} />{' '}
-                  </Form.Group>
+                    <Form.Group>
+                      <Form.Label htmlFor="pasivo">
+                        <h4>Pasivo</h4>
+                      </Form.Label>
+                      <AsyncSelectActivoPasivo
+                        isMulti
+                        sendResponse={getAsyncPasivo}
+                      />
+                    </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label htmlFor="pasivo">
-                      <h4>Pasivo</h4>
-                    </Form.Label>
-                    <AsyncSelectActivoPasivo sendResponse={getAsyncPasivo} />
-                  </Form.Group>
-
-                  <Form.Group>
-                    <Form.Label htmlFor="pasivo">
-                      <h4>Sentimiento</h4>
-                    </Form.Label>
-                    <Select
-                      options={sentimiento}
-                      placeholder={'Buscar'}
-                      onChange={(e) => setTonoOption(e.value)}
-                    />
-                  </Form.Group>
-                </Form>
-
-                <div className={optionStyles.controls}>
-                  <button className={optionStyles.reject}>Eliminar</button>
-                  <button className={optionStyles.accept}>Guardar</button>
+                    <Form.Group>
+                      <Form.Label htmlFor="pasivo">
+                        <h4>Sentimiento</h4>
+                      </Form.Label>
+                      <Select
+                        options={sentimiento}
+                        placeholder={'Buscar'}
+                        onChange={(e) => setTonoOption(Number(e.value))}
+                      />
+                    </Form.Group>
+                  </Form>
                 </div>
               </div>
-            </div>
+              <ButtonControls
+                form="categorization-form"
+                accept={{ disabled: !currentFragment }}
+                reject={{ disabled: !currentFragment }}
+              />
+            </>
           )}
 
           {selected === 2 && (
             <>
-              <Form>
-                <Form.Group>
+              <Form id="article-form" onSubmit={sendArticleCategorization}>
+                <Form.Group className="mb-3">
                   <Form.Label>
                     <h4>Asignar tags al artículo</h4>
                   </Form.Label>
-                  <Select options={sentimiento} placeholder="Buscar" />
+                  <AsyncSelectTag
+                    projectId={articulo.proyecto}
+                    sendResponse={getTagGeneral}
+                    isMulti
+                  />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>
                     <h4>Asignar temas al artículo</h4>
                   </Form.Label>
-                  <Select options={sentimiento} placeholder="Buscar" />
+                  <AsyncSelectTema
+                    projectId={articulo.proyecto}
+                    sendResponse={getTemaGeneral}
+                    isMulti
+                  />
                 </Form.Group>
               </Form>
 
-              <div className={optionStyles.controls}>
-                <button className={optionStyles.reject}>Eliminar</button>
-                <button className={optionStyles.accept}>Guardar</button>
-              </div>
+              <ButtonControls form={'article-form'} />
             </>
           )}
         </div>
