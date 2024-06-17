@@ -24,7 +24,7 @@ function App() {
     async function fetchData() {
       await getArticleData(1204095).then((data) => {
         setarticle(data.articulo);
-        setArticleText(data.articulo.texto);
+        setArticleText(data.articulo?.texto);
         setSummaryText(data.articulo.resumen);
         setSelections(
           data.fragmentos.map((fragment): Selection => {
