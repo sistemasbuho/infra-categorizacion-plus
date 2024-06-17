@@ -10,6 +10,7 @@ import SummaryArticle from './components/SummaryArticle.tsx';
 import Article from './components/Article.tsx';
 import styles from './assets/css/app.module.css';
 import Menu from './components/menu/Menu.tsx';
+import { ConfigProvider } from './context/ConfigContext.tsx';
 
 function App() {
   const [isLoading, setsLoading] = useState(false);
@@ -30,8 +31,8 @@ function App() {
             return {
               id: fragment.id,
               startIndex: Number(fragment.start_index),
-              length: fragment.articulo.texto.length,
-              text: fragment.articulo.texto,
+              length: fragment.article_fragment.length,
+              text: fragment.article_fragment,
             };
           })
         );
@@ -49,7 +50,7 @@ function App() {
   }
 
   return (
-    <>
+    <ConfigProvider>
       {isLoading ? (
         <section className={`${styles.cont_global}`}>
           <section className={styles.cont_article_sections}>
@@ -93,7 +94,7 @@ function App() {
       ) : (
         <p> Cargando</p>
       )}
-    </>
+    </ConfigProvider>
   );
 }
 
