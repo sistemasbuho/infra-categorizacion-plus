@@ -1,19 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Definir la interfaz de configuración
 interface Config {
   fontSize: number;
   darkMode: boolean;
   toggleDarkMode: () => void;
-  setFontSize: (size: string) => void;
+  setFontSize: (size: number) => void;
 }
 
-// Definir las props del proveedor de contexto
 interface ConfigProviderProps {
   children: ReactNode;
 }
 
-// Crear un contexto con la interfaz de configuración
 const ConfigContext = createContext<Config | undefined>(undefined);
 
 export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
@@ -49,7 +46,6 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   );
 };
 
-// Custom hook para usar el contexto de configuración
 export const useConfig = (): Config => {
   const context = useContext(ConfigContext);
   if (context === undefined) {
