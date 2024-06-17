@@ -79,3 +79,7 @@ export async function GeneralRequest(route, type = 'GET', params = {}) {
   );
   return resp;
 }
+
+export function getLocalToken() {
+  return JSON.parse(localStorage.getItem('token'));
+}
