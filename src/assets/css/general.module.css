@@ -14,6 +14,12 @@
   --btn-accept-color-hover: #00ada1;
   --btn-reject-color: transparent;
   --btn-reject-color-hover: #ff7588;
+
+  --scrollbar-color: #82828250;
+  --scrollbar-thumb-color: #62769a;
+
+  --fragment-saved-background: #c4fcef;
+  --fragment-saved-border: #00c9a770;
 }
 
 * {

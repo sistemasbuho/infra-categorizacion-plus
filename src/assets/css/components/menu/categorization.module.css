@@ -33,6 +33,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 0.5rem;
+  overflow: hidden !important;
 }
 
 .body .section_body {
@@ -40,6 +41,20 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.body .section_body::-webkit-scrollbar {
+  width: 10px;
+  background: var(--scrollbar-color);
+  border-radius: 20px;
+}
+
+.body .section_body::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  border: none;
+  background: var(--scrollbar-thumb-color);
 }
 
 .fragments_cont {
@@ -48,7 +63,7 @@
   height: 100%;
 }
 
-.fragments_cont div:first-child h4 {
+.fragments_cont > div:first-child h4 {
   margin-bottom: 0.5rem;
 }
 
@@ -56,7 +71,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .fragment {
@@ -70,6 +84,11 @@
   align-items: center;
   justify-content: space-between;
   transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.fragment_saved {
+  background: var(--fragment-saved-background);
+  border: 4px solid var(--fragment-saved-border);
 }
 
 .fragment > p {
@@ -95,18 +114,17 @@
   border-color: #62769a;
 }
 
-.fragment.fragment_selected,
+.fragment.fragment_selected > p,
 .fragment:hover > p {
   color: #ffffff;
 }
 
-.fragment.fragment_selected,
+.fragment.fragment_selected > button,
 .fragment:hover > button {
   color: #ffffff;
 }
 
-
-.form h4{
+.form h4 {
   text-align: left;
   font: normal normal bold 18px / 24px Segoe UI;
   letter-spacing: 0px;

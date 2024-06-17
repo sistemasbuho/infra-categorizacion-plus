@@ -40,6 +40,18 @@
   overflow-y: auto;
 }
 
+.option_cont > div:nth-child(2)::-webkit-scrollbar {
+  width: 10px;
+  background: var(--scrollbar-color);
+  border-radius: 20px;
+}
+
+.option_cont > div:nth-child(2)::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  border: none;
+  background: var(--scrollbar-thumb-color);
+}
+
 .option_cont .controls {
   display: flex;
   width: 100%;
@@ -67,6 +79,11 @@
   color: #333333;
 }
 
+.option_cont .controls .reject:disabled,
+.option_cont .controls .accept:disabled {
+  opacity: 0.5;
+}
+
 .option_cont .controls .accept {
   border-color: #62769a;
   background-color: var(--btn-accept-color);
@@ -74,12 +91,12 @@
   color: #ffffff;
 }
 
-.option_cont .controls .accept:hover {
+.option_cont .controls .accept:hover:not(:disabled) {
   background-color: var(--btn-accept-color-hover);
   border-color: var(--btn-accept-color-hover);
 }
 
-.option_cont .controls .reject:hover {
+.option_cont .controls .reject:hover:not(:disabled) {
   background-color: var(--btn-reject-color-hover);
   border-color: var(--btn-reject-color-hover);
   color: #fff;
