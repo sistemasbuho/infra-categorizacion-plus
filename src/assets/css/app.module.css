@@ -62,3 +62,16 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
+
+.scrolled_section::-webkit-scrollbar {
+  width: 10px;
+  background: var(--scrollbar-color);
+  border-radius: 20px;
+}
+
+.scrolled_section::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  border: none;
+  background: var(--scrollbar-thumb-color);
+}
