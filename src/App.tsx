@@ -25,14 +25,14 @@ function App() {
       await getArticleData(1204095).then((data) => {
         setarticle(data.articulo);
         setArticleText(data.articulo?.texto);
-        setSummaryText(data.articulo.resumen);
+        setSummaryText(data.articulo?.resumen);
         setSelections(
-          data.fragmentos.map((fragment): Selection => {
+          data.fragmentos?.map((fragment): Selection => {
             return {
-              id: fragment.id,
-              startIndex: Number(fragment.start_index),
-              length: fragment.article_fragment.length,
-              text: fragment.article_fragment,
+              id: fragment?.id,
+              startIndex: Number(fragment?.start_index),
+              length: fragment?.article_fragment?.length,
+              text: fragment?.article_fragment,
               ...fragment,
             };
           })
