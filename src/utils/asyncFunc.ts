@@ -1,4 +1,4 @@
-import { categorization } from '../interfaces/generals';
+import { newCategorization } from '../interfaces/generals';
 import { GeneralRequest } from './funcs';
 
 /*
@@ -46,22 +46,43 @@ export async function getActivoPasivoCategorization(query: string) {
   });
 }
 
-export async function deleteFragment(articleID: number, fragmentID: number) {
-  return await GeneralRequest(
-    `articulo/${articleID}/fragmentos/${fragmentID}}`,
-    'POST',
-    {}
-  );
+export async function postFragment(articleID: number, body: newCategorization) {
+  return await GeneralRequest(`articulo/${articleID}/fragmentos`, 'POST', body);
 }
 
 export async function editFragment(
   articleID: number,
   fragmentID: number,
-  body: categorization
+  body: newCategorization
 ) {
   return await GeneralRequest(
-    `articulo/${articleID}/fragmentos/${fragmentID}}`,
+    `articulo/${articleID}/fragmentos/${fragmentID}`,
+    'PUT',
+    body
+  );
+}
+
+export async function deleteFragment(articleID: number, fragmentID: number) {
+  return await GeneralRequest(
+    `articulo/${articleID}/fragmentos/${fragmentID}`,
+    'DELETE',
+    {}
+  );
+}
+
+
+export async function postArticleCategorization(articleID: number, body: {tema: number[], tag: number[]}) {
+  return await GeneralRequest(
+    `articulos/${articleID}`,
     'POST',
     body
+  );
+}
+
+export async function deleteArticleCategorization(articleID: number) {
+  return await GeneralRequest(
+    `articulo/${articleID}`,
+    'DELETE',
+    {}
   );
 }
