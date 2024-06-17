@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 
 import optionStyles from '../../../assets/css/components/menu/options.module.css';
 import Select from 'react-select';
-import { headerArticle } from '../../../interfaces/generals';
+import { headerArticle, SelectOption } from '../../../interfaces/generals';
 import { useState } from 'react';
 
 interface Props {
@@ -12,14 +12,23 @@ interface Props {
 }
 
 function Header({ articulo }: Props) {
-  // const [medioOption, setMedioOption] = useState(articulo.medio);
-  const [medioOption] = useState(articulo.medio);
-  const [programaOption, setProgramaOption] = useState(articulo.programa);
-  // const [tipoOption, settipoOption] = useState(articulo.tipo_articulo);
-  const [tipoOption] = useState(articulo.tipo_articulo);
+  const [medioOption] = useState({
+    label: articulo.medio.nombre,
+    value: articulo.medio.id,
+  });
+  const [programaOption] = useState<SelectOption>({
+    label: articulo.programa.nombre,
+    value: articulo.programa.id,
+  });
+  const [tipoOption] = useState<SelectOption>({
+    label: articulo.tipo_articulo.nombre,
+    value: articulo.tipo_articulo.id,
+  });
   const [fechaOption, setfechaOption] = useState(articulo.fecha);
-  // const [autorOption, setAutoroption] = useState(articulo.autor);
-  const [autorOption] = useState(articulo.autor);
+  const [autorOption] = useState<SelectOption>({
+    label: articulo.autor.nombre,
+    value: articulo.autor.id,
+  });
 
   return (
     <>
@@ -33,7 +42,7 @@ function Header({ articulo }: Props) {
             <Form.Label htmlFor="tipo">
               <h4>Tipo</h4>
             </Form.Label>
-            <Select defaultValue={{ label: tipoOption, value: tipoOption }} />
+            <Select defaultValue={tipoOption} />
           </Form.Group>
 
           <Form.Group className="mb-4">
@@ -54,12 +63,7 @@ function Header({ articulo }: Props) {
             <Form.Label htmlFor="tipo">
               <h4>Medio</h4>
             </Form.Label>
-            <Select
-              defaultValue={{
-                label: medioOption.nombre,
-                value: medioOption.id,
-              }}
-            />
+            <Select defaultValue={medioOption} />
           </Form.Group>
 
           <Form.Group className="mb-4">
@@ -67,24 +71,16 @@ function Header({ articulo }: Props) {
               <h4>Programa</h4>
             </Form.Label>
             <Select
-              onChange={(e) => setProgramaOption(e.value)}
-              defaultValue={{
-                label: programaOption,
-                value: programaOption,
-              }}
-            />{' '}
+              defaultValue={programaOption}
+              // onChange={(e) => setProgramaOption(e.value)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-4">
             <Form.Label htmlFor="tipo">
               <h4>Autor</h4>
             </Form.Label>
-            <Select
-              defaultValue={{
-                label: autorOption.nombre,
-                value: autorOption.id,
-              }}
-            />
+            <Select defaultValue={autorOption} />
           </Form.Group>
         </Form>
       </div>

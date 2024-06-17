@@ -32,6 +32,11 @@ export interface newCategorization {
   pasivo: string[];
 }
 
+export interface SelectOption {
+  label: string;
+  value: string | number;
+}
+
 export interface editCategorization {
   tag: number[];
   tema: number[];
