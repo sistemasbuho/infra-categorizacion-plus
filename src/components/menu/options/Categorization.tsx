@@ -20,8 +20,6 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 
 import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo';
-import AsyncSelectTema from '../../asyncSelects/AsyncSelectTema';
-import AsyncSelectTag from '../../asyncSelects/AsyncSelectTag';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
 
@@ -47,13 +45,13 @@ function Categorization({
   const [currentFragment, setCurrentFragment] = useState<Selection | null>(
     null
   );
-  const [tagOptions, setTagOptions] = useState([]);
-  const [temaOption, setTemaOption] = useState([]);
+  const [tagOptions, setTagOptions] = useState<Tags[] | null>([]);
+  const [temaOption, setTemaOption] = useState<Temas[] | null>([]);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<number>(null);
-  const [temaGeneral, setTemaGeneral] = useState([]);
-  const [tagGeneral, setTagGeneral] = useState([]);
+  const [temaGeneral, setTemaGeneral] = useState<Temas[] | null>([]);
+  const [tagGeneral, setTagGeneral] = useState<Tags[] | null>([]);
 
   const sentimiento = [
     { value: '1', label: 'Positvo' },
@@ -123,14 +121,6 @@ function Categorization({
     console.log(response);
   }
 
-  function getAsyncTag(data) {
-    setTagOptions(data);
-  }
-
-  function getAsyncTema(data) {
-    setTemaOption(data);
-  }
-
   function getAsyncActivo(data) {
     setActivoOption(data);
   }
@@ -139,27 +129,9 @@ function Categorization({
     setPasivoOption(data);
   }
 
-  function getTemaGeneral(data) {
-    setTemaGeneral(data);
-  }
-
-  function getTagGeneral(data) {
-    setTagGeneral(data);
-  }
-
   function isNewFragment(frag: Selection) {
     return frag?.selectionId ? true : false;
   }
-
-  // useEffect(() => {
-  //   setTagOptions(currentFragment.)
-  //   setTemaOption(currentFragment.)
-  //   setActivoOption(currentFragment.)
-  //   setPasivoOption(currentFragment.)
-  //   setTonoOption(currentFragment.)
-
-  //   return () => {};
-  // }, [currentFragment]);
 
   return (
     <>
@@ -236,6 +208,14 @@ function Categorization({
                           label: item.nombre,
                           value: item.id,
                         }))}
+                        onChange={(e) =>
+                          setTemaOption(
+                            e.map((item) => ({
+                              id: item.value,
+                              nombre: item.label,
+                            }))
+                          )
+                        }
                       />
                     </Form.Group>
 
@@ -249,6 +229,14 @@ function Categorization({
                           label: item.nombre,
                           value: item.id,
                         }))}
+                        onChange={(e) =>
+                          setTagOptions(
+                            e.map((item) => ({
+                              id: item.value,
+                              nombre: item.label,
+                            }))
+                          )
+                        }
                       />
                     </Form.Group>
 
@@ -300,17 +288,41 @@ function Categorization({
                   <Form.Label>
                     <h4>Asignar tags al artículo</h4>
                   </Form.Label>
-                  <AsyncSelectTag
-                    projectId={articulo.proyecto}
-                    sendResponse={getTagGeneral}
+                  <Select
                     isMulti
+                    options={temas.map((item) => ({
+                      label: item.nombre,
+                      value: item.id,
+                    }))}
+                    onChange={(e) =>
+                      setTagGeneral(
+                        e.map((item) => ({
+                          id: item.value,
+                          nombre: item.label,
+                        }))
+                      )
+                    }
                   />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>
                     <h4>Asignar temas al artículo</h4>
                   </Form.Label>
-                  <Select />
+                  <Select
+                    isMulti
+                    options={temas.map((item) => ({
+                      label: item.nombre,
+                      value: item.id,
+                    }))}
+                    onChange={(e) =>
+                      setTemaGeneral(
+                        e.map((item) => ({
+                          id: item.value,
+                          nombre: item.label,
+                        }))
+                      )
+                    }
+                  />{' '}
                 </Form.Group>
               </Form>
 
