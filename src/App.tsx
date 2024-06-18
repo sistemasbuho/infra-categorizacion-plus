@@ -1,4 +1,6 @@
 import { getArticleData } from './utils/asyncFunc.ts';
+import { ConfigProvider } from './context/ConfigContext.tsx';
+import { useEffect, useState } from 'react';
 import {
   ArticleCategorization,
   Programas,
@@ -8,7 +10,6 @@ import {
   Tipos,
   article,
 } from './interfaces/generals.ts';
-import { useEffect, useState } from 'react';
 
 import GeneralCategorization from './components/GeneralCategorization.tsx';
 import HeaderBar from './components/HeaderBar.tsx';
@@ -18,7 +19,6 @@ import SummaryArticle from './components/SummaryArticle.tsx';
 import Article from './components/Article.tsx';
 import styles from './assets/css/app.module.css';
 import Menu from './components/menu/Menu.tsx';
-import { ConfigProvider } from './context/ConfigContext.tsx';
 
 function App() {
   const [isLoading, setsLoading] = useState(false);
@@ -30,7 +30,7 @@ function App() {
   const [temas, setTemas] = useState<Temas[]>([]);
   const [tags, setTags] = useState<Tags[]>([]);
   const [tipos, setTipos] = useState<Tipos[]>([]);
-  const [programa, setPrograma] = useState<Programas[]>([]);
+  const [programas, setProgramas] = useState<Programas[]>([]);
   const [ArticleCategorization, setArticleCategorization] =
     useState<ArticleCategorization | null>(null);
 
@@ -55,7 +55,7 @@ function App() {
         setTemas(data.temas);
         setTags(data.tags[0].tags);
         setTipos(data.tipo);
-        setPrograma(data.programa);
+        setProgramas(data.programa);
         setSelections(
           data.fragmentos?.map((fragment): Selection => {
             return {
@@ -110,7 +110,9 @@ function App() {
           </section>
 
           <Menu
-          ArticleCategorization={ArticleCategorization}
+            ArticleCategorization={ArticleCategorization}
+            tipos={tipos}
+            programas={programas}
             tags={tags}
             temas={temas}
             articulo={article}

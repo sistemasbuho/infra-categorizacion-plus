@@ -4,9 +4,11 @@ import { useState } from 'react';
 import {
   ArticleCategorization,
   headerArticle,
+  Programas,
   Selection,
   Tags,
   Temas,
+  Tipos,
 } from '../../interfaces/generals';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
@@ -17,6 +19,8 @@ import Config from './options/Config';
 
 interface CategorizationProps {
   ArticleCategorization: ArticleCategorization;
+  tipos: Tipos[];
+  programas: Programas[];
   tags: Tags[];
   temas: Temas[];
   articulo: headerArticle;
@@ -26,6 +30,8 @@ interface CategorizationProps {
 
 function Menu({
   ArticleCategorization,
+  tipos,
+  programas,
   tags,
   temas,
   articulo,
@@ -60,7 +66,9 @@ function Menu({
           </button>
         </header>
         <div className={optionStyles.option_cont}>
-          {currentOption === 1 && <Header articulo={articulo} />}
+          {currentOption === 1 && (
+            <Header articulo={articulo} tipos={tipos} programas={programas} />
+          )}
           {currentOption === 2 && (
             <Categorization
               ArticleCategorization={ArticleCategorization}

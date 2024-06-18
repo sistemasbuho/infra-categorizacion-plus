@@ -4,23 +4,30 @@ import { Form } from 'react-bootstrap';
 
 import optionStyles from '../../../assets/css/components/menu/options.module.css';
 import Select from 'react-select';
-import { headerArticle, SelectOption } from '../../../interfaces/generals';
+import {
+  headerArticle,
+  Programas,
+  SelectOption,
+  Tipos,
+} from '../../../interfaces/generals';
 import { useState } from 'react';
 
 interface Props {
   articulo: headerArticle;
+  tipos: Tipos[];
+  programas: Programas[];
 }
 
-function Header({ articulo }: Props) {
+function Header({ articulo, tipos, programas }: Props) {
   const [medioOption] = useState({
     label: articulo.medio.nombre,
     value: articulo.medio.id,
   });
-  const [programaOption] = useState<SelectOption>({
+  const [programaOption, setProgramaOption] = useState<SelectOption>({
     label: articulo.programa.nombre,
     value: articulo.programa.id,
   });
-  const [tipoOption] = useState<SelectOption>({
+  const [tipoOption, setTipoOption] = useState<SelectOption>({
     label: articulo.tipo_articulo.nombre,
     value: articulo.tipo_articulo.id,
   });
@@ -42,7 +49,14 @@ function Header({ articulo }: Props) {
             <Form.Label htmlFor="tipo">
               <h4>Tipo</h4>
             </Form.Label>
-            <Select defaultValue={tipoOption} />
+            <Select
+              options={tipos.map((item) => ({
+                label: item.nombre,
+                value: item.id,
+              }))}
+              defaultValue={tipoOption}
+              onChange={(e) => setTipoOption(e)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-4">
@@ -71,8 +85,12 @@ function Header({ articulo }: Props) {
               <h4>Programa</h4>
             </Form.Label>
             <Select
+              options={programas.map((item) => ({
+                label: item.nombre,
+                value: item.id,
+              }))}
               defaultValue={programaOption}
-              // onChange={(e) => setProgramaOption(e.value)}
+              onChange={(e) => setProgramaOption(e)}
             />
           </Form.Group>
 
