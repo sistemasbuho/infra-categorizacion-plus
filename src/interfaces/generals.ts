@@ -4,6 +4,16 @@ export interface article {
   text: string;
 }
 
+export interface Tags {
+  id: number;
+  nombre: string;
+}
+
+export interface Temas {
+  id: number;
+  nombre: string;
+}
+
 export interface headerArticle extends article {
   medio?: { id: number; nombre: string };
   autor?: { id: number; nombre: string };

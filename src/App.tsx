@@ -19,6 +19,8 @@ function App() {
   const [selections, setSelections] = useState<Selection[]>([]);
   const [newSelections, setNewSelections] = useState<Selection[]>([]);
   const [article, setarticle] = useState<article>(null);
+  const [temas, setTemas] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,6 +28,8 @@ function App() {
         setarticle(data.articulo);
         setArticleText(data.articulo?.texto);
         setSummaryText(data.articulo?.resumen);
+        setTemas(data.temas);
+        setTags(data.tags[0].tags);
         setSelections(
           data.fragmentos?.map((fragment): Selection => {
             return {
@@ -87,6 +91,8 @@ function App() {
           </section>
 
           <Menu
+            tags={tags}
+            temas={temas}
             articulo={article}
             fragments={[...selections, ...newSelections]}
             deleteFragment={deleteFragment}

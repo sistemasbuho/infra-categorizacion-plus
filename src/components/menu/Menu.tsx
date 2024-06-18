@@ -1,7 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { headerArticle, Selection } from '../../interfaces/generals';
+import {
+  headerArticle,
+  Selection,
+  Tags,
+  Temas,
+} from '../../interfaces/generals';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 import styles from '../../assets/css/app.module.css';
@@ -10,12 +15,20 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 interface CategorizationProps {
+  tags: Tags[];
+  temas: Temas[];
   articulo: headerArticle;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
 }
 
-function Menu({ articulo, fragments, deleteFragment }: CategorizationProps) {
+function Menu({
+  tags,
+  temas,
+  articulo,
+  fragments,
+  deleteFragment,
+}: CategorizationProps) {
   const [currentOption, setCurrentOption] = useState(1);
 
   return (
@@ -47,6 +60,8 @@ function Menu({ articulo, fragments, deleteFragment }: CategorizationProps) {
           {currentOption === 1 && <Header articulo={articulo} />}
           {currentOption === 2 && (
             <Categorization
+              tags={tags}
+              temas={temas}
               articulo={articulo}
               fragments={fragments}
               deleteFragment={deleteFragment}

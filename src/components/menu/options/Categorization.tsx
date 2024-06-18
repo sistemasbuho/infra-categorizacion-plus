@@ -3,6 +3,8 @@ import {
   editCategorization,
   newCategorization,
   Selection,
+  Tags,
+  Temas,
 } from '../../../interfaces/generals';
 
 import {
@@ -26,12 +28,16 @@ import Select from 'react-select';
 import ButtonControls from '../../controls/ButtonControls';
 
 interface CategorizationProps {
+  tags: Tags[];
+  temas: Temas[];
   articulo: article;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
 }
 
 function Categorization({
+  temas,
+  tags,
   articulo,
   fragments,
   deleteFragment,
@@ -41,13 +47,11 @@ function Categorization({
   const [currentFragment, setCurrentFragment] = useState<Selection | null>(
     null
   );
-
   const [tagOptions, setTagOptions] = useState([]);
   const [temaOption, setTemaOption] = useState([]);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<number>(null);
-
   const [temaGeneral, setTemaGeneral] = useState([]);
   const [tagGeneral, setTagGeneral] = useState([]);
 
@@ -95,7 +99,17 @@ function Categorization({
 
   async function deleteCurrentFragment(frag: Selection) {
     deleteFragment(frag);
-    return await delFragment(articulo.id, frag.id);
+
+    if (!frag.selectionId) {
+      return await delFragment(articulo.id, frag.id);
+    }
+
+    setCurrentFragment((prev) => {
+      if (prev?.id === frag?.id || prev?.selectionId === frag?.selectionId) {
+        return null;
+      }
+      return prev;
+    });
   }
 
   async function sendArticleCategorization(e: React.FormEvent) {
@@ -212,29 +226,33 @@ function Categorization({
                     onSubmit={sendCategorization}
                     className="mb-3"
                   >
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                       <Form.Label>
                         <h4>Tema</h4>
                       </Form.Label>
-                      <AsyncSelectTema
+                      <Select
                         isMulti
-                        projectId={articulo.proyecto}
-                        sendResponse={getAsyncTema}
+                        options={temas.map((item) => ({
+                          label: item.nombre,
+                          value: item.id,
+                        }))}
                       />
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                       <Form.Label>
                         <h4>Tag</h4>
                       </Form.Label>
-                      <AsyncSelectTag
+                      <Select
                         isMulti
-                        projectId={articulo.proyecto}
-                        sendResponse={getAsyncTag}
+                        options={tags.map((item) => ({
+                          label: item.nombre,
+                          value: item.id,
+                        }))}
                       />
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                       <Form.Label>
                         <h4>Activo</h4>
                       </Form.Label>
@@ -244,7 +262,7 @@ function Categorization({
                       />{' '}
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                       <Form.Label htmlFor="pasivo">
                         <h4>Pasivo</h4>
                       </Form.Label>
@@ -292,11 +310,7 @@ function Categorization({
                   <Form.Label>
                     <h4>Asignar temas al artículo</h4>
                   </Form.Label>
-                  <AsyncSelectTema
-                    projectId={articulo.proyecto}
-                    sendResponse={getTemaGeneral}
-                    isMulti
-                  />
+                  <Select />
                 </Form.Group>
               </Form>
 
