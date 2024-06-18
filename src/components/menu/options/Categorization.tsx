@@ -1,5 +1,6 @@
 import {
   article,
+  ArticleCategorization,
   editCategorization,
   newCategorization,
   Selection,
@@ -26,6 +27,7 @@ import Select from 'react-select';
 import ButtonControls from '../../controls/ButtonControls';
 
 interface CategorizationProps {
+  ArticleCategorization: ArticleCategorization;
   tags: Tags[];
   temas: Temas[];
   articulo: article;
@@ -34,6 +36,7 @@ interface CategorizationProps {
 }
 
 function Categorization({
+  ArticleCategorization,
   temas,
   tags,
   articulo,
@@ -290,7 +293,7 @@ function Categorization({
                   </Form.Label>
                   <Select
                     isMulti
-                    options={temas.map((item) => ({
+                    options={tags.map((item) => ({
                       label: item.nombre,
                       value: item.id,
                     }))}
@@ -302,7 +305,11 @@ function Categorization({
                         }))
                       )
                     }
-                  />
+                    defaultValue={ArticleCategorization.tags.map((e) => ({
+                      label: e.nombre,
+                      value: e.id,
+                    }))}
+                  />{' '}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>
@@ -322,7 +329,11 @@ function Categorization({
                         }))
                       )
                     }
-                  />{' '}
+                    defaultValue={ArticleCategorization.temas.map((e) => ({
+                      label: e.nombre,
+                      value: e.id,
+                    }))}
+                  />
                 </Form.Group>
               </Form>
 

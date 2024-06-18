@@ -1,5 +1,13 @@
 import { getArticleData } from './utils/asyncFunc.ts';
-import { Selection, article } from './interfaces/generals.ts';
+import {
+  ArticleCategorization,
+  Programas,
+  Selection,
+  Tags,
+  Temas,
+  Tipos,
+  article,
+} from './interfaces/generals.ts';
 import { useEffect, useState } from 'react';
 
 import GeneralCategorization from './components/GeneralCategorization.tsx';
@@ -19,8 +27,19 @@ function App() {
   const [selections, setSelections] = useState<Selection[]>([]);
   const [newSelections, setNewSelections] = useState<Selection[]>([]);
   const [article, setarticle] = useState<article>(null);
-  const [temas, setTemas] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [temas, setTemas] = useState<Temas[]>([]);
+  const [tags, setTags] = useState<Tags[]>([]);
+  const [tipos, setTipos] = useState<Tipos[]>([]);
+  const [programa, setPrograma] = useState<Programas[]>([]);
+  const [ArticleCategorization, setArticleCategorization] =
+    useState<ArticleCategorization | null>(null);
+
+  function deleteFragment(frag: Selection) {
+    setSelections((prev) => prev.filter((fragment) => fragment.id !== frag.id));
+    setNewSelections((prev) =>
+      prev.filter((fragment) => fragment.selectionId !== frag.selectionId)
+    );
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -28,8 +47,15 @@ function App() {
         setarticle(data.articulo);
         setArticleText(data.articulo?.texto);
         setSummaryText(data.articulo?.resumen);
+
+        setArticleCategorization({
+          tags: data.general[0].tag_data,
+          temas: data.general[0].tema_data,
+        });
         setTemas(data.temas);
         setTags(data.tags[0].tags);
+        setTipos(data.tipo);
+        setPrograma(data.programa);
         setSelections(
           data.fragmentos?.map((fragment): Selection => {
             return {
@@ -46,13 +72,6 @@ function App() {
     }
     fetchData();
   }, []);
-
-  function deleteFragment(frag: Selection) {
-    setSelections((prev) => prev.filter((fragment) => fragment.id !== frag.id));
-    setNewSelections((prev) =>
-      prev.filter((fragment) => fragment.selectionId !== frag.selectionId)
-    );
-  }
 
   return (
     <ConfigProvider>
@@ -91,6 +110,7 @@ function App() {
           </section>
 
           <Menu
+          ArticleCategorization={ArticleCategorization}
             tags={tags}
             temas={temas}
             articulo={article}

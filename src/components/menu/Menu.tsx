@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import {
+  ArticleCategorization,
   headerArticle,
   Selection,
   Tags,
@@ -15,6 +16,7 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 interface CategorizationProps {
+  ArticleCategorization: ArticleCategorization;
   tags: Tags[];
   temas: Temas[];
   articulo: headerArticle;
@@ -23,6 +25,7 @@ interface CategorizationProps {
 }
 
 function Menu({
+  ArticleCategorization,
   tags,
   temas,
   articulo,
@@ -60,6 +63,7 @@ function Menu({
           {currentOption === 1 && <Header articulo={articulo} />}
           {currentOption === 2 && (
             <Categorization
+              ArticleCategorization={ArticleCategorization}
               tags={tags}
               temas={temas}
               articulo={articulo}

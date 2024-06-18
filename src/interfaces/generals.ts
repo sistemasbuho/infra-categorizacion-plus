@@ -1,18 +1,26 @@
+interface generalOption {
+  id: number;
+  nombre: string;
+}
+
 export interface article {
   proyecto: number;
   id: number;
   text: string;
 }
 
-export interface Tags {
-  id: number;
-  nombre: string;
+export interface ArticleCategorization {
+  tags: Tags[];
+  temas: Temas[];
 }
 
-export interface Temas {
-  id: number;
-  nombre: string;
-}
+export interface Tags extends generalOption {}
+
+export interface Temas extends generalOption {}
+
+export interface Tipos extends generalOption {}
+
+export interface Programas extends generalOption {}
 
 export interface headerArticle extends article {
   medio?: { id: number; nombre: string };
@@ -21,14 +29,6 @@ export interface headerArticle extends article {
   programa?: { id: number; nombre: string };
   fecha?: string;
 }
-
-// export interface categorization {
-//   tono: number;
-//   tag?: number;
-//   tema: number;
-//   activo?: number;
-//   pasivo?: number;
-// }
 
 export interface newCategorization {
   article_fragment: string;
