@@ -3,6 +3,26 @@ interface generalOption {
   nombre: string;
 }
 
+interface OriginalFragment {
+  article_fragment?: string;
+  start_index?: number;
+  end_index?: number;
+  articulo?: number;
+  tag?: generalOption[];
+  tema: generalOption[];
+  tono?: number;
+  activo?: generalOption[];
+  pasivo?: generalOption[];
+}
+
+export interface Selection extends OriginalFragment {
+  id: number;
+  startIndex: number;
+  length: number;
+  text: string;
+  selectionId?: number;
+}
+
 export interface article {
   proyecto: number;
   id: number;
@@ -14,32 +34,12 @@ export interface ArticleCategorization {
   temas: Temas[];
 }
 
-export interface Tags extends generalOption {}
-
-export interface Temas extends generalOption {}
-
-export interface Tipos extends generalOption {}
-
-export interface Programas extends generalOption {}
-
 export interface headerArticle extends article {
   medio?: { id: number; nombre: string };
   autor?: { id: number; nombre: string };
   tipo_articulo?: { id: number; nombre: string };
   programa?: { id: number; nombre: string };
   fecha?: string;
-}
-
-export interface newCategorization {
-  article_fragment: string;
-  start_index: number;
-  end_index: number;
-  articulo: number;
-  tag: number[];
-  tema: number[];
-  tono: number;
-  activo: string[];
-  pasivo: string[];
 }
 
 export interface SelectOption {
@@ -60,12 +60,16 @@ export interface GeneralRequestOptions {
   body?: BodyInit;
 }
 
-export interface Selection {
-  id: number;
-  startIndex: number;
-  length: number;
-  text: string;
-  selectionId?: number;
+export interface Categorization {
+  article_fragment?: string;
+  start_index?: number;
+  end_index?: number;
+  articulo?: number;
+  tag?: number[];
+  tema?: number[];
+  tono?: number;
+  activo?: string[];
+  pasivo?: string[];
 }
 
 export interface OverlappingProps {
@@ -85,3 +89,11 @@ export interface generalRequestResponse {
   data: unknown;
   error: boolean;
 }
+
+export interface Tags extends generalOption {}
+
+export interface Temas extends generalOption {}
+
+export interface Tipos extends generalOption {}
+
+export interface Programas extends generalOption {}

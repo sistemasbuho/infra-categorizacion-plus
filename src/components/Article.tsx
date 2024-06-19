@@ -9,8 +9,8 @@ import styles from '../assets/css/article.module.css';
 interface ArticleProps {
   text: string;
   selections: Selection[];
-  setSelections: Dispatch<SetStateAction<Selection[]>>;
   newSelections: Selection[];
+  setSelections: Dispatch<SetStateAction<Selection[]>>;
   setNewSelections: Dispatch<SetStateAction<Selection[]>>;
 }
 
@@ -48,14 +48,15 @@ function Article({
       const allSelections = [...selections, ...newSelections];
 
       if (!isOverlappingFragment({ startIndex, length, allSelections })) {
-        setNewSelections((prevSelections) => [
+        setNewSelections((prevSelections: Selection[]) => [
           ...prevSelections,
           {
             id: Date.now(),
-            startIndex,
-            length,
             text: selectedText,
             selectionId: Date.now(),
+            tema: [],
+            startIndex,
+            length,
           },
         ]);
       }
@@ -65,13 +66,16 @@ function Article({
   const applySelections = (text: string, selections: Selection[]) => {
     let modifiedText = text;
 
-    const sortedSelections = [...selections].sort(
+    const sortedSelections = selections.sort(
       (a, b) => b.startIndex - a.startIndex
     );
 
-    sortedSelections.forEach(({ startIndex, length }) => {
+    sortedSelections.forEach(({ startIndex, text }) => {
       const before = modifiedText.slice(0, startIndex);
-      const selected = modifiedText.slice(startIndex, startIndex + length);
+      const selected = modifiedText.slice(
+        Number(startIndex),
+        Number(startIndex) + Number(text.length)
+      );
       const after = modifiedText.slice(startIndex + length);
 
       modifiedText = `${before}<span style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;

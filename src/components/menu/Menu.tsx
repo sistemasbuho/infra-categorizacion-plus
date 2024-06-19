@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 import {
   ArticleCategorization,
   headerArticle,
@@ -26,6 +26,8 @@ interface CategorizationProps {
   articulo: headerArticle;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
+  setSelections: Dispatch<SetStateAction<Selection[]>>;
+  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
 }
 
 function Menu({
@@ -36,6 +38,8 @@ function Menu({
   temas,
   articulo,
   fragments,
+  setSelections,
+  setNewSelections,
   deleteFragment,
 }: CategorizationProps) {
   const [currentOption, setCurrentOption] = useState(1);
@@ -77,6 +81,8 @@ function Menu({
               articulo={articulo}
               fragments={fragments}
               deleteFragment={deleteFragment}
+              setSelections={setSelections}
+              setNewSelections={setNewSelections}
             />
           )}
 

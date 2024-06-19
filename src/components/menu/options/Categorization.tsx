@@ -1,30 +1,28 @@
 import {
   article,
   ArticleCategorization,
+  Categorization as FragmentCategorization,
   editCategorization,
-  newCategorization,
   Selection,
   Tags,
   Temas,
 } from '../../../interfaces/generals';
-
 import {
   postFragment,
   deleteFragment as delFragment,
   postArticleCategorization,
+  deleteArticleCategorization as delArticleCategorization,
   editFragment,
 } from '../../../utils/asyncFunc';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 
 import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo';
+import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
-
-import ButtonControls from '../../controls/ButtonControls';
 
 interface CategorizationProps {
   ArticleCategorization: ArticleCategorization;
@@ -33,6 +31,9 @@ interface CategorizationProps {
   articulo: article;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
+
+  setSelections: Dispatch<SetStateAction<Selection[]>>;
+  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
 }
 
 function Categorization({
@@ -42,40 +43,85 @@ function Categorization({
   articulo,
   fragments,
   deleteFragment,
+  setSelections,
+  setNewSelections,
 }: CategorizationProps) {
   const [selected, setSelected] = useState(1);
 
   const [currentFragment, setCurrentFragment] = useState<Selection | null>(
     null
   );
-  const [tagOptions, setTagOptions] = useState<Tags[] | null>([]);
-  const [temaOption, setTemaOption] = useState<Temas[] | null>([]);
+
+  const [isValidTema, setIsValidTema] = useState<boolean>(false);
+
+  const [tagOptions, setTagOptions] = useState<Tags[] | null>();
+  const [temaOption, setTemaOption] = useState<Temas[] | null>(null);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<number>(null);
-  const [temaGeneral, setTemaGeneral] = useState<Temas[] | null>([]);
-  const [tagGeneral, setTagGeneral] = useState<Tags[] | null>([]);
-
+  const [temaGeneral, setTemaGeneral] = useState<Temas[] | null>(
+    ArticleCategorization.temas
+  );
+  const [tagGeneral, setTagGeneral] = useState<Tags[] | null>(
+    ArticleCategorization.tags
+  );
   const sentimiento = [
     { value: '1', label: 'Positvo' },
     { value: '2', label: 'Neutral' },
     { value: '3', label: 'Negativo' },
   ];
 
-  async function postCurrentFragment() {
-    const update: newCategorization = {
-      article_fragment: currentFragment.text,
-      start_index: currentFragment.startIndex,
-      end_index: currentFragment.startIndex + currentFragment.length,
-      articulo: articulo.id,
-      tag: tagOptions.map((item) => item.id),
-      tema: temaOption.map((item) => item.id),
-      tono: Number(tonoOption),
-      activo: activoOption.map((item) => item.id),
-      pasivo: pasivoOption.map((item) => item.id),
+  // Articulo
+  async function sendArticleCategorization(e: React.FormEvent) {
+    e.preventDefault();
+    const update = {
+      tema: temaGeneral.map((item) => item.id),
+      tag: tagGeneral.map((item) => item.id),
     };
 
-    return await postFragment(articulo.id, update);
+    await postArticleCategorization(articulo.id, update);
+  }
+
+  async function deleteArticleCategorizaion() {
+    setTagGeneral([]);
+    setTemaGeneral([]);
+    await delArticleCategorization(articulo.id);
+  }
+
+  // Fragmento
+  async function postCurrentFragment() {
+    const update: FragmentCategorization = {
+      articulo: articulo.id,
+      article_fragment: currentFragment.text,
+      start_index: currentFragment.startIndex,
+      end_index: currentFragment.startIndex + currentFragment.text.length,
+      tag: tagOptions.map((item) => item.id),
+      tema: temaOption.map((item) => item.id),
+      activo: activoOption.map((item) => item.id),
+      pasivo: pasivoOption.map((item) => item.id),
+      tono: Number(tonoOption),
+    };
+
+    return await postFragment(articulo.id, update).then((res) => {
+      const { fragmento } = res;
+      const fragmentSaved: Selection = {
+        ...fragmento,
+        id: fragmento.id,
+        text: fragmento.article_fragment,
+        length: fragmento.article_fragment.length,
+        startIndex: Number(fragmento.start_index),
+      };
+
+      delete fragmentSaved.selectionId;
+      setSelections((prev) => [...prev, fragmentSaved]);
+      setNewSelections((prev) =>
+        prev.filter(
+          (sel) =>
+            sel?.id !== fragmentSaved?.id ||
+            sel?.selectionId !== fragmentSaved?.selectionId
+        )
+      );
+    });
   }
 
   async function editCurrentFragment() {
@@ -88,14 +134,6 @@ function Categorization({
     };
 
     return await editFragment(articulo.id, currentFragment.id, update);
-  }
-
-  function sendCategorization(e: React.FormEvent<HTMLFormElement>): void {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const isSavedFragment = !isNewFragment(currentFragment);
-    isSavedFragment ? editCurrentFragment() : postCurrentFragment();
   }
 
   async function deleteCurrentFragment(frag: Selection) {
@@ -113,15 +151,12 @@ function Categorization({
     });
   }
 
-  async function sendArticleCategorization(e: React.FormEvent) {
+  function sendCategorization(e: React.FormEvent<HTMLFormElement>): void {
+    e.stopPropagation();
     e.preventDefault();
-    const update = {
-      tema: temaGeneral.map((item) => item.id),
-      tag: tagGeneral.map((item) => item.id),
-    };
 
-    const response = await postArticleCategorization(articulo.id, update);
-    console.log(response);
+    const isSavedFragment = !isNewFragment(currentFragment);
+    isSavedFragment ? editCurrentFragment() : postCurrentFragment();
   }
 
   function getAsyncActivo(data) {
@@ -135,6 +170,23 @@ function Categorization({
   function isNewFragment(frag: Selection) {
     return frag?.selectionId ? true : false;
   }
+
+  // useEffect(() => {
+
+  //   setTagOptions(currentFragment?.tag_details);
+  //   setTemaOption(currentFragment?.tema_details);
+  //   setPasivoOption(currentFragment?.pasivo_details);
+  //   setActivoOption(currentFragment?.activo_details);
+
+  //   return () => {};
+  // }, [currentFragment]);
+
+  useEffect(() => {
+    if (temaOption === null || temaOption?.length <= 0) {
+      return setIsValidTema(false);
+    }
+    return setIsValidTema(true);
+  }, [temaOption]);
 
   return (
     <>
@@ -168,12 +220,13 @@ function Categorization({
                     {fragments.length > 0 ? (
                       fragments.map((frag, i) => (
                         <div
-                          className={`${styles.fragment} ${
-                            !frag?.selectionId && styles.fragment_saved
-                          }  ${
-                            currentFragment?.id === frag?.id &&
-                            styles.fragment_selected
-                          }`}
+                          className={`
+                            ${styles.fragment}
+                            ${!frag?.selectionId && styles.fragment_saved} 
+                            ${
+                              currentFragment?.id === frag?.id &&
+                              styles.fragment_selected
+                            }`}
                           key={i}
                           onClick={() => setCurrentFragment(frag)}
                         >
@@ -211,6 +264,10 @@ function Categorization({
                           label: item.nombre,
                           value: item.id,
                         }))}
+                        value={temaOption?.map((item) => ({
+                          label: item?.nombre,
+                          value: item?.id,
+                        }))}
                         onChange={(e) =>
                           setTemaOption(
                             e.map((item) => ({
@@ -219,6 +276,14 @@ function Categorization({
                             }))
                           )
                         }
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            borderColor: isValidTema
+                              ? 'hsl( 0, 0%, 80%)'
+                              : 'red',
+                          }),
+                        }}
                       />
                     </Form.Group>
 
@@ -231,6 +296,10 @@ function Categorization({
                         options={tags.map((item) => ({
                           label: item.nombre,
                           value: item.id,
+                        }))}
+                        value={tagOptions?.map((item) => ({
+                          label: item?.nombre,
+                          value: item?.id,
                         }))}
                         onChange={(e) =>
                           setTagOptions(
@@ -250,7 +319,7 @@ function Categorization({
                       <AsyncSelectActivoPasivo
                         isMulti
                         sendResponse={getAsyncActivo}
-                      />{' '}
+                      />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -276,9 +345,18 @@ function Categorization({
                   </Form>
                 </div>
               </div>
+
+              <p className="text-center mb-0">
+                {!currentFragment
+                  ? 'Por favor seleccione un fragmento'
+                  : !isValidTema
+                  ? 'Por favor seleccione un tema'
+                  : null}
+              </p>
+
               <ButtonControls
                 form="categorization-form"
-                accept={{ disabled: !currentFragment }}
+                accept={{ disabled: !currentFragment || !isValidTema }}
                 reject={{ disabled: !currentFragment }}
               />
             </>
@@ -293,6 +371,10 @@ function Categorization({
                   </Form.Label>
                   <Select
                     isMulti
+                    value={tagGeneral?.map((item) => ({
+                      label: item.nombre,
+                      value: item.id,
+                    }))}
                     options={tags.map((item) => ({
                       label: item.nombre,
                       value: item.id,
@@ -305,7 +387,7 @@ function Categorization({
                         }))
                       )
                     }
-                    defaultValue={ArticleCategorization.tags.map((e) => ({
+                    defaultValue={ArticleCategorization.tags?.map((e) => ({
                       label: e.nombre,
                       value: e.id,
                     }))}
@@ -321,6 +403,10 @@ function Categorization({
                       label: item.nombre,
                       value: item.id,
                     }))}
+                    value={temaGeneral?.map((item) => ({
+                      label: item.nombre,
+                      value: item.id,
+                    }))}
                     onChange={(e) =>
                       setTemaGeneral(
                         e.map((item) => ({
@@ -329,7 +415,7 @@ function Categorization({
                         }))
                       )
                     }
-                    defaultValue={ArticleCategorization.temas.map((e) => ({
+                    defaultValue={ArticleCategorization.temas?.map((e) => ({
                       label: e.nombre,
                       value: e.id,
                     }))}
@@ -337,7 +423,10 @@ function Categorization({
                 </Form.Group>
               </Form>
 
-              <ButtonControls form={'article-form'} />
+              <ButtonControls
+                form={'article-form'}
+                reject={{ text: 'Eliminar', event: deleteArticleCategorizaion }}
+              />
             </>
           )}
         </div>

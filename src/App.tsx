@@ -19,9 +19,10 @@ import SummaryArticle from './components/SummaryArticle.tsx';
 import Article from './components/Article.tsx';
 import styles from './assets/css/app.module.css';
 import Menu from './components/menu/Menu.tsx';
+import Loader from './components/Loader.tsx';
 
 function App() {
-  const [isLoading, setsLoading] = useState(false);
+  const [isLoading, setsLoading] = useState<boolean>(true);
   const [articleText, setArticleText] = useState<string>('');
   const [summaryText, setSummaryText] = useState<string>('');
   const [selections, setSelections] = useState<Selection[]>([]);
@@ -49,25 +50,25 @@ function App() {
         setSummaryText(data.articulo?.resumen);
 
         setArticleCategorization({
-          tags: data.general[0].tag_data,
-          temas: data.general[0].tema_data,
+          tags: data.general[0]?.tag_data,
+          temas: data.general[0]?.tema_data,
         });
         setTemas(data.temas);
         setTags(data.tags[0].tags);
         setTipos(data.tipo);
         setProgramas(data.programa);
         setSelections(
-          data.fragmentos?.map((fragment): Selection => {
+          data.fragmentos?.map((fragment: Selection) => {
             return {
-              id: fragment?.id,
-              startIndex: Number(fragment?.start_index),
-              length: fragment?.article_fragment?.length,
-              text: fragment?.article_fragment,
+              id: fragment.id,
+              startIndex: Number(fragment.start_index),
+              length: Number(fragment.article_fragment.length),
+              text: fragment.article_fragment,
               ...fragment,
             };
           })
         );
-        setsLoading(true);
+        setsLoading(false);
       });
     }
     fetchData();
@@ -75,7 +76,7 @@ function App() {
 
   return (
     <ConfigProvider>
-      {isLoading ? (
+      {!isLoading ? (
         <section className={`${styles.cont_global}`}>
           <section className={styles.cont_article_sections}>
             <div>
@@ -117,11 +118,13 @@ function App() {
             temas={temas}
             articulo={article}
             fragments={[...selections, ...newSelections]}
+            setSelections={setSelections}
+            setNewSelections={setNewSelections}
             deleteFragment={deleteFragment}
           />
         </section>
       ) : (
-        <p> Cargando</p>
+        <Loader isLoading={true} />
       )}
     </ConfigProvider>
   );
