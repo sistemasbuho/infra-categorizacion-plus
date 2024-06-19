@@ -1,4 +1,4 @@
-import { editCategorization, newCategorization } from '../interfaces/generals';
+import { Categorization, editCategorization } from '../interfaces/generals';
 import { GeneralRequest } from './funcs';
 
 /*
@@ -7,10 +7,7 @@ import { GeneralRequest } from './funcs';
 ============================================================
 */
 
-export async function getArticleData(id: string | number) {
-  return await GeneralRequest(`articulos/${id}/fragmentos`);
-}
-
+// Formulario de categorización
 export async function getTagCategorization(query: string, projectId: number) {
   return await GeneralRequest(`buscar_variables`, 'POST', {
     id: Date.now(),
@@ -37,7 +34,6 @@ export async function getTonoCategorization(query: string) {
   });
 }
 
-// esta petición es para los activos y los pasivos
 export async function getActivoPasivoCategorization(query: string) {
   return await GeneralRequest('buscar_variables', 'POST', {
     id: Date.now(),
@@ -46,7 +42,8 @@ export async function getActivoPasivoCategorization(query: string) {
   });
 }
 
-export async function postFragment(articleID: number, body: newCategorization) {
+// Fragmento
+export async function postFragment(articleID: number, body: Categorization) {
   return await GeneralRequest(`articulo/${articleID}/fragmentos`, 'POST', body);
 }
 
@@ -70,6 +67,11 @@ export async function deleteFragment(articleID: number, fragmentID: number) {
   );
 }
 
+// Articulo
+export async function getArticleData(id: string | number) {
+  return await GeneralRequest(`articulos/${id}/fragmentos`);
+}
+
 export async function postArticleCategorization(
   articleID: number,
   body: { tema: number[]; tag: number[] }
@@ -78,5 +80,5 @@ export async function postArticleCategorization(
 }
 
 export async function deleteArticleCategorization(articleID: number) {
-  return await GeneralRequest(`articulo/${articleID}`, 'DELETE', {});
+  return await GeneralRequest(`articulos/${articleID}`, 'DELETE', {});
 }
