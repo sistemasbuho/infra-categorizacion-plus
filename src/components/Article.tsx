@@ -70,11 +70,11 @@ function Article({
       (a, b) => b.startIndex - a.startIndex
     );
 
-    sortedSelections.forEach(({ startIndex, text }) => {
+    sortedSelections.forEach(({ startIndex, length }) => {
       const before = modifiedText.slice(0, startIndex);
       const selected = modifiedText.slice(
         Number(startIndex),
-        Number(startIndex) + Number(text.length)
+        Number(startIndex) + length
       );
       const after = modifiedText.slice(startIndex + length);
 
