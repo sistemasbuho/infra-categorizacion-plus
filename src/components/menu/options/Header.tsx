@@ -20,21 +20,21 @@ interface Props {
 
 function Header({ articulo, tipos, programas }: Props) {
   const [medioOption] = useState({
-    label: articulo.medio.nombre,
-    value: articulo.medio.id,
+    label: articulo.medio?.nombre,
+    value: articulo.medio?.id,
   });
   const [programaOption, setProgramaOption] = useState<SelectOption>({
-    label: articulo.programa.nombre,
-    value: articulo.programa.id,
+    label: articulo.programa?.nombre,
+    value: articulo.programa?.id,
   });
   const [tipoOption, setTipoOption] = useState<SelectOption>({
-    label: articulo.tipo_articulo.nombre,
-    value: articulo.tipo_articulo.id,
+    label: articulo.tipo_articulo?.nombre,
+    value: articulo.tipo_articulo?.id,
   });
   const [fechaOption, setfechaOption] = useState(articulo.fecha);
   const [autorOption] = useState<SelectOption>({
-    label: articulo.autor.nombre,
-    value: articulo.autor.id,
+    label: articulo.autor?.nombre,
+    value: articulo.autor?.id,
   });
 
   return (
