@@ -6,6 +6,8 @@ import {
   Selection,
   Tags,
   Temas,
+  GeneralOption,
+  SelectOption,
 } from '../../../interfaces/generals';
 import {
   postFragment,
@@ -53,22 +55,23 @@ function Categorization({
   );
 
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   const [tagOptions, setTagOptions] = useState<Tags[] | null>();
   const [temaOption, setTemaOption] = useState<Temas[] | null>(null);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
-  const [tonoOption, setTonoOption] = useState<number>(null);
+  const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
   const [temaGeneral, setTemaGeneral] = useState<Temas[] | null>(
     ArticleCategorization.temas
   );
   const [tagGeneral, setTagGeneral] = useState<Tags[] | null>(
     ArticleCategorization.tags
   );
-  const sentimiento = [
-    { value: '1', label: 'Positvo' },
-    { value: '2', label: 'Neutral' },
-    { value: '3', label: 'Negativo' },
+  const sentimiento: SelectOption[] = [
+    { value: 1, label: 'Positvo' },
+    { value: 2, label: 'Neutral' },
+    { value: 3, label: 'Negativo' },
   ];
 
   // Articulo
@@ -109,7 +112,7 @@ function Categorization({
         }
         return item.id;
       }),
-      tono: Number(tonoOption),
+      tono: Number(tonoOption.id),
     };
 
     return await postFragment(articulo.id, update).then((res) => {
@@ -159,6 +162,15 @@ function Categorization({
       }
       return prev;
     });
+  }
+
+  function clearForm() {
+    setForceUpdate((prev) => !prev);
+    setTagOptions([]);
+    setTemaOption([]);
+    setActivoOption([]);
+    setPasivoOption([]);
+    setTonoOption(null);
   }
 
   function sendCategorization(e: React.FormEvent<HTMLFormElement>): void {
@@ -329,6 +341,7 @@ function Categorization({
                       <AsyncSelectActivoPasivo
                         isMulti
                         sendResponse={getAsyncActivo}
+                        clear={forceUpdate}
                       />
                     </Form.Group>
 
@@ -339,6 +352,7 @@ function Categorization({
                       <AsyncSelectActivoPasivo
                         isMulti
                         sendResponse={getAsyncPasivo}
+                        clear={forceUpdate}
                       />
                     </Form.Group>
 
@@ -347,9 +361,21 @@ function Categorization({
                         <h4>Sentimiento</h4>
                       </Form.Label>
                       <Select
-                        options={sentimiento}
+                        options={sentimiento.map((item) => ({
+                          label: item.label,
+                          value: item.value,
+                        }))}
                         placeholder={'Buscar'}
-                        onChange={(e) => setTonoOption(Number(e.value))}
+                        onChange={(e) =>
+                          setTonoOption({
+                            id: Number(e.value),
+                            nombre: e.label,
+                          })
+                        }
+                        value={{
+                          label: tonoOption?.nombre,
+                          value: tonoOption?.id,
+                        }}
                       />
                     </Form.Group>
                   </Form>
@@ -367,7 +393,7 @@ function Categorization({
               <ButtonControls
                 form="categorization-form"
                 accept={{ disabled: !currentFragment || !isValidTema }}
-                reject={{ disabled: !currentFragment }}
+                reject={{ disabled: !currentFragment, event: clearForm }}
               />
             </>
           )}
