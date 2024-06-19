@@ -5,6 +5,7 @@ interface Props {
   reject?: {
     disabled?: boolean;
     text?: string;
+    event?: () => void;
   };
   accept?: {
     disabled?: boolean;
@@ -19,6 +20,11 @@ function ButtonControls({ form, accept, reject }: Props) {
         <button
           className={optionStyles.reject}
           disabled={reject?.disabled || false}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            reject?.event();
+          }}
         >
           {reject?.text || 'Cancelar'}
         </button>
