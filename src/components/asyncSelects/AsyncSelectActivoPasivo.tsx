@@ -87,9 +87,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   }
 
   useEffect(() => {
-    if (clear) {
-      clearInput();
-    }
+    clearInput();
   }, [clear]);
 
   useEffect(() => {
