@@ -97,8 +97,18 @@ function Categorization({
       end_index: currentFragment.startIndex + currentFragment.text.length,
       tag: tagOptions.map((item) => item.id),
       tema: temaOption.map((item) => item.id),
-      activo: activoOption.map((item) => item.id),
-      pasivo: pasivoOption.map((item) => item.id),
+      activo: activoOption.map((item) => {
+        if (item.isNew) {
+          return item.nombre;
+        }
+        return item.id;
+      }),
+      pasivo: pasivoOption.map((item) => {
+        if (item.isNew) {
+          return item.nombre;
+        }
+        return item.id;
+      }),
       tono: Number(tonoOption),
     };
 

@@ -6,6 +6,8 @@ import AsyncSelect from 'react-select/async';
 interface TagOption {
   id: number;
   nombre: string;
+  ubicacion_nombre?: string | null;
+  isNew?: boolean;
 }
 
 interface AsyncSelectActivoPasivoProps {
@@ -39,7 +41,8 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
       if (query.length < 2) {
         throw new Error('Para buscar, por favor ingrese 2 o más caracteres');
       }
-      return new Promise((resolve, reject) => {
+
+      const res = new Promise<TagOption[]>((resolve, reject) => {
         if (searchTimeoutRef.current) {
           clearTimeout(searchTimeoutRef.current);
         }
@@ -47,7 +50,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
           try {
             const response = await getActivoPasivoCategorization(query);
 
-            if (response) {
+            if (response && response.Actor) {
               resolve(response.Actor);
             } else {
               resolve([]);
@@ -57,6 +60,20 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
           }
         }, 500);
       });
+
+      const result = await res;
+
+      if (result.length > 0) {
+        return result;
+      } else {
+        return [
+          {
+            id: Date.now(),
+            nombre: query,
+            isNew: true,
+          },
+        ];
+      }
     } catch (error) {
       console.error(error);
       return [];
@@ -87,7 +104,14 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
       cacheOptions
       key={`objective-${forceUpdate ? 'refresh' : 'normal'}`}
       name={name}
-      getOptionLabel={(e: TagOption) => e.nombre}
+      getOptionLabel={(e: TagOption) => {
+        if (e.isNew) {
+          return `${e.nombre} ( Nuevo )`;
+        } else if (e.ubicacion_nombre) {
+          return `${e.nombre} | ${e.ubicacion_nombre}`;
+        }
+        return e.nombre;
+      }}
       getOptionValue={(e) => e.id.toString()}
       loadOptions={loadOptions}
       onInputChange={(value) => setInputAutorValue(value)}
