@@ -1,4 +1,4 @@
-interface generalOption {
+export interface GeneralOption {
   id: number;
   nombre: string;
 }
@@ -8,11 +8,11 @@ interface OriginalFragment {
   start_index?: number;
   end_index?: number;
   articulo?: number;
-  tag?: generalOption[];
-  tema: generalOption[];
+  tag?: GeneralOption[];
+  tema: GeneralOption[];
   tono?: number;
-  activo?: generalOption[];
-  pasivo?: generalOption[];
+  activo?: GeneralOption[];
+  pasivo?: GeneralOption[];
 }
 
 export interface Selection extends OriginalFragment {
@@ -44,7 +44,7 @@ export interface headerArticle extends article {
 
 export interface SelectOption {
   label: string;
-  value: string | number;
+  value: number;
 }
 
 export interface editCategorization {
@@ -90,10 +90,12 @@ export interface generalRequestResponse {
   error: boolean;
 }
 
-export interface Tags extends generalOption {}
+export interface Tags extends GeneralOption {}
 
-export interface Temas extends generalOption {}
+export interface Temas extends GeneralOption {}
 
-export interface Tipos extends generalOption {}
+export interface Tipos extends GeneralOption {}
 
-export interface Programas extends generalOption {}
+export interface Programas extends GeneralOption {}
+
+export interface Tono extends GeneralOption {}
