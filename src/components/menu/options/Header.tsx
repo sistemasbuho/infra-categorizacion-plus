@@ -1,16 +1,19 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
-
-import optionStyles from '../../../assets/css/components/menu/options.module.css';
-import Select from 'react-select';
+import { postHeader } from '../../../utils/asyncFunc';
+import { useState } from 'react';
 import {
   headerArticle,
   Programas,
   SelectOption,
   Tipos,
 } from '../../../interfaces/generals';
-import { useState } from 'react';
+
+import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
+import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
+import ButtonControls from '../../controls/ButtonControls';
+import Select from 'react-select';
 
 interface Props {
   articulo: headerArticle;
@@ -19,10 +22,6 @@ interface Props {
 }
 
 function Header({ articulo, tipos, programas }: Props) {
-  const [medioOption] = useState({
-    label: articulo.medio?.nombre,
-    value: articulo.medio?.id,
-  });
   const [programaOption, setProgramaOption] = useState<SelectOption>({
     label: articulo.programa?.nombre,
     value: articulo.programa?.id,
@@ -32,10 +31,48 @@ function Header({ articulo, tipos, programas }: Props) {
     value: articulo.tipo_articulo?.id,
   });
   const [fechaOption, setfechaOption] = useState(articulo.fecha);
-  const [autorOption] = useState<SelectOption>({
-    label: articulo.autor?.nombre,
-    value: articulo.autor?.id,
+  const [autorOption, setAutorOption] = useState<SelectOption | null>({
+    label: articulo.autor.nombre,
+    value: articulo.autor.id,
   });
+  const [medioOption, setMedioOption] = useState<SelectOption | null>({
+    label: articulo.medio.nombre,
+    value: articulo.medio.id,
+  });
+  async function sendHeaderCategorization(e: React.FormEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const time = new Date(fechaOption).toLocaleTimeString();
+    const date = new Date(fechaOption)
+      .toLocaleDateString()
+      .split('/')
+      .reverse()
+      .join('-');
+
+    const fullDate = `${date} ${time}`;
+
+    const update = {
+      articulo_id: articulo.id,
+      tipo_articulo_id: tipoOption.value,
+      programa_id: programaOption.value,
+      fecha: fullDate,
+      medio_id: [
+        medioOption[0].isNew ? medioOption[0].nombre : medioOption[0].id,
+      ],
+      autor_id: [autorOption[0].nombre],
+    };
+
+    return await postHeader(articulo.id, update);
+  }
+
+  function getMedio(option) {
+    setMedioOption(option);
+  }
+
+  function getAutor(option) {
+    setAutorOption(option);
+  }
 
   return (
     <>
@@ -44,7 +81,7 @@ function Header({ articulo, tipos, programas }: Props) {
         <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
       </div>
       <div>
-        <Form>
+        <Form id="header-form" onSubmit={sendHeaderCategorization}>
           <Form.Group className="mb-4">
             <Form.Label htmlFor="tipo">
               <h4>Tipo</h4>
@@ -77,7 +114,7 @@ function Header({ articulo, tipos, programas }: Props) {
             <Form.Label htmlFor="tipo">
               <h4>Medio</h4>
             </Form.Label>
-            <Select defaultValue={medioOption} />
+            <AsyncSelectMedio sendResponse={getMedio} />
           </Form.Group>
 
           <Form.Group className="mb-4">
@@ -98,15 +135,11 @@ function Header({ articulo, tipos, programas }: Props) {
             <Form.Label htmlFor="tipo">
               <h4>Autor</h4>
             </Form.Label>
-            <Select defaultValue={autorOption} />
+            <AsyncSelectAutor sendResponse={getAutor} />
           </Form.Group>
         </Form>
       </div>
-
-      <div className={optionStyles.controls}>
-        <button className={optionStyles.reject}>Eliminar</button>
-        <button className={optionStyles.accept}>Guardar</button>
-      </div>
+      <ButtonControls form="header-form" />
     </>
   );
 }
