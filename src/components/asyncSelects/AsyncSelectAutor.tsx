@@ -50,8 +50,8 @@ const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
           try {
             const response = await searchAutor(query);
 
-            if (response && response.Actor) {
-              resolve(response.Actor);
+            if (response && response.Actor_general) {
+              resolve(response.Actor_general);
             } else {
               resolve([]);
             }
