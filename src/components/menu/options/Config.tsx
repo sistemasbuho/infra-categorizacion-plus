@@ -1,20 +1,21 @@
-// src/components/Config.tsx
-import React from 'react';
 import { useConfig } from '../../../context/ConfigContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import ToggleSwitch from '../../controls/ToggleSwitch';
+
+import styles from '../../../assets/css/components/menu/config.module.css';
 
 const Config: React.FC = () => {
   const { fontSize, setFontSize, darkMode, toggleDarkMode } = useConfig();
 
   return (
-    <>
+    <div className={styles.config}>
       <div>
         <h2>Personalización</h2>
       </div>
 
-      <div>
+      <div className={styles.config}>
         <div className="d-flex gap-3 justify-content-between align-items-center">
           <p className="m-0">Tamaño letra</p>
 
@@ -35,7 +36,7 @@ const Config: React.FC = () => {
           <ToggleSwitch checked={darkMode} onChange={toggleDarkMode} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
