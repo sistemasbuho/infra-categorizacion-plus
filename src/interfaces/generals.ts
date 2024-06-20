@@ -35,8 +35,8 @@ export interface ArticleCategorization {
 }
 
 export interface headerArticle extends article {
-  medio?: { id: number; nombre: string };
-  autor?: { id: number; nombre: string };
+  medio?: GeneralOption[];
+  autor?: GeneralOption[];
   tipo_articulo?: { id: number; nombre: string };
   programa?: { id: number; nombre: string };
   fecha?: string;
@@ -45,6 +45,7 @@ export interface headerArticle extends article {
 export interface SelectOption {
   label: string;
   value: number;
+  isNew?: boolean;
 }
 
 export interface editCategorization {
@@ -99,3 +100,11 @@ export interface Tipos extends GeneralOption {}
 export interface Programas extends GeneralOption {}
 
 export interface Tono extends GeneralOption {}
+
+export interface Medios extends GeneralOption {
+  isNew?: boolean;
+}
+
+export interface Autores extends GeneralOption {
+  isNew?: boolean;
+}
