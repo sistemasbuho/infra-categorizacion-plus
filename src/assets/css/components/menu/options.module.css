@@ -52,7 +52,7 @@
   background: var(--scrollbar-thumb-color);
 }
 
-.option_cont .controls {
+.controls {
   display: flex;
   width: 100%;
   justify-content: stretch;
@@ -60,8 +60,8 @@
   gap: 1rem;
 }
 
-.option_cont .controls .accept,
-.option_cont .controls .reject {
+.controls .accept,
+.controls .reject {
   padding: 0.5rem 1rem;
   font: normal normal bold 15px/20px Segoe UI;
   border-width: 1px;
@@ -73,30 +73,30 @@
     color 0.2s ease;
 }
 
-.option_cont .controls .reject {
+.controls .reject {
   background: var(--btn-reject-color);
   border-color: #333333;
   color: #333333;
 }
 
-.option_cont .controls .reject:disabled,
-.option_cont .controls .accept:disabled {
+.controls .reject:disabled,
+.controls .accept:disabled {
   opacity: 0.5;
 }
 
-.option_cont .controls .accept {
+.controls .accept {
   border-color: #62769a;
   background-color: var(--btn-accept-color);
   border-color: var(--btn-accept-color);
   color: #ffffff;
 }
 
-.option_cont .controls .accept:hover:not(:disabled) {
+.controls .accept:hover:not(:disabled) {
   background-color: var(--btn-accept-color-hover);
   border-color: var(--btn-accept-color-hover);
 }
 
-.option_cont .controls .reject:hover:not(:disabled) {
+.controls .reject:hover:not(:disabled) {
   background-color: var(--btn-reject-color-hover);
   border-color: var(--btn-reject-color-hover);
   color: #fff;
