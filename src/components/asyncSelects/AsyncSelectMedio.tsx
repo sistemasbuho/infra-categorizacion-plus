@@ -61,19 +61,7 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
         }, 500);
       });
 
-      const result = await res;
-
-      if (result.length > 0) {
-        return result;
-      } else {
-        return [
-          {
-            id: Date.now(),
-            nombre: query,
-            isNew: true,
-          },
-        ];
-      }
+      return await res;
     } catch (error) {
       console.error(error);
       return [];
@@ -97,19 +85,12 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
   return (
     <AsyncSelect
       isMulti={isMulti}
-      noOptionsMessage={() => 'Sin resultados'}
+      noOptionsMessage={() => 'No se encontraron resultados'}
       className="mb-3"
       cacheOptions
       key={`objective-${forceUpdate ? 'refresh' : 'normal'}`}
       name={name}
-      getOptionLabel={(e: TagOption) => {
-        if (e.isNew) {
-          return `${e.nombre} ( Nuevo )`;
-        } else if (e.ubicacion_nombre) {
-          return `${e.nombre} | ${e.ubicacion_nombre}`;
-        }
-        return e.nombre;
-      }}
+      getOptionLabel={(e: TagOption) => e.nombre}
       getOptionValue={(e) => e.id.toString()}
       loadOptions={loadOptions}
       onInputChange={(value) => setInputAutorValue(value)}
