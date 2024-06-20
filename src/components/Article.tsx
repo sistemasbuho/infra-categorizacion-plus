@@ -5,6 +5,7 @@ import { isOverlappingFragment } from '../utils/funcs';
 
 import globalStyles from '../assets/css/general.module.css';
 import styles from '../assets/css/article.module.css';
+import { useConfig } from '../context/ConfigContext';
 
 interface ArticleProps {
   text: string;
@@ -21,9 +22,10 @@ function Article({
   newSelections,
   setNewSelections,
 }: ArticleProps): JSX.Element {
+  const { fontSize } = useConfig();
+
   const [articleModified, setArticleModified] = useState(text);
   const articleRef = useRef<HTMLParagraphElement>(null);
-
   const handleSelection = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -102,7 +104,7 @@ function Article({
     <>
       <div className={`${globalStyles.bg_sec}`}>
         <article className={styles.page}>
-          <p ref={articleRef} onMouseUp={handleSelection}>
+          <p ref={articleRef} onMouseUp={handleSelection} style={{fontSize: fontSize}}>
             <span dangerouslySetInnerHTML={{ __html: articleModified }} />
           </p>
         </article>
