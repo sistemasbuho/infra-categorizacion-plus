@@ -84,20 +84,20 @@ export async function deleteArticleCategorization(articleID: number) {
 }
 
 // Encabezado
-export async function postHeader(id: number, body: string) {
+export async function postHeader(id: number, body) {
   return await GeneralRequest(`completar_articulo/${id}`, 'POST', body);
 }
 
-export async function searchMedio(id: number, query: string) {
-  return await GeneralRequest(`completar_articulo/${id}`, 'POST', {
+export async function searchMedio(query: string) {
+  return await GeneralRequest('buscar_variables', 'POST', {
     id: 1,
     nombre: query,
     modelo: 'Medio_general',
   });
 }
 
-export async function searchAutor(id: number, query: string) {
-  return await GeneralRequest(`completar_articulo/${id}`, 'POST', {
+export async function searchAutor(query: string) {
+  return await GeneralRequest('buscar_variables', 'POST', {
     id: 1,
     nombre: query,
     modelo: 'Actor_general',
