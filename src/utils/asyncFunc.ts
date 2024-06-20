@@ -17,7 +17,7 @@ export async function getTagCategorization(query: string, projectId: number) {
   });
 }
 
-export async function getTemaCategorization(query, projectId) {
+export async function getTemaCategorization(query: string, projectId: number) {
   return await GeneralRequest('buscar_variables', 'POST', {
     id: Date.now(),
     nombre: query,
@@ -81,4 +81,25 @@ export async function postArticleCategorization(
 
 export async function deleteArticleCategorization(articleID: number) {
   return await GeneralRequest(`articulos/${articleID}`, 'DELETE', {});
+}
+
+// Encabezado
+export async function postHeader(id: number, body: string) {
+  return await GeneralRequest(`completar_articulo/${id}`, 'POST', body);
+}
+
+export async function searchMedio(id: number, query: string) {
+  return await GeneralRequest(`completar_articulo/${id}`, 'POST', {
+    id: 1,
+    nombre: query,
+    modelo: 'Medio_general',
+  });
+}
+
+export async function searchAutor(id: number, query: string) {
+  return await GeneralRequest(`completar_articulo/${id}`, 'POST', {
+    id: 1,
+    nombre: query,
+    modelo: 'Actor_general',
+  });
 }
