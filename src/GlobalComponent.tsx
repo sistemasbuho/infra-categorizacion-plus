@@ -54,8 +54,8 @@ function GlobalComponent() {
         setSummaryText(data.articulo?.resumen);
 
         setArticleCategorization({
-          tags: data.general[0]?.tag_data,
-          temas: data.general[0]?.tema_data,
+          tags: data.general?.[0]?.tag_data,
+          temas: data.general?.[0]?.tema_data,
         });
         setTemas(data.temas);
         setTags(data.tags[0].tags);
