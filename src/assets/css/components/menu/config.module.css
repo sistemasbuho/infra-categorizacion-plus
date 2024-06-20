@@ -1,0 +1,19 @@
+.config {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
+.config > div:first-child {
+  width: 100%;
+}
+
+.config > div:nth-child(2) {
+  width: 100%;
+}
+
+.config button {
+  border-color: transparent;
+  background: transparent;
+}
