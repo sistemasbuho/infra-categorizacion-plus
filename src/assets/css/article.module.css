@@ -17,7 +17,8 @@
 }
 
 .page > p {
-  letter-spacing: 0px;
+  width: fit-content;
+  margin: 0 auto;
   color: var(--text-color);
   white-space: pre-wrap;
 }
