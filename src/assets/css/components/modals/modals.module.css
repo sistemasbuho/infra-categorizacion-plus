@@ -1,0 +1,31 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #00000070;
+  z-index: 9;
+}
+
+.modal_cont {
+  background: #fff;
+  padding: 1rem;
+  width: 600px;
+  border: 5px;
+}
+
+.modal_cont .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+}
+
+.header button {
+  border-color: transparent;
+  background: transparent;
+}
