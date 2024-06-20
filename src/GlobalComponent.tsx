@@ -11,7 +11,6 @@ import {
   article,
 } from './interfaces/generals.ts';
 
-import GeneralCategorization from './components/GeneralCategorization.tsx';
 import HeaderBar from './components/HeaderBar.tsx';
 import MinContainer from './components/MinContainer.tsx';
 import KeywordSearh from './components/KeywordSearh.tsx';
@@ -21,6 +20,7 @@ import styles from './assets/css/app.module.css';
 import Menu from './components/menu/Menu.tsx';
 import Loader from './components/Loader.tsx';
 import { useParams } from 'react-router';
+import RenderFile from './components/visualizacion/RenderFile.tsx';
 
 function GlobalComponent() {
   const [isLoading, setsLoading] = useState<boolean>(true);
@@ -84,7 +84,7 @@ function GlobalComponent() {
         <section className={`${styles.cont_global}`}>
           <section className={styles.cont_article_sections}>
             <div>
-              <HeaderBar />
+              <HeaderBar article={article} />
 
               <div className="pe-3">
                 <MinContainer title="Palabras clave" isDeployable>
@@ -99,7 +99,7 @@ function GlobalComponent() {
               </MinContainer>
 
               <MinContainer title="Visualización PDF" isDeployable>
-                <GeneralCategorization />
+                <RenderFile fileUrl={article.image_media_file} />
               </MinContainer>
 
               <MinContainer title="Transcripción" isDeployable>
