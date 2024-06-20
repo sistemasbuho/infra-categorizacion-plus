@@ -27,6 +27,7 @@ export interface article {
   proyecto: number;
   id: number;
   text: string;
+  titulo: string;
   image_media_file?: string;
 }
 
