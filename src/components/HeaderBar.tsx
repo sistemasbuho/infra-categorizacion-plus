@@ -17,7 +17,12 @@ function HeaderBar() {
         <p>Atrás</p>
       </div>
 
-      <button className={styles.btn}>Finalizar</button>
+      <div className="d-flex gap-3">
+        <button className={`${styles.btn} ${styles.btn_delete}`}>
+          Eliminar articulo
+        </button>
+        <button className={`${styles.btn} ${styles.btn_finish}`}>Finalizar</button>
+      </div>
     </nav>
   );
 }
