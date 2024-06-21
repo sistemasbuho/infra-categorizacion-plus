@@ -103,3 +103,7 @@ export async function searchAutor(query: string) {
     modelo: 'Actor_general',
   });
 }
+
+export async function putArticle(id: number, body) {
+  return await GeneralRequest(`estado_borrar/${id}`, 'PUT', body);
+}
