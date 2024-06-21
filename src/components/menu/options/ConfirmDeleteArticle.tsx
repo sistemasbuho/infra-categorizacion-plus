@@ -1,7 +1,9 @@
 import { article, GeneralOption } from '../../../interfaces/generals';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { putArticle } from '../../../utils/asyncFunc';
+import { useArticleContext } from '../../../context/ArticleContext';
 
 import styles from '../../../assets/css/components/modals/modals.module.css';
 import Select from 'react-select';
@@ -13,9 +15,10 @@ interface Props {
 }
 
 function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
-  console.log(article.titulo);
+  const [justificacion, setJustificacion] = useState(null);
+  const { article: articleContext, setArticle } = useArticleContext();
 
-  const OptionsFromDelete: GeneralOption[] = [
+  const OptionsFromInactive: GeneralOption[] = [
     {
       id: 1,
       nombre: 'Incompleto',
@@ -47,13 +50,51 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
     },
   ];
 
+  const OptionsFromActive: GeneralOption[] = [
+    {
+      id: 1,
+      nombre: ' Artículo borrado accidentalmente',
+    },
+    {
+      id: 2,
+      nombre: 'Mención mal escrita, pero igual se debe categorizar',
+    },
+    {
+      id: 3,
+      nombre: 'Transcripción de audio incompleto, pero se escucha la mención.',
+    },
+    {
+      id: 4,
+      nombre: 'Otro',
+    },
+  ];
+
+  const estado = articleContext.state ? 'False' : 'True';
+
+  async function disableArticle() {
+    const update = {
+      estado,
+      justificacion,
+    };
+
+    return await putArticle(articleContext.id, update).then(() => {
+      const state = update.estado === 'True' ? true : false;
+      setArticle((prev) => ({ ...prev, state }));
+      closeModal();
+    });
+  }
+
+  function closeModal() {
+    setShow(false);
+  }
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal_cont}>
         <div className={styles.header}>
           <h2>Cambiar estado</h2>
 
-          <button onClick={() => setShow(false)}>
+          <button onClick={closeModal}>
             <FontAwesomeIcon icon={faClose} />
           </button>
         </div>
@@ -70,15 +111,28 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
             artículo:
           </p>
 
-          <Select
-            options={OptionsFromDelete}
-            getOptionLabel={(e) => e.nombre}
-            getOptionValue={(e) => String(e.id)}
-          />
-
+          <form
+            id="disable_article"
+            onSubmit={(e: FormEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+              disableArticle();
+            }}
+          >
+            <Select
+              options={article.state ? OptionsFromActive : OptionsFromInactive}
+              getOptionLabel={(e) => e.nombre}
+              getOptionValue={(e) => String(e.id)}
+              onChange={(e) => setJustificacion(e.nombre)}
+            />
+          </form>
           <br />
 
-          <ButtonControls form="header-form" />
+          <ButtonControls
+            form="disable_article"
+            reject={{ event: closeModal }}
+            accept={{ disabled: justificacion === null }}
+          />
         </div>
       </div>
     </div>

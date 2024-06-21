@@ -1,22 +1,26 @@
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import styles from '../assets/css/components/headerBar.module.css';
+import { putArticle } from '../utils/asyncFunc';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
+
+import styles from '../assets/css/components/headerBar.module.css';
 import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
-import { article } from '../interfaces/generals';
+import { useArticleContext } from '../context/ArticleContext';
 
-interface Props {
-  article: article;
-}
-
-function HeaderBar({ article }: Props) {
+function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { article } = useArticleContext();
 
   const navigate = useNavigate();
+
   function exit() {
     navigate(-1);
+  }
+
+  async function finishArticle(id) {
+    const update = { finished: true };
+    return await putArticle(id, update);
   }
 
   return (
@@ -32,9 +36,12 @@ function HeaderBar({ article }: Props) {
             className={`${styles.btn} ${styles.btn_delete}`}
             onClick={() => setShowDeleteModal(true)}
           >
-            Eliminar articulo
+            {article.state ? 'Activar articulo' : 'Eliminar articulo'}
           </button>
-          <button className={`${styles.btn} ${styles.btn_finish}`}>
+          <button
+            className={`${styles.btn} ${styles.btn_finish}`}
+            onClick={finishArticle}
+          >
             Finalizar
           </button>
         </div>
