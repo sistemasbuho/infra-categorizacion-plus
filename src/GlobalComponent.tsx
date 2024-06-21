@@ -21,6 +21,7 @@ import Menu from './components/menu/Menu.tsx';
 import Loader from './components/Loader.tsx';
 import { useParams } from 'react-router';
 import RenderFile from './components/visualizacion/RenderFile.tsx';
+import { ArticleProvider } from './context/ArticleContext.tsx';
 
 function GlobalComponent() {
   const [isLoading, setsLoading] = useState<boolean>(true);
@@ -79,58 +80,60 @@ function GlobalComponent() {
   }, []);
 
   return (
-    <ConfigProvider>
-      {!isLoading ? (
-        <section className={`${styles.cont_global}`}>
-          <section className={styles.cont_article_sections}>
-            <div>
-              <HeaderBar article={article} />
+    <ArticleProvider>
+      <ConfigProvider>
+        {!isLoading ? (
+          <section className={`${styles.cont_global}`}>
+            <section className={styles.cont_article_sections}>
+              <div>
+                <HeaderBar />
 
-              <div className="pe-3">
-                <MinContainer title="Palabras clave" isDeployable>
-                  <KeywordSearh />
+                <div className="pe-3">
+                  <MinContainer title="Palabras clave" isDeployable>
+                    <KeywordSearh />
+                  </MinContainer>
+                </div>
+              </div>
+
+              <div className={styles.scrolled_section}>
+                <MinContainer title="Resumen" isDeployable>
+                  <SummaryArticle text={summaryText} />
+                </MinContainer>
+
+                <MinContainer title="Visualización PDF" isDeployable>
+                  <RenderFile fileUrl={article.image_media_file} />
+                </MinContainer>
+
+                <MinContainer title="Transcripción" isDeployable>
+                  <Article
+                    text={articleText}
+                    selections={selections}
+                    setSelections={setSelections}
+                    newSelections={newSelections}
+                    setNewSelections={setNewSelections}
+                  />
                 </MinContainer>
               </div>
-            </div>
+            </section>
 
-            <div className={styles.scrolled_section}>
-              <MinContainer title="Resumen" isDeployable>
-                <SummaryArticle text={summaryText} />
-              </MinContainer>
-
-              <MinContainer title="Visualización PDF" isDeployable>
-                <RenderFile fileUrl={article.image_media_file} />
-              </MinContainer>
-
-              <MinContainer title="Transcripción" isDeployable>
-                <Article
-                  text={articleText}
-                  selections={selections}
-                  setSelections={setSelections}
-                  newSelections={newSelections}
-                  setNewSelections={setNewSelections}
-                />
-              </MinContainer>
-            </div>
+            <Menu
+              ArticleCategorization={ArticleCategorization}
+              tipos={tipos}
+              programas={programas}
+              tags={tags}
+              temas={temas}
+              articulo={article}
+              fragments={[...selections, ...newSelections]}
+              setSelections={setSelections}
+              setNewSelections={setNewSelections}
+              deleteFragment={deleteFragment}
+            />
           </section>
-
-          <Menu
-            ArticleCategorization={ArticleCategorization}
-            tipos={tipos}
-            programas={programas}
-            tags={tags}
-            temas={temas}
-            articulo={article}
-            fragments={[...selections, ...newSelections]}
-            setSelections={setSelections}
-            setNewSelections={setNewSelections}
-            deleteFragment={deleteFragment}
-          />
-        </section>
-      ) : (
-        <Loader isLoading={true} />
-      )}
-    </ConfigProvider>
+        ) : (
+          <Loader isLoading={true} />
+        )}
+      </ConfigProvider>
+    </ArticleProvider>
   );
 }
 
