@@ -9,10 +9,11 @@
 }
 
 .modal_cont {
+  position: relative;
   background: #fff;
-  padding: 1rem;
+  padding: 2rem;
   width: 600px;
-  border: 5px;
+  border-radius: 5px;
 }
 
 .modal_cont .header {
@@ -28,4 +29,7 @@
 .header button {
   border-color: transparent;
   background: transparent;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
