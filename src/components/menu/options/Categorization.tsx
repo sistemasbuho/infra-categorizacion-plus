@@ -193,15 +193,14 @@ function Categorization({
     return frag?.selectionId ? true : false;
   }
 
-  // useEffect(() => {
+  useEffect(() => {
+    setTagOptions(currentFragment?.tag_details);
+    setTemaOption(currentFragment?.tema_details);
+    setPasivoOption(currentFragment?.pasivo_details);
+    setActivoOption(currentFragment?.activo_details);
 
-  //   setTagOptions(currentFragment?.tag_details);
-  //   setTemaOption(currentFragment?.tema_details);
-  //   setPasivoOption(currentFragment?.pasivo_details);
-  //   setActivoOption(currentFragment?.activo_details);
-
-  //   return () => {};
-  // }, [currentFragment]);
+    return () => {};
+  }, [currentFragment]);
 
   useEffect(() => {
     if (temaOption === null || temaOption?.length <= 0) {
