@@ -11,7 +11,7 @@ function RenderPDF({ pdfUrl }: Props): React.ReactElement {
     <>
       <iframe
         className={styles.pdf_cont}
-        src="https://www.colomos.ceti.mx/documentos/goe/mujeresQueAmanDemasiado.pdf"
+        src={pdfUrl}
       ></iframe>
     </>
   );
