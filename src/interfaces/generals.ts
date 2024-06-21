@@ -21,6 +21,7 @@ export interface Selection extends OriginalFragment {
   length: number;
   text: string;
   selectionId?: number;
+  tag_details?: GeneralOption[];
 }
 
 export interface article {
@@ -29,6 +30,7 @@ export interface article {
   text: string;
   titulo: string;
   image_media_file?: string;
+  state: boolean;
 }
 
 export interface ArticleCategorization {
