@@ -60,7 +60,6 @@
 .fragments_cont {
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .fragments_cont > div:first-child h4 {
