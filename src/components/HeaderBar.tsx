@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { putArticle } from '../utils/asyncFunc';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
+import { useArticleContext } from '../context/ArticleContext';
 
 import styles from '../assets/css/components/headerBar.module.css';
 import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
-import { useArticleContext } from '../context/ArticleContext';
 
 function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -36,7 +36,7 @@ function HeaderBar() {
             className={`${styles.btn} ${styles.btn_delete}`}
             onClick={() => setShowDeleteModal(true)}
           >
-            {article.state ? 'Activar articulo' : 'Eliminar articulo'}
+            {article?.state ? 'Activar articulo' : 'Eliminar articulo'}
           </button>
           <button
             className={`${styles.btn} ${styles.btn_finish}`}
