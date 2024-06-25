@@ -5,14 +5,9 @@ interface Props {
 }
 
 function RenderPDF({ pdfUrl }: Props): React.ReactElement {
-  console.log(pdfUrl);
-
   return (
     <>
-      <iframe
-        className={styles.pdf_cont}
-        src={pdfUrl}
-      ></iframe>
+      <iframe className={styles.pdf_cont} src={pdfUrl}></iframe>
     </>
   );
 }

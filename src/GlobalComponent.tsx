@@ -29,7 +29,6 @@ function GlobalComponent() {
 
   const { darkMode } = useConfig();
 
-  const [articleText, setArticleText] = useState<string>('');
   const [selections, setSelections] = useState<Selection[]>([]);
   const [newSelections, setNewSelections] = useState<Selection[]>([]);
   const [temas, setTemas] = useState<Temas[]>([]);
@@ -48,9 +47,7 @@ function GlobalComponent() {
   }
 
   useEffect(() => {
-    if (article) {
-
-      setArticleText(article.articulo?.texto);
+    if (!isLoading) {
       setArticleCategorization({
         tags: article.forms_data.general?.[0]?.tag_data.map(
           (item: GeneralOption) => ({
@@ -107,7 +104,6 @@ function GlobalComponent() {
 
               <MinContainer title="Transcripción" isDeployable>
                 <Article
-                  text={articleText}
                   selections={selections}
                   setSelections={setSelections}
                   newSelections={newSelections}

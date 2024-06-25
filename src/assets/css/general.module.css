@@ -10,7 +10,7 @@
   --text-important: #62769a;
 
   --btn-primary: #62769a;
-  --btn-secundary:#fff;
+  --btn-secundary: #fff;
   --btn-selected: #00ada1;
 
   --btn-border-color: #333;
@@ -20,6 +20,10 @@
 
   --scroll-background: #828282;
   --scroll-color: #62769a;
+
+  --fragment-saved-bg: #00ada1;;
+  --fragment-saved-color: #fff;;
+
 }
 
 .App.dark {
@@ -35,7 +39,7 @@
   --btn-secundary-hover: #ffffff;
 
   --btn-border-color: #333;
-  --btn-primary:  #fff;
+  --btn-primary: #fff;
   --btn-secundary: #474747;
   --btn-selected: #62769a;
 

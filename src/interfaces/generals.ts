@@ -1,4 +1,5 @@
 interface OriginalFragment {
+  id: number;
   article_fragment?: string;
   start_index?: number;
   end_index?: number;
@@ -20,10 +21,6 @@ export interface GeneralOption {
 }
 
 export interface Selection extends OriginalFragment {
-  id: number;
-  startIndex: number;
-  length: number;
-  text: string;
   selectionId?: number;
 }
 

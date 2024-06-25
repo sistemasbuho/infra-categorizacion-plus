@@ -45,7 +45,7 @@ const ArticleContext = createContext(null);
 export const ArticleProvider: FC<Props> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [article, setArticle] = useState(null);
-
+  
   useEffect(() => {
     async function fetchData() {
       await getArticleData(1204095).then((data) => {

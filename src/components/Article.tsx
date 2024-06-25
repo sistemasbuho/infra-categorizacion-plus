@@ -6,9 +6,9 @@ import { isOverlappingFragment } from '../utils/funcs';
 import globalStyles from '../assets/css/general.module.css';
 import styles from '../assets/css/article.module.css';
 import { useConfig } from '../context/ConfigContext';
+import { useArticleContext } from '../context/ArticleContext';
 
 interface ArticleProps {
-  text: string;
   selections: Selection[];
   newSelections: Selection[];
   setSelections: Dispatch<SetStateAction<Selection[]>>;
@@ -16,16 +16,18 @@ interface ArticleProps {
 }
 
 function Article({
-  text,
   selections,
   setSelections,
   newSelections,
   setNewSelections,
 }: ArticleProps): JSX.Element {
   const { fontSize } = useConfig();
+  const { texto } = useArticleContext().articleState.article.articulo;
+  const [allSelections, setAllSelections] = useState([]);
 
-  const [articleModified, setArticleModified] = useState(text);
+  const [articleModified, setArticleModified] = useState(texto);
   const articleRef = useRef<HTMLParagraphElement>(null);
+
   const handleSelection = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -54,11 +56,10 @@ function Article({
           ...prevSelections,
           {
             id: Date.now(),
-            text: selectedText,
+            article_fragment: selectedText,
             selectionId: Date.now(),
             tema: [],
             startIndex,
-            length,
           },
         ]);
       }
@@ -69,19 +70,19 @@ function Article({
     let modifiedText = text;
 
     const sortedSelections = selections.sort(
-      (a, b) => b.startIndex - a.startIndex
+      (a, b) => b.start_index - a.start_index
     );
 
-    sortedSelections.forEach(({ startIndex, length }) => {
-      const before = modifiedText.slice(0, startIndex);
+    sortedSelections.forEach(({ start_index, article_fragment }) => {
+      const before = modifiedText.slice(0, start_index);
       const selected = modifiedText.slice(
-        Number(startIndex),
-        Number(startIndex) + length
+        Number(start_index),
+        Number(start_index) + article_fragment.length
       );
-      const after = modifiedText.slice(startIndex + length);
+      const after = modifiedText.slice(article_fragment.length);
 
       modifiedText = `${before}<span id='${
-        startIndex + '_' + length
+        start_index + '_' + length
       }' style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
     });
 
@@ -96,11 +97,15 @@ function Article({
   }, []);
 
   useEffect(() => {
-    const allSelections = [...selections, ...newSelections];
-    const modifiedText = applySelections(text, allSelections);
+    setAllSelections([...selections, ...newSelections]);
+    return () => {};
+  }, [selections, newSelections]);
 
+  useEffect(() => {
+    const modifiedText = applySelections(texto, allSelections);
     setArticleModified(modifiedText);
-  }, [newSelections]);
+    return () => {};
+  }, [allSelections]);
 
   return (
     <>

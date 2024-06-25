@@ -8,10 +8,12 @@ export const isOverlappingFragment = ({
   allSelections,
 }: OverlappingProps): boolean => {
   const endIndex = startIndex + length;
-  return allSelections.some(({ startIndex: selStart, length: selLength }) => {
-    const selEnd = selStart + selLength;
-    return startIndex < selEnd && endIndex > selStart;
-  });
+  return allSelections.some(
+    ({ start_index: selStart, article_fragment: selLength }) => {
+      const selEnd = selStart + selLength.length;
+      return startIndex < selEnd && endIndex > selStart;
+    }
+  );
 };
 
 export async function reqtsApiForm(

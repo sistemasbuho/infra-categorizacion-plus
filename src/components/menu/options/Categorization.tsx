@@ -37,14 +37,12 @@ interface CategorizationProps {
 
 function Categorization({
   ArticleCategorization,
-  fragments,
   deleteFragment,
   setSelections,
   setNewSelections,
 }: CategorizationProps) {
-  const { articulo } = useArticleContext().articleState.article;
-  const { temas, tags } = useArticleContext().articleState.article.forms_data
-
+  const { articulo, fragments } = useArticleContext().articleState.article;
+  const { temas, tags } = useArticleContext().articleState.article.forms_data;
   const [selected, setSelected] = useState(1);
   const [currentFragment, setCurrentFragment] = useState<Selection | null>(
     null
@@ -90,9 +88,9 @@ function Categorization({
   async function postCurrentFragment() {
     const update: FragmentCategorization = {
       articulo: articulo.id,
-      article_fragment: currentFragment.text,
-      start_index: currentFragment.startIndex,
-      end_index: currentFragment.startIndex + currentFragment.text.length,
+      article_fragment: currentFragment.article_fragment,
+      start_index: currentFragment.start_index,
+      end_index: currentFragment.start_index + currentFragment.article_fragment.length,
       tag: tagOptions.map((item) => item.id),
       tema: temaOption.map((item) => item.id),
       activo: activoOption.map((item) => {
@@ -234,33 +232,39 @@ function Categorization({
 
                   <div className={styles.list}>
                     {fragments.length > 0 ? (
-                      fragments.map((frag, i) => (
-                        <a
-                          href={`#${frag.startIndex + '_' + frag.length}`}
-                          key={i}
-                        >
-                          <div
-                            className={`
-                            ${styles.fragment}
-                            ${!frag?.selectionId && styles.fragment_saved} 
-                            ${
-                              currentFragment?.id === frag?.id &&
-                              styles.fragment_selected
+                      fragments.map((frag, i) => {
+                        return (
+                          <a
+                            href={`#${
+                              frag.start_index +
+                              '_' +
+                              frag.article_fragment.length
                             }`}
-                            onClick={() => setCurrentFragment(frag)}
+                            key={i}
                           >
-                            <p>{frag.text}</p>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteCurrentFragment(frag);
-                              }}
+                            <div
+                              className={`
+                              ${styles.fragment}
+                              ${!frag?.selectionId && styles.fragment_saved} 
+                              ${
+                                currentFragment?.id === frag?.id &&
+                                styles.fragment_selected
+                              }`}
+                              onClick={() => setCurrentFragment(frag)}
                             >
-                              <FontAwesomeIcon icon={faClose} />
-                            </button>
-                          </div>
-                        </a>
-                      ))
+                              <p>{frag.article_fragment}</p>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteCurrentFragment(frag);
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faClose} />
+                              </button>
+                            </div>
+                          </a>
+                        );
+                      })
                     ) : (
                       <p className="text-center m-0">Aún no hay fragmentos</p>
                     )}
