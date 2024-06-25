@@ -15,7 +15,7 @@ const ConfigContext = createContext<Config | undefined>(undefined);
 
 export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   const [config, setConfig] = useState({
-    fontSize: 16,
+    fontSize: 20,
     darkMode: false,
   });
 
