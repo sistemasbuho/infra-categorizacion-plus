@@ -1,4 +1,4 @@
-import style from '../assets/css/components/keywordSearch.module.css';
+import style from '../assets/css/components/sumaryArticle.module.css';
 import { useConfig } from '../context/ConfigContext';
 
 function SummaryArticle({ text }) {
