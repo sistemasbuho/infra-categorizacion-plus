@@ -1,8 +1,3 @@
-export interface GeneralOption {
-  id: number;
-  nombre: string;
-}
-
 interface OriginalFragment {
   article_fragment?: string;
   start_index?: number;
@@ -13,6 +8,15 @@ interface OriginalFragment {
   tono?: number;
   activo?: GeneralOption[];
   pasivo?: GeneralOption[];
+  tag_details?: GeneralOption[];
+  tema_details?: GeneralOption[];
+  pasivo_details?: GeneralOption[];
+  activo_details?: GeneralOption[];
+}
+
+export interface GeneralOption {
+  id: number;
+  nombre: string;
 }
 
 export interface Selection extends OriginalFragment {
@@ -21,19 +25,22 @@ export interface Selection extends OriginalFragment {
   length: number;
   text: string;
   selectionId?: number;
-  tag_details?: GeneralOption[];
-  tema_details?: GeneralOption[];
-  pasivo_details?: GeneralOption[];
-  activo_details?: GeneralOption[];
 }
 
 export interface article {
   proyecto: number;
   id: number;
   text: string;
+  texto?: string;
   titulo: string;
   image_media_file?: string;
   state: boolean;
+  resumen?: string;
+  medio?: GeneralOption;
+  autor?: GeneralOption;
+  tipo_articulo?: { id: number; nombre: string };
+  programa?: { id: number; nombre: string };
+  fecha?: string;
 }
 
 export interface ArticleCategorization {
