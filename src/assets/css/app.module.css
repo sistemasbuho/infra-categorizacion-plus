@@ -3,6 +3,7 @@
   grid-template-columns: 1fr 337px;
   height: 100vh;
   padding-inline: 2rem;
+  background-color: var(--bg-primary);
 }
 
 .cont_options_bar {
@@ -11,7 +12,6 @@
   right: 0;
   bottom: 0;
   width: 337px;
-
   opacity: 1;
   height: 100%;
   display: flex;
@@ -20,7 +20,7 @@
 
 .cont_options_bar header {
   width: 100%;
-  height: 100px;
+  height: 50px;
   display: flex;
   justify-content: stretch;
   align-items: stretch;
@@ -33,12 +33,13 @@
   background: transparent;
   opacity: 0.5;
   transition: opacity 0.2s ease;
+  color: var(--text-important);
 }
 
 .cont_options_bar header button.selected {
-  background: #ffffff 0% 0% no-repeat padding-box;
+  background-color: var(--box-color);
   opacity: 1;
-  box-shadow: var(--box-shadow-style);
+  box-shadow: var(--box-shadow);
   z-index: -1;
 }
 
@@ -63,15 +64,14 @@
   gap: 1.5rem;
 }
 
-
 .scrolled_section::-webkit-scrollbar {
   width: 10px;
-  background: var(--scrollbar-color);
+  background: var(--btn-selected);
   border-radius: 20px;
 }
 
 .scrolled_section::-webkit-scrollbar-thumb {
   border-radius: 20px;
   border: none;
-  background: var(--scrollbar-thumb-color);
+  background: var(--text-important);
 }

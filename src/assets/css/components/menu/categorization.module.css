@@ -13,18 +13,18 @@
   background: transparent;
   text-align: start;
   border-bottom: 4px solid transparent;
-  transition: border-bottom 0.2s ease;
-  color: #828282;
+  color: var(--text-primary);
 }
 
 .nav button:hover {
-  color: #333333;
+  color: var(--btn-selected);
   border-bottom: 4px solid #00ada1;
 }
 
 .nav button.selected {
-  color: #333333;
-  border-bottom: 4px solid #00ada1;
+  color: var(--btn-selected);
+  border-bottom: 4px solid;
+  border-color: var(--btn-selected);
 }
 
 .body {
@@ -72,17 +72,20 @@
   gap: 0.5rem;
 }
 
+.list a {
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
 .fragment {
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
   border: 1px solid #333333;
   border-radius: 7px;
   padding: 0.25rem 0.5rem;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .fragment_saved {
@@ -96,7 +99,6 @@
   overflow: hidden;
   max-width: 80%;
   margin: 0;
-
   text-align: left;
   font: normal normal normal 15px/20px Segoe UI;
   letter-spacing: 0px;
@@ -109,13 +111,13 @@
 
 .fragment.fragment_selected,
 .fragment:hover {
-  background-color: #62769a;
+  background-color: var(--color-primary);
   border-color: #62769a;
 }
 
 .fragment.fragment_selected > p,
 .fragment:hover > p {
-  color: #ffffff;
+  color: var(--text-important);
 }
 
 .fragment.fragment_selected > button,
@@ -127,7 +129,7 @@
   text-align: left;
   font: normal normal bold 18px / 24px Segoe UI;
   letter-spacing: 0px;
-  color: #333333;
+  color: var(--text-primary);
   opacity: 1;
   margin: 0;
 }

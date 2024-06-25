@@ -2,15 +2,15 @@
   padding: 2rem;
   display: flex;
   gap: 1rem;
-  background-color: var(--color-primary);
-  box-shadow: var(--box-shadow-style);
+  background-color: var(--box-color);
+  box-shadow: var(--box-shadow);
   display: flex;
   justify-content: stretch;
   align-items: stretch;
 }
 
-.container p {
-  color: #62769a;
+.container .text_important {
+  color: var(--text-important);
   font-weight: bold;
   margin: 0;
 }

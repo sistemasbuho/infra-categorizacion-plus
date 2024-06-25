@@ -14,14 +14,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--box-shadow-style);
-  background: var(--color-primary);
+  background: var(--box-color);
+  box-shadow: var(--box-shadow);
+  transition: all 0.2s ease;
 }
 
 .container > div:first-child h2 {
   font: normal normal 400 15px/20px Segoe UI;
   letter-spacing: 1.75px;
-  color: #333333;
+  color: var(--text-color);
   text-transform: uppercase;
   opacity: 1;
   margin: 0;
@@ -29,4 +30,5 @@
 .container > div:first-child button {
   border: none;
   background: transparent;
+  color: var(--text-color);
 }

@@ -1,6 +1,6 @@
 .cont_section {
   padding: 1rem;
-  box-shadow: var(--box-shadow-style);
+  box-shadow: var(--box-shadow);
   height: 100vh;
   width: 400px;
   background: #fff;
@@ -80,11 +80,10 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--btn-color-basic);
+  background-color: var(--btn-col);
   border: none;
   color: white;
   padding: 0 0.5rem;
-  transition: background-color 0.2s ease;
 }
 
 .ticket button:hover {

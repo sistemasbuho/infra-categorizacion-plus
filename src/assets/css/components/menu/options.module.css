@@ -1,18 +1,18 @@
 .option_cont {
   padding: 1rem 2rem;
   width: 100%;
-  height: calc(100% - 100px);
+  height: calc(100% - 50px);
   display: flex;
   flex-flow: column nowrap;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: var(--box-shadow-style);
+  background-color: var(--box-color);
+  box-shadow: var(--box-shadow);
 }
 
 .option_cont h2 {
   text-align: left;
   font: normal normal 400 15px/20px Segoe UI;
   letter-spacing: 1.75px;
-  color: #333333;
+  color: var(--text-primary);
   text-transform: uppercase;
 }
 
@@ -20,7 +20,7 @@
   text-align: left;
   font: normal normal bold 18px/24px Segoe UI;
   letter-spacing: 0px;
-  color: #333333;
+  color: var(--text-primary);
   opacity: 1;
   margin: 0;
 }
@@ -42,14 +42,14 @@
 
 .option_cont > div:nth-child(2)::-webkit-scrollbar {
   width: 10px;
-  background: var(--scrollbar-color);
+  background: var(--scroll-background);
   border-radius: 20px;
 }
 
 .option_cont > div:nth-child(2)::-webkit-scrollbar-thumb {
   border-radius: 20px;
   border: none;
-  background: var(--scrollbar-thumb-color);
+  background: var(--scroll-color);
 }
 
 .controls {
@@ -63,20 +63,11 @@
 .controls .accept,
 .controls .reject {
   padding: 0.5rem 1rem;
-  font: normal normal bold 15px/20px Segoe UI;
-  border-width: 1px;
+  font: normal normal 15px/20px Segoe UI;
+  border: 1px solid;
   letter-spacing: 0px;
-  border-style: solid;
   flex-grow: 1;
   border-radius: 5px;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.controls .reject {
-  background: var(--btn-reject-color);
-  border-color: #333333;
-  color: #333333;
 }
 
 .controls .reject:disabled,
@@ -85,19 +76,24 @@
 }
 
 .controls .accept {
-  border-color: #62769a;
-  background-color: var(--btn-accept-color);
-  border-color: var(--btn-accept-color);
-  color: #ffffff;
+  background-color: var(--btn-primary);
+  border-color: var(--btn-primary);
+  color: var(--text-secundary);
+}
+.controls .reject {
+  background-color: var(--btn-secundary);
+  border-color: var(--btn-border-color);
+  color: var(--text-primary);
 }
 
 .controls .accept:hover:not(:disabled) {
-  background-color: var(--btn-accept-color-hover);
-  border-color: var(--btn-accept-color-hover);
+  border-color: var(--btn-primary-hover);
+  background-color: var(--btn-primary-hover);
+  color: var(--text-primary);
 }
 
 .controls .reject:hover:not(:disabled) {
-  background-color: var(--btn-reject-color-hover);
-  border-color: var(--btn-reject-color-hover);
-  color: #fff;
+  border-color: var(--btn-secundary-hover);
+  background-color: var(--btn-secundary-hover);
+  color: var(--text-secundary);
 }

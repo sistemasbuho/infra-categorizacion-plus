@@ -7,7 +7,6 @@
   background-color: var(--btn-color-basic);
   color: whitesmoke;
   font-size: 20px;
-  transition: background-color .2s ease;
 }
 
 

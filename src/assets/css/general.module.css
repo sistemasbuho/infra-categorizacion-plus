@@ -1,31 +1,56 @@
 :root {
-  --bg-body: #f5f7fa;
-  --color-primary: #fff;
-  --text-color: #333;
-  --color-section: #333333;
-  --color-secondary: #21232a;
-  --btn-color-select: #00c0b0;
-  --btn-color-basic: #1b2942;
-  --box-shadow-style: 0px 3px 6px #00000029;
+  --box-shadow: 0px 3px 6px #00000029;
+  --border: 1px solid #333333;
 
-  --text-important-color: #333333;
-  --text-normal-color: #333;
-  --btn-accept-color: #62769a;
-  --btn-accept-color-hover: #00ada1;
-  --btn-reject-color: transparent;
-  --btn-reject-color-hover: #ff7588;
+  --bg-primary: #ffffff;
+  --box-color: #ffffff;
 
-  --scrollbar-color: #82828250;
-  --scrollbar-thumb-color: #62769a;
+  --text-primary: #333;
+  --text-secundary: #fff;
+  --text-important: #62769a;
 
-  --fragment-saved-background: #c4fcef;
-  --fragment-saved-border: #00c9a770;
+  --btn-primary: #62769a;
+  --btn-secundary:#fff;
+  --btn-selected: #00ada1;
+
+  --btn-border-color: #333;
+
+  --btn-primary-hover: #00ada1;
+  --btn-secundary-hover: #ff7588;
+
+  --scroll-background: #828282;
+  --scroll-color: #62769a;
+}
+
+.App.dark {
+  --box-shadow: 0px 3px 6px #333;
+  --bg-primary: #21232a;
+  --box-color: #686d76;
+
+  --text-primary: #fff;
+  --text-secundary: #333;
+  --text-important: rgb(255, 255, 255);
+
+  --btn-primary-hover: #00ada1;
+  --btn-secundary-hover: #ffffff;
+
+  --btn-border-color: #333;
+  --btn-primary:  #fff;
+  --btn-secundary: #474747;
+  --btn-selected: #62769a;
+
+  --scroll-background: #828282;
+  --scroll-color: #62769a;
+
+  --border: 1px solid #959595;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -51,7 +76,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .bg_sec {
-  background-color: var(--color-primary);
-  box-shadow: var(--box-shadow-style);
+  background-color: var(--box-color);
+  box-shadow: var(--box-shadow);
   padding: 2.5rem 2rem;
 }

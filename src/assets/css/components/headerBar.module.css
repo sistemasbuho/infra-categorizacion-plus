@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  color: var(--text-color);
 }
 
 .container div:first-child > p {
@@ -33,21 +34,23 @@
 }
 
 .btn_delete {
-  border-color: black;
-  background-color: var(--btn-reject-color);
+  color: var(--text-primary);
+  border-color: var(--btn-border-color);
+  background-color: var(--btn-secundary);
 }
 
 .btn_delete:hover {
-  color: #fff;
-  border-color: var(--btn-reject-color-hover);
-  background-color: var(--btn-reject-color-hover);
+  color: var(--text-secundary);
+  border-color: var(--btn-secundary-hover);
+  background-color: var(--btn-secundary-hover);
 }
 
 .btn_finish {
-  background-color: var(--btn-accept-color);
-  color: white;
+  background-color: var(--btn-primary);
+  color: var(--text-secundary);
 }
 
 .btn_finish:hover {
-  background-color: var(--btn-accept-color-hover);
+  background-color: var(--btn-primary-hover);
+  color: var(--text-secundary);
 }

@@ -3,6 +3,7 @@
   flex-direction: column;
   width: 100%;
   gap: 1rem;
+  color: var(--text-primary);
 }
 
 .config > div:first-child {
