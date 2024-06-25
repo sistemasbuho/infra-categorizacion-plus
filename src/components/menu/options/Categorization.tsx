@@ -240,27 +240,31 @@ function Categorization({
                   <div className={styles.list}>
                     {fragments.length > 0 ? (
                       fragments.map((frag, i) => (
-                        <div
-                          className={`
+                        <a
+                          href={`#${frag.startIndex + '_' + frag.length}`}
+                          key={i}
+                        >
+                          <div
+                            className={`
                             ${styles.fragment}
                             ${!frag?.selectionId && styles.fragment_saved} 
                             ${
                               currentFragment?.id === frag?.id &&
                               styles.fragment_selected
                             }`}
-                          key={i}
-                          onClick={() => setCurrentFragment(frag)}
-                        >
-                          <p>{frag.text}</p>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteCurrentFragment(frag);
-                            }}
+                            onClick={() => setCurrentFragment(frag)}
                           >
-                            <FontAwesomeIcon icon={faClose} />
-                          </button>
-                        </div>
+                            <p>{frag.text}</p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteCurrentFragment(frag);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faClose} />
+                            </button>
+                          </div>
+                        </a>
                       ))
                     ) : (
                       <p className="text-center m-0">Aún no hay fragmentos</p>

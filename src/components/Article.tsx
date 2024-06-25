@@ -80,7 +80,9 @@ function Article({
       );
       const after = modifiedText.slice(startIndex + length);
 
-      modifiedText = `${before}<span style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
+      modifiedText = `${before}<span id='${
+        startIndex + '_' + length
+      }' style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
     });
 
     return modifiedText;
@@ -104,7 +106,11 @@ function Article({
     <>
       <div className={`${globalStyles.bg_sec}`}>
         <article className={styles.page}>
-          <p ref={articleRef} onMouseUp={handleSelection} style={{fontSize: fontSize}}>
+          <p
+            ref={articleRef}
+            onMouseUp={handleSelection}
+            style={{ fontSize: fontSize }}
+          >
             <span dangerouslySetInnerHTML={{ __html: articleModified }} />
           </p>
         </article>
