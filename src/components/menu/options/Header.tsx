@@ -1,10 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 import { postHeader } from '../../../utils/asyncFunc';
 import { useState } from 'react';
 import {
-  headerArticle,
+  article,
   Programas,
   SelectOption,
   Tipos,
@@ -16,7 +14,7 @@ import ButtonControls from '../../controls/ButtonControls';
 import Select from 'react-select';
 
 interface Props {
-  articulo: headerArticle;
+  articulo: article;
   tipos: Tipos[];
   programas: Programas[];
 }
@@ -32,12 +30,12 @@ function Header({ articulo, tipos, programas }: Props) {
   });
   const [fechaOption, setfechaOption] = useState(articulo.fecha);
   const [autorOption, setAutorOption] = useState<SelectOption | null>({
-    label: articulo.autor.nombre,
-    value: articulo.autor.id,
+    label: articulo.autor?.nombre,
+    value: articulo.autor?.id,
   });
   const [medioOption, setMedioOption] = useState<SelectOption | null>({
-    label: articulo.medio.nombre,
-    value: articulo.medio.id,
+    label: articulo.medio?.nombre,
+    value: articulo.medio?.id,
   });
   async function sendHeaderCategorization(e: React.FormEvent) {
     e.stopPropagation();
@@ -78,7 +76,6 @@ function Header({ articulo, tipos, programas }: Props) {
     <>
       <div>
         <h2>ENCABEZADO</h2>
-        <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
       </div>
       <div>
         <Form id="header-form" onSubmit={sendHeaderCategorization}>

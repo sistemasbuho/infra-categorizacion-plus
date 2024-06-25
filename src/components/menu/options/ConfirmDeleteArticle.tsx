@@ -14,9 +14,9 @@ interface Props {
   setShow: Dispatch<SetStateAction<boolean>>;
 }
 
-function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
+function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
   const [justificacion, setJustificacion] = useState(null);
-  const { article: articleContext, setArticle } = useArticleContext();
+  const { article } = useArticleContext().articleState;
 
   const OptionsFromInactive: GeneralOption[] = [
     {
@@ -69,7 +69,7 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
     },
   ];
 
-  const estado = articleContext.state ? 'False' : 'True';
+  const estado = article?.articulo.state ? 'False' : 'True';
 
   async function disableArticle() {
     const update = {
@@ -77,9 +77,14 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
       justificacion,
     };
 
-    return await putArticle(articleContext.id, update).then(() => {
-      const state = update.estado === 'True' ? true : false;
-      setArticle((prev) => ({ ...prev, state }));
+    return await putArticle(article?.articulo.id, update).then(() => {
+      // const state = update.estado === 'True' ? true : false;
+      // setArticle((prev) => {
+      //   return {
+      //     ...prev,
+      //     articulo: { ...prev.articulo, state },
+      //   };
+      // });
       closeModal();
     });
   }
@@ -103,7 +108,7 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
           <p>Esto cambiara de estado siguiente artículo:</p>
 
           <p>
-            <strong>{article.titulo}</strong>
+            <strong>{article.articulo.titulo}</strong>
           </p>
 
           <p>
@@ -120,7 +125,9 @@ function ConfirmDeleteArticle({ article, setShow }: Props): React.ReactElement {
             }}
           >
             <Select
-              options={article.state ? OptionsFromActive : OptionsFromInactive}
+              options={
+                article.articulo.state ? OptionsFromActive : OptionsFromInactive
+              }
               getOptionLabel={(e) => e.nombre}
               getOptionValue={(e) => String(e.id)}
               onChange={(e) => setJustificacion(e.nombre)}

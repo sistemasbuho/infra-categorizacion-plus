@@ -8,35 +8,71 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { article } from '../interfaces/generals';
+import { article, GeneralOption, Selection } from '../interfaces/generals';
 import { getArticleData } from '../utils/asyncFunc';
-import { useParams } from 'react-router';
 
 interface Props {
   children: ReactNode;
 }
 
 interface ContextProps {
-  article: article;
-  setArticle: Dispatch<SetStateAction<article>>;
+  loadingState: {
+    isLoading: boolean;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+  };
+
+  articleState: {
+    article: {
+      articulo: article;
+      fragments: Selection[];
+      forms_data: {
+        programa: GeneralOption[];
+        tags: GeneralOption[];
+        temas: GeneralOption[];
+        tipo: GeneralOption[];
+        general: {
+          tag_data: GeneralOption[];
+          tema_data: GeneralOption[];
+        };
+      };
+    };
+    setArticle: Dispatch<SetStateAction<article>>;
+  };
 }
 
 const ArticleContext = createContext(null);
 
 export const ArticleProvider: FC<Props> = ({ children }) => {
-  const [article, setArticle] = useState<article | null>(null);
-  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [article, setArticle] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
-      await getArticleData(id).then((data) => {
-        setArticle(data.articulo);
+      await getArticleData(1204095).then((data) => {
+        setArticle({
+          articulo: { ...data.articulo },
+          fragments: data.fragmentos,
+          forms_data: {
+            programa: data.programa,
+            tags: data.tags,
+            temas: data.temas,
+            tipo: data.tipo,
+            general: data.general,
+          },
+        });
+        setIsLoading(false);
       });
     }
     fetchData();
   }, []);
+
   return (
-    <ArticleContext.Provider value={{ article, setArticle }}>
+    <ArticleContext.Provider
+      value={{
+        loadingState: { isLoading, setIsLoading },
+        articleState: { article, setArticle },
+      }}
+    >
       {children}
     </ArticleContext.Provider>
   );

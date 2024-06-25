@@ -1,5 +1,4 @@
 import {
-  article,
   ArticleCategorization,
   Categorization as FragmentCategorization,
   editCategorization,
@@ -25,12 +24,10 @@ import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo'
 import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
+import { useArticleContext } from '../../../context/ArticleContext';
 
 interface CategorizationProps {
   ArticleCategorization: ArticleCategorization;
-  tags: Tags[];
-  temas: Temas[];
-  articulo: article;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
 
@@ -40,20 +37,18 @@ interface CategorizationProps {
 
 function Categorization({
   ArticleCategorization,
-  temas,
-  tags,
-  articulo,
   fragments,
   deleteFragment,
   setSelections,
   setNewSelections,
 }: CategorizationProps) {
-  const [selected, setSelected] = useState(1);
+  const { articulo } = useArticleContext().articleState.article;
+  const { temas, tags } = useArticleContext().articleState.article.forms_data
 
+  const [selected, setSelected] = useState(1);
   const [currentFragment, setCurrentFragment] = useState<Selection | null>(
     null
   );
-
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 

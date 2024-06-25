@@ -3,7 +3,6 @@ import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState, Dispatch, SetStateAction } from 'react';
 import {
   ArticleCategorization,
-  headerArticle,
   Programas,
   Selection,
   Tags,
@@ -16,6 +15,7 @@ import styles from '../../assets/css/app.module.css';
 import Categorization from './options/Categorization';
 import Header from './options/Header';
 import Config from './options/Config';
+import { useArticleContext } from '../../context/ArticleContext';
 
 interface CategorizationProps {
   ArticleCategorization: ArticleCategorization;
@@ -23,7 +23,6 @@ interface CategorizationProps {
   programas: Programas[];
   tags: Tags[];
   temas: Temas[];
-  articulo: headerArticle;
   fragments: Selection[];
   deleteFragment: (frag: Selection) => void;
   setSelections: Dispatch<SetStateAction<Selection[]>>;
@@ -34,14 +33,13 @@ function Menu({
   ArticleCategorization,
   tipos,
   programas,
-  tags,
-  temas,
-  articulo,
   fragments,
   setSelections,
   setNewSelections,
   deleteFragment,
 }: CategorizationProps) {
+  const { articulo } = useArticleContext().articleState.article;
+
   const [currentOption, setCurrentOption] = useState(1);
 
   return (
@@ -76,9 +74,6 @@ function Menu({
           {currentOption === 2 && (
             <Categorization
               ArticleCategorization={ArticleCategorization}
-              tags={tags}
-              temas={temas}
-              articulo={articulo}
               fragments={fragments}
               deleteFragment={deleteFragment}
               setSelections={setSelections}

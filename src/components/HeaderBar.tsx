@@ -10,7 +10,7 @@ import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
 
 function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { article } = useArticleContext();
+  const { articulo: article } = useArticleContext().articleState.article;
 
   const navigate = useNavigate();
 
