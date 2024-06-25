@@ -22,9 +22,9 @@ export interface Selection extends OriginalFragment {
   text: string;
   selectionId?: number;
   tag_details?: GeneralOption[];
-  tema_details: GeneralOption[];
-  pasivo_details: GeneralOption[];
-  activo_details: GeneralOption[];
+  tema_details?: GeneralOption[];
+  pasivo_details?: GeneralOption[];
+  activo_details?: GeneralOption[];
 }
 
 export interface article {
