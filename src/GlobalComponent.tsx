@@ -65,9 +65,8 @@ function GlobalComponent() {
       setSelections(() => {
         return article.fragments.map((fragment) => ({
           id: fragment.id,
-          startIndex: Number(fragment.start_index),
-          length: Number(fragment.article_fragment.length),
-          text: fragment.article_fragment,
+          start_index: Number(fragment.start_index),
+          article_fragment: fragment.article_fragment,
           ...fragment,
         }));
       });

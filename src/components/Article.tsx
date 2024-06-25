@@ -59,31 +59,32 @@ function Article({
             article_fragment: selectedText,
             selectionId: Date.now(),
             tema: [],
-            startIndex,
+            start_index: Number(startIndex),
           },
         ]);
       }
     }
   };
 
-  const applySelections = (text: string, selections: Selection[]) => {
+  const applySelections = (text, selections) => {
     let modifiedText = text;
-
     const sortedSelections = selections.sort(
       (a, b) => b.start_index - a.start_index
     );
 
     sortedSelections.forEach(({ start_index, article_fragment }) => {
-      const before = modifiedText.slice(0, start_index);
-      const selected = modifiedText.slice(
-        Number(start_index),
-        Number(start_index) + article_fragment.length
-      );
-      const after = modifiedText.slice(article_fragment.length);
+      start_index = Number(start_index);
 
-      modifiedText = `${before}<span id='${
-        start_index + '_' + length
-      }' style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
+      const before = modifiedText.substring(0, start_index);
+      const selected = modifiedText.substring(
+        start_index,
+        start_index + article_fragment.length
+      );
+      const after = modifiedText.substring(
+        start_index + article_fragment.length
+      );
+
+      modifiedText = `${before}<span id='${start_index}_${article_fragment.length}' style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
     });
 
     return modifiedText;

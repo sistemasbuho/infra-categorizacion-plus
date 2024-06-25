@@ -7,11 +7,12 @@ export const isOverlappingFragment = ({
   length,
   allSelections,
 }: OverlappingProps): boolean => {
-  const endIndex = startIndex + length;
+  const endIndex = Number(startIndex + length);
   return allSelections.some(
     ({ start_index: selStart, article_fragment: selLength }) => {
+      selStart = Number(selStart);
       const selEnd = selStart + selLength.length;
-      return startIndex < selEnd && endIndex > selStart;
+      return startIndex < selEnd && endIndex > Number(selStart);
     }
   );
 };

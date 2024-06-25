@@ -90,7 +90,8 @@ function Categorization({
       articulo: articulo.id,
       article_fragment: currentFragment.article_fragment,
       start_index: currentFragment.start_index,
-      end_index: currentFragment.start_index + currentFragment.article_fragment.length,
+      end_index:
+        currentFragment.start_index + currentFragment.article_fragment.length,
       tag: tagOptions.map((item) => item.id),
       tema: temaOption.map((item) => item.id),
       activo: activoOption.map((item) => {
@@ -235,11 +236,7 @@ function Categorization({
                       fragments.map((frag, i) => {
                         return (
                           <a
-                            href={`#${
-                              frag.start_index +
-                              '_' +
-                              frag.article_fragment.length
-                            }`}
+                            href={`#${frag.start_index}_${frag.article_fragment.length}`}
                             key={i}
                           >
                             <div
