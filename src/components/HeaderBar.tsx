@@ -18,9 +18,9 @@ function HeaderBar() {
     navigate(-1);
   }
 
-  async function finishArticle(id) {
+  async function finishArticle() {
     const update = { finished: true };
-    return await putArticle(id, update);
+    return await putArticle(article.id, update);
   }
 
   return (
