@@ -34,15 +34,13 @@
 }
 
 .btn_delete {
-  color: var(--text-primary);
-  border-color: var(--btn-border-color);
-  background-color: var(--btn-secundary);
+  background-color: var(--btn-primary);
+  color: var(--text-secundary);
 }
 
 .btn_delete:hover {
-  color: var(--text-secundary);
-  border-color: var(--btn-secundary-hover);
-  background-color: var(--btn-secundary-hover);
+  background-color: var(--btn-primary-hover);
+  color: var(--text-primary);
 }
 
 .btn_finish {
@@ -52,5 +50,5 @@
 
 .btn_finish:hover {
   background-color: var(--btn-primary-hover);
-  color: var(--text-secundary);
+  color: var(--text-primary);
 }

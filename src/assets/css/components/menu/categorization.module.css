@@ -47,14 +47,14 @@
 
 .body .section_body::-webkit-scrollbar {
   width: 10px;
-  background: var(--scrollbar-color);
+  background: var(--scroll-background);
   border-radius: 20px;
 }
 
 .body .section_body::-webkit-scrollbar-thumb {
   border-radius: 20px;
   border: none;
-  background: var(--scrollbar-thumb-color);
+  background: var(--scroll-color);
 }
 
 .fragments_cont {
@@ -78,14 +78,15 @@
 }
 
 .fragment {
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 3px 6px #00000029;
-  border: 1px solid #333333;
+  background: var(--bg-fragment) 0% 0% no-repeat padding-box;
+  box-shadow: var(--box-shadow-fragment);
+  border: var(--border-fragment);
   border-radius: 7px;
   padding: 0.25rem 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: background 0.5s ease;
 }
 
 .fragment_saved {
@@ -110,20 +111,24 @@
   border-color: transparent;
 }
 
+.fragment:hover:not(.fragment_selected) {
+  background: var(--btn-primary);
+}
+
+.fragment:hover:not(.fragment_selected) button {
+  color: var(--text-secundary);
+}
+
 .fragment.fragment_selected,
 .fragment:hover {
-  background-color: var(--color-primary);
-  border-color: #62769a;
+  background: var(--btn-selected);
+  border-color: var(--btn-selected);
+  color: var(--text-secundary);
 }
 
-.fragment.fragment_selected > p,
-.fragment:hover > p {
-  color: var(--text-important);
-}
-
-.fragment.fragment_selected > button,
-.fragment:hover > button {
-  color: #ffffff;
+.fragment.fragment_selected button,
+.fragment:hover {
+  color: var(--text-secundary);
 }
 
 .form h4 {

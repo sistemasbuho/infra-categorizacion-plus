@@ -1,25 +1,19 @@
 import { Form } from 'react-bootstrap';
 import { postHeader } from '../../../utils/asyncFunc';
 import { useState } from 'react';
-import {
-  article,
-  Programas,
-  SelectOption,
-  Tipos,
-} from '../../../interfaces/generals';
+import { SelectOption } from '../../../interfaces/generals';
+import { useArticleContext } from '../../../context/ArticleContext';
 
 import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
 import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
 import ButtonControls from '../../controls/ButtonControls';
 import Select from 'react-select';
 
-interface Props {
-  articulo: article;
-  tipos: Tipos[];
-  programas: Programas[];
-}
+function Header() {
+  const { articulo } = useArticleContext().articleState.article;
+  const { programa: programas, tipo: tipos } =
+    useArticleContext().articleState.article.forms_data;
 
-function Header({ articulo, tipos, programas }: Props) {
   const [programaOption, setProgramaOption] = useState<SelectOption>({
     label: articulo.programa?.nombre,
     value: articulo.programa?.id,
@@ -77,7 +71,7 @@ function Header({ articulo, tipos, programas }: Props) {
       <div>
         <h2>ENCABEZADO</h2>
       </div>
-      <div>
+      <div className="mb-4">
         <Form id="header-form" onSubmit={sendHeaderCategorization}>
           <Form.Group className="mb-4">
             <Form.Label htmlFor="tipo">
@@ -128,7 +122,7 @@ function Header({ articulo, tipos, programas }: Props) {
             />
           </Form.Group>
 
-          <Form.Group className="mb-4">
+          <Form.Group>
             <Form.Label htmlFor="tipo">
               <h4>Autor</h4>
             </Form.Label>

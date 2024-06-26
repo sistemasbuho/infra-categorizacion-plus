@@ -1,14 +1,14 @@
 .cont_global {
   display: grid;
   grid-template-columns: 1fr 337px;
-  height: 100vh;
+  height: calc(100vh - 60px);
   padding-inline: 2rem;
   background-color: var(--bg-primary);
 }
 
 .cont_options_bar {
   position: fixed;
-  top: 0;
+  top: 60px;
   right: 0;
   bottom: 0;
   width: 337px;
@@ -66,12 +66,12 @@
 
 .scrolled_section::-webkit-scrollbar {
   width: 10px;
-  background: var(--btn-selected);
+  background: var(--scroll-background);
   border-radius: 20px;
 }
 
 .scrolled_section::-webkit-scrollbar-thumb {
   border-radius: 20px;
   border: none;
-  background: var(--text-important);
+  background: var(--scroll-color);
 }

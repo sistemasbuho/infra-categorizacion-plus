@@ -5,10 +5,10 @@ import axios from 'axios';
 export const isOverlappingFragment = ({
   startIndex,
   length,
-  allSelections,
+  allFragments,
 }: OverlappingProps): boolean => {
   const endIndex = Number(startIndex + length);
-  return allSelections.some(
+  return allFragments.some(
     ({ start_index: selStart, article_fragment: selLength }) => {
       selStart = Number(selStart);
       const selEnd = selStart + selLength.length;

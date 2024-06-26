@@ -10,6 +10,22 @@ import {
 } from 'react';
 import { article, GeneralOption, Selection } from '../interfaces/generals';
 import { getArticleData } from '../utils/asyncFunc';
+import { useParams } from 'react-router';
+
+const initialArticleState = {
+  articulo: {},
+  fragments: [],
+  forms_data: {
+    programa: [],
+    tags: [],
+    temas: [],
+    tipo: [],
+    general: {
+      tag: [],
+      tema: [],
+    },
+  },
+};
 
 interface Props {
   children: ReactNode;
@@ -31,8 +47,8 @@ interface ContextProps {
         temas: GeneralOption[];
         tipo: GeneralOption[];
         general: {
-          tag_data: GeneralOption[];
-          tema_data: GeneralOption[];
+          tag: GeneralOption[];
+          tema: GeneralOption[];
         };
       };
     };
@@ -44,27 +60,36 @@ const ArticleContext = createContext(null);
 
 export const ArticleProvider: FC<Props> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [article, setArticle] = useState(null);
-  
+  const [article, setArticle] = useState(initialArticleState);
+
+  const { id } = useParams();
+
   useEffect(() => {
     async function fetchData() {
-      await getArticleData(1204095).then((data) => {
+      await getArticleData(id).then((data) => {
+        const tagGeneral = data.general?.[0].tag_data;
+        const temaGeneral = data.general?.[0].tema_data;
+
         setArticle({
           articulo: { ...data.articulo },
           fragments: data.fragmentos,
           forms_data: {
             programa: data.programa,
-            tags: data.tags,
+            tags: data.tags[0].tags,
             temas: data.temas,
             tipo: data.tipo,
-            general: data.general,
+            general: {
+              tag: tagGeneral,
+              tema: temaGeneral,
+            },
           },
         });
+
         setIsLoading(false);
       });
     }
     fetchData();
-  }, []);
+  }, [id]);
 
   return (
     <ArticleContext.Provider

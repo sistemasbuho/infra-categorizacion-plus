@@ -1,7 +1,7 @@
 .option_cont {
   padding: 1rem 2rem;
   width: 100%;
-  height: calc(100% - 50px);
+  height: calc(100% - 110px);
   display: flex;
   flex-flow: column nowrap;
   background-color: var(--box-color);

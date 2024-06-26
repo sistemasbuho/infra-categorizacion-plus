@@ -1,29 +1,21 @@
-import { Dispatch, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { Selection } from '../interfaces/generals';
 import { isOverlappingFragment } from '../utils/funcs';
 
 import globalStyles from '../assets/css/general.module.css';
 import styles from '../assets/css/article.module.css';
+
 import { useConfig } from '../context/ConfigContext';
 import { useArticleContext } from '../context/ArticleContext';
+import { useFragmentContext } from '../context/FragmentsContext';
 
-interface ArticleProps {
-  selections: Selection[];
-  newSelections: Selection[];
-  setSelections: Dispatch<SetStateAction<Selection[]>>;
-  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
-}
-
-function Article({
-  selections,
-  setSelections,
-  newSelections,
-  setNewSelections,
-}: ArticleProps): JSX.Element {
+function Article(): JSX.Element {
   const { fontSize } = useConfig();
   const { texto } = useArticleContext().articleState.article.articulo;
-  const [allSelections, setAllSelections] = useState([]);
+  const { localFragments, savedFragments, allFrags } = useFragmentContext();
+
+  const { allFragments } = allFrags;
+  const { setFragments } = savedFragments;
+  const { setNewFragments } = localFragments;
 
   const [articleModified, setArticleModified] = useState(texto);
   const articleRef = useRef<HTMLParagraphElement>(null);
@@ -49,10 +41,9 @@ function Article({
       preSelectionRange.setEnd(range.startContainer, range.startOffset);
       const startIndex = preSelectionRange.toString().length;
       const length = selectedText.length;
-      const allSelections = [...selections, ...newSelections];
 
-      if (!isOverlappingFragment({ startIndex, length, allSelections })) {
-        setNewSelections((prevSelections: Selection[]) => [
+      if (!isOverlappingFragment({ startIndex, length, allFragments })) {
+        setNewFragments((prevSelections) => [
           ...prevSelections,
           {
             id: Date.now(),
@@ -91,22 +82,17 @@ function Article({
   };
 
   useEffect(() => {
-    setSelections((sel) =>
+    setFragments((sel) =>
       sel.map((select) => ({ ...select, selectionId: Date.now() }))
     );
     return () => {};
   }, []);
 
   useEffect(() => {
-    setAllSelections([...selections, ...newSelections]);
-    return () => {};
-  }, [selections, newSelections]);
-
-  useEffect(() => {
-    const modifiedText = applySelections(texto, allSelections);
+    const modifiedText = applySelections(texto, allFragments);
     setArticleModified(modifiedText);
     return () => {};
-  }, [allSelections]);
+  }, [allFragments]);
 
   return (
     <>

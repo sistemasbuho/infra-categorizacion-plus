@@ -1,7 +1,6 @@
 :root {
   --box-shadow: 0px 3px 6px #00000029;
   --border: 1px solid #333333;
-
   --bg-primary: #ffffff;
   --box-color: #ffffff;
 
@@ -18,24 +17,27 @@
   --btn-primary-hover: #00ada1;
   --btn-secundary-hover: #ff7588;
 
-  --scroll-background: #828282;
+  --scroll-background: #ccc;
   --scroll-color: #62769a;
 
-  --fragment-saved-bg: #00ada1;;
-  --fragment-saved-color: #fff;;
+  --fragment-saved-bg: #00ada1;
+  --fragment-saved-color: #fff;
 
+  --bg-fragment: transparent;
+  --box-shadow-fragment: 0px 3px 6px #00000029;
+  --border-fragment: 1px solid #fff;
 }
 
 .App.dark {
   --box-shadow: 0px 3px 6px #333;
   --bg-primary: #21232a;
-  --box-color: #686d76;
+  --box-color: #292e3f;
 
   --text-primary: #fff;
   --text-secundary: #333;
   --text-important: rgb(255, 255, 255);
 
-  --btn-primary-hover: #00ada1;
+  --btn-primary-hover: #333333;
   --btn-secundary-hover: #ffffff;
 
   --btn-border-color: #333;
@@ -43,17 +45,20 @@
   --btn-secundary: #474747;
   --btn-selected: #62769a;
 
-  --scroll-background: #828282;
-  --scroll-color: #62769a;
+  --scroll-background: #ccc;
+  --scroll-color: #474747;
 
   --border: 1px solid #959595;
+
+  --bg-fragment: transparent;
+  --box-shadow-fragment: 0px 3px 6px #00000029;
+  --border-fragment: 1px solid #fff;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.2s ease;
   scroll-behavior: smooth;
 }
 
@@ -63,20 +68,6 @@ body {
   /* overflow-X: hidden; */
   scroll-behavior: smooth;
   background: var(--bg-body) !important;
-}
-
-body::-webkit-scrollbar {
-  width: 1rem;
-  background-color: #cccccc60;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
 }
 
 .bg_sec {

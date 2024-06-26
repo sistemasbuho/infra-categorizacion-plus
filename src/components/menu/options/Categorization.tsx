@@ -1,5 +1,4 @@
 import {
-  ArticleCategorization,
   Categorization as FragmentCategorization,
   editCategorization,
   Selection,
@@ -11,12 +10,12 @@ import {
 import {
   postFragment,
   deleteFragment as delFragment,
-  postArticleCategorization,
-  deleteArticleCategorization as delArticleCategorization,
   editFragment,
 } from '../../../utils/asyncFunc';
+import { useArticleContext } from '../../../context/ArticleContext';
+import { useFragmentContext } from '../../../context/FragmentsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 
@@ -24,29 +23,18 @@ import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo'
 import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
-import { useArticleContext } from '../../../context/ArticleContext';
 
-interface CategorizationProps {
-  ArticleCategorization: ArticleCategorization;
-  fragments: Selection[];
-  deleteFragment: (frag: Selection) => void;
-
-  setSelections: Dispatch<SetStateAction<Selection[]>>;
-  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
-}
-
-function Categorization({
-  ArticleCategorization,
-  deleteFragment,
-  setSelections,
-  setNewSelections,
-}: CategorizationProps) {
-  const { articulo, fragments } = useArticleContext().articleState.article;
+function Categorization() {
+  const { articulo } = useArticleContext().articleState.article;
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
   const [selected, setSelected] = useState(1);
-  const [currentFragment, setCurrentFragment] = useState<Selection | null>(
-    null
-  );
+
+  const { current, allFrags, methods } = useFragmentContext();
+  const { currentFragment, setCurrentFragment } = current;
+
+  const { delete: deleteFragment } = methods;
+  const { allFragments } = allFrags;
+
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
@@ -55,34 +43,32 @@ function Categorization({
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
-  const [temaGeneral, setTemaGeneral] = useState<Temas[] | null>(
-    ArticleCategorization.temas
-  );
-  const [tagGeneral, setTagGeneral] = useState<Tags[] | null>(
-    ArticleCategorization.tags
-  );
+
   const sentimiento: SelectOption[] = [
     { value: 1, label: 'Positvo' },
     { value: 2, label: 'Neutral' },
     { value: 3, label: 'Negativo' },
   ];
 
-  // Articulo
-  async function sendArticleCategorization(e: React.FormEvent) {
-    e.preventDefault();
-    const update = {
-      tema: temaGeneral.map((item) => item.id),
-      tag: tagGeneral.map((item) => item.id),
-    };
+  // async function sendArticleCategorization(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   const update = {
+  //     tema: forms_data.general.tema.map((item) => item.id),
+  //     tag: forms_data.general.tag.map((item) => item.id),
+  //   };
 
-    await postArticleCategorization(articulo.id, update);
-  }
+  //   await postArticleCategorization(articulo.id, update);
+  // }
 
-  async function deleteArticleCategorizaion() {
-    setTagGeneral([]);
-    setTemaGeneral([]);
-    await delArticleCategorization(articulo.id);
-  }
+  // async function deleteArticleCategorizaion() {
+  //   setArticle((prev) => {
+  //     console.log(prev);
+
+  //     return prev;
+  //   });
+
+  //   await delArticleCategorization(articulo.id);
+  // }
 
   // Fragmento
   async function postCurrentFragment() {
@@ -120,14 +106,14 @@ function Categorization({
       };
 
       delete fragmentSaved.selectionId;
-      setSelections((prev) => [...prev, fragmentSaved]);
-      setNewSelections((prev) =>
-        prev.filter(
-          (sel) =>
-            sel?.id !== fragmentSaved?.id ||
-            sel?.selectionId !== fragmentSaved?.selectionId
-        )
-      );
+      // setSelections((prev) => [...prev, fragmentSaved]);
+      // setNewSelections((prev) =>
+      //   prev.filter(
+      //     (sel) =>
+      //       sel?.id !== fragmentSaved?.id ||
+      //       sel?.selectionId !== fragmentSaved?.selectionId
+      //   )
+      // );
     });
   }
 
@@ -232,8 +218,8 @@ function Categorization({
                   <h4>Fragmentos</h4>
 
                   <div className={styles.list}>
-                    {fragments.length > 0 ? (
-                      fragments.map((frag, i) => {
+                    {allFragments.length > 0 ? (
+                      allFragments.map((frag, i) => {
                         return (
                           <a
                             href={`#${frag.start_index}_${frag.article_fragment.length}`}
@@ -312,24 +298,13 @@ function Categorization({
                       <Form.Label>
                         <h4>Tag</h4>
                       </Form.Label>
+
                       <Select
                         isMulti
-                        options={tags.map((item) => ({
-                          label: item.nombre,
-                          value: item.id,
-                        }))}
-                        value={tagOptions?.map((item) => ({
-                          label: item?.nombre,
-                          value: item?.id,
-                        }))}
-                        onChange={(e) =>
-                          setTagOptions(
-                            e.map((item) => ({
-                              id: item.value,
-                              nombre: item.label,
-                            }))
-                          )
-                        }
+                        getOptionLabel={(e) => e.nombre}
+                        getOptionValue={(e) => String(e.id)}
+                        options={tags}
+                        onChange={(e: GeneralOption[]) => setTagOptions(e)}
                       />
                     </Form.Group>
 
@@ -397,7 +372,7 @@ function Categorization({
             </>
           )}
 
-          {selected === 2 && (
+          {/* {selected === 2 && (
             <>
               <Form id="article-form" onSubmit={sendArticleCategorization}>
                 <Form.Group className="mb-3">
@@ -463,7 +438,7 @@ function Categorization({
                 reject={{ text: 'Eliminar', event: deleteArticleCategorizaion }}
               />
             </>
-          )}
+          )} */}
         </div>
       </div>
     </>

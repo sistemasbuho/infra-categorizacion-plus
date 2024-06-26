@@ -1,45 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
-import { useState, Dispatch, SetStateAction } from 'react';
-import {
-  ArticleCategorization,
-  Programas,
-  Selection,
-  Tags,
-  Temas,
-  Tipos,
-} from '../../interfaces/generals';
+import { useState } from 'react';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 import styles from '../../assets/css/app.module.css';
 import Categorization from './options/Categorization';
 import Header from './options/Header';
 import Config from './options/Config';
-import { useArticleContext } from '../../context/ArticleContext';
 
-interface CategorizationProps {
-  ArticleCategorization: ArticleCategorization;
-  tipos: Tipos[];
-  programas: Programas[];
-  tags: Tags[];
-  temas: Temas[];
-  fragments: Selection[];
-  deleteFragment: (frag: Selection) => void;
-  setSelections: Dispatch<SetStateAction<Selection[]>>;
-  setNewSelections: Dispatch<SetStateAction<Selection[]>>;
-}
-
-function Menu({
-  ArticleCategorization,
-  tipos,
-  programas,
-  fragments,
-  setSelections,
-  setNewSelections,
-  deleteFragment,
-}: CategorizationProps) {
-  const { articulo } = useArticleContext().articleState.article;
-
+function Menu() {
   const [currentOption, setCurrentOption] = useState(1);
 
   return (
@@ -68,19 +37,8 @@ function Menu({
           </button>
         </header>
         <div className={optionStyles.option_cont}>
-          {currentOption === 1 && (
-            <Header articulo={articulo} tipos={tipos} programas={programas} />
-          )}
-          {currentOption === 2 && (
-            <Categorization
-              ArticleCategorization={ArticleCategorization}
-              fragments={fragments}
-              deleteFragment={deleteFragment}
-              setSelections={setSelections}
-              setNewSelections={setNewSelections}
-            />
-          )}
-
+          {currentOption === 1 && <Header />}
+          {currentOption === 2 && <Categorization />}
           {currentOption === 3 && <Config />}
         </div>
       </section>

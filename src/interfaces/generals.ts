@@ -29,6 +29,7 @@ export interface article {
   id: number;
   text: string;
   texto?: string;
+  article_fragment?: string;
   titulo: string;
   image_media_file?: string;
   state: boolean;
@@ -87,7 +88,7 @@ export interface Categorization {
 export interface OverlappingProps {
   startIndex: number;
   length: number;
-  allSelections: Selection[];
+  allFragments: Selection[];
 }
 
 export interface generalRequestProps {
