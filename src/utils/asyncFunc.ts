@@ -107,3 +107,7 @@ export async function searchAutor(query: string) {
 export async function putArticle(id: number, body) {
   return await GeneralRequest(`estado_borrar/${id}`, 'PUT', body);
 }
+
+export async function finishArticle(id: number) {
+  return await GeneralRequest(`finalizar/${id}`, 'PUT');
+}

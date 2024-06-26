@@ -1,6 +1,6 @@
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { putArticle } from '../utils/asyncFunc';
+import { finishArticle as finishArticleFunc } from '../utils/asyncFunc';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { useArticleContext } from '../context/ArticleContext';
@@ -19,8 +19,7 @@ function HeaderBar() {
   }
 
   async function finishArticle() {
-    const update = { finished: true };
-    return await putArticle(article.id, update);
+    return await finishArticleFunc(article.id);
   }
 
   return (
