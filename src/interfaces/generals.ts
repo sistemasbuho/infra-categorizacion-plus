@@ -1,3 +1,18 @@
+export interface articleContext {
+  articulo: article;
+  fragments: Selection[];
+  forms_data: {
+    programa: GeneralOption[];
+    tags: GeneralOption[];
+    temas: GeneralOption[];
+    tipo: GeneralOption[];
+    general: {
+      tag: GeneralOption[];
+      tema: GeneralOption[];
+    };
+  };
+}
+
 interface OriginalFragment {
   id: number;
   article_fragment?: string;

@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { article, GeneralOption, Selection } from '../interfaces/generals';
+import { articleContext } from '../interfaces/generals';
 import { getArticleData } from '../utils/asyncFunc';
 import { useParams } from 'react-router';
 
@@ -38,21 +38,8 @@ interface ContextProps {
   };
 
   articleState: {
-    article: {
-      articulo: article;
-      fragments: Selection[];
-      forms_data: {
-        programa: GeneralOption[];
-        tags: GeneralOption[];
-        temas: GeneralOption[];
-        tipo: GeneralOption[];
-        general: {
-          tag: GeneralOption[];
-          tema: GeneralOption[];
-        };
-      };
-    };
-    setArticle: Dispatch<SetStateAction<article>>;
+    article: articleContext;
+    setArticle: Dispatch<SetStateAction<articleContext>>;
   };
 }
 
