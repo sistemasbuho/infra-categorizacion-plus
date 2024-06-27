@@ -2,10 +2,7 @@ import {
   Categorization as FragmentCategorization,
   editCategorization,
   Selection,
-  Tags,
-  Temas,
   GeneralOption,
-  SelectOption,
 } from '../../../interfaces/generals';
 import {
   postFragment,
@@ -32,18 +29,20 @@ function Categorization() {
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
   const [selected, setSelected] = useState(1);
 
-  const { current, allFrags, methods } = useFragmentContext();
+  const { current, methods, savedFragments, localFragments } =
+    useFragmentContext();
   const { currentFragment, setCurrentFragment } = current;
+  const { delete: deleteFragment, save: saveFragment } = methods;
 
-  const { delete: deleteFragment } = methods;
-  const { allFragments } = allFrags;
+  const { fragments } = savedFragments;
+  const { newFragments } = localFragments;
 
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
   //fragments
-  const [tagOptions, setTagOptions] = useState<Tags[] | null>();
-  const [temaOption, setTemaOption] = useState<Temas[] | null>(null);
+  const [tagOptions, setTagOptions] = useState<GeneralOption[] | null>();
+  const [temaOption, setTemaOption] = useState<GeneralOption[] | null>(null);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
@@ -56,10 +55,10 @@ function Categorization() {
     forms_data.general.tag
   );
 
-  const sentimiento: SelectOption[] = [
-    { value: 1, label: 'Positvo' },
-    { value: 2, label: 'Neutral' },
-    { value: 3, label: 'Negativo' },
+  const sentimiento: GeneralOption[] = [
+    { id: 1, nombre: 'Positvo' },
+    { id: 2, nombre: 'Neutral' },
+    { id: 3, nombre: 'Negativo' },
   ];
 
   async function sendArticleCategorization(e: React.FormEvent) {
@@ -135,23 +134,7 @@ function Categorization() {
 
     return await postFragment(articulo.id, update).then((res) => {
       const { fragmento } = res;
-      const fragmentSaved: Selection = {
-        ...fragmento,
-        id: fragmento.id,
-        text: fragmento.article_fragment,
-        length: fragmento.article_fragment.length,
-        startIndex: Number(fragmento.start_index),
-      };
-
-      delete fragmentSaved.selectionId;
-      // setSelections((prev) => [...prev, fragmentSaved]);
-      // setNewSelections((prev) =>
-      //   prev.filter(
-      //     (sel) =>
-      //       sel?.id !== fragmentSaved?.id ||
-      //       sel?.selectionId !== fragmentSaved?.selectionId
-      //   )
-      // );
+      saveFragment(fragmento);
     });
   }
 
@@ -216,6 +199,9 @@ function Categorization() {
     setTemaOption(currentFragment?.tema_details);
     setPasivoOption(currentFragment?.pasivo_details);
     setActivoOption(currentFragment?.activo_details);
+    setTonoOption(
+      sentimiento.find((sent) => sent?.id === currentFragment?.tono)
+    );
 
     return () => {};
   }, [currentFragment]);
@@ -256,8 +242,8 @@ function Categorization() {
                   <h4>Fragmentos</h4>
 
                   <div className={styles.list}>
-                    {allFragments.length > 0 ? (
-                      allFragments.map((frag, i) => {
+                    {[...fragments, ...newFragments].length > 0 ? (
+                      [...fragments, ...newFragments].map((frag, i) => {
                         return (
                           <a
                             href={`#${frag.start_index}_${frag.article_fragment.length}`}
@@ -305,22 +291,11 @@ function Categorization() {
                       </Form.Label>
                       <Select
                         isMulti
-                        options={temas.map((item) => ({
-                          label: item.nombre,
-                          value: item.id,
-                        }))}
-                        value={temaOption?.map((item) => ({
-                          label: item?.nombre,
-                          value: item?.id,
-                        }))}
-                        onChange={(e) =>
-                          setTemaOption(
-                            e.map((item) => ({
-                              id: item.value,
-                              nombre: item.label,
-                            }))
-                          )
-                        }
+                        options={temas}
+                        getOptionLabel={(e) => e.nombre}
+                        getOptionValue={(e) => String(e.id)}
+                        value={temaOption || []}
+                        onChange={(e: GeneralOption[]) => setTemaOption(e)}
                         styles={{
                           control: (base) => ({
                             ...base,
@@ -342,6 +317,7 @@ function Categorization() {
                         getOptionLabel={(e) => e.nombre}
                         getOptionValue={(e) => String(e.id)}
                         options={tags}
+                        value={tagOptions || []}
                         onChange={(e: GeneralOption[]) => setTagOptions(e)}
                       />
                     </Form.Group>
@@ -354,6 +330,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncActivo}
                         clear={forceUpdate}
+                        value={currentFragment?.activo_details || []}
                       />
                     </Form.Group>
 
@@ -365,6 +342,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncPasivo}
                         clear={forceUpdate}
+                        value={currentFragment?.pasivo_details || []}
                       />
                     </Form.Group>
 
@@ -373,21 +351,12 @@ function Categorization() {
                         <h4>Sentimiento</h4>
                       </Form.Label>
                       <Select
-                        options={sentimiento.map((item) => ({
-                          label: item.label,
-                          value: item.value,
-                        }))}
+                        options={sentimiento}
                         placeholder={'Buscar'}
-                        onChange={(e) =>
-                          setTonoOption({
-                            id: Number(e.value),
-                            nombre: e.label,
-                          })
-                        }
-                        value={{
-                          label: tonoOption?.nombre,
-                          value: tonoOption?.id,
-                        }}
+                        onChange={(e) => setTonoOption(e)}
+                        getOptionLabel={(e) => e.nombre}
+                        getOptionValue={(e) => String(e.id)}
+                        value={tonoOption}
                       />
                     </Form.Group>
                   </Form>

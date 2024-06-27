@@ -36,6 +36,7 @@ interface ContextProps {
   methods: {
     create: (frag: Selection) => void;
     delete: (frag: Selection) => void;
+    save: (frag: Selection) => void;
   };
 }
 
@@ -51,17 +52,6 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   const { fragments: articleFragments } =
     useArticleContext().articleState.article;
 
-  function deleteFragment(frag: Selection) {
-    setFragments((prev) => prev.filter((fragment) => fragment.id !== frag.id));
-    setNewFragments((prev) =>
-      prev.filter((fragment) => fragment.selectionId !== frag.selectionId)
-    );
-  }
-
-  function createNewFragment(newFragment: Selection) {
-    setNewFragments((prev) => [...prev, newFragment]);
-  }
-
   useEffect(() => {
     if (articleFragments) {
       articleFragments.map((item) => ({
@@ -73,8 +63,44 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
     return () => {};
   }, [articleFragments]);
 
+  // para los nuevos fragmentos, no es para los fragmentos guardados en la base de datos
+  function createNewFragment(newFragment: Selection) {
+    setNewFragments((prev) => [...prev, newFragment]);
+    setAllFragments((prev) => [...prev, newFragment]);
+  }
+
+  // solo se debe usar para fragmentos guardados en la base de datos
+  function saveFragment(newFrag: Selection) {
+    const formatedFragment = newFrag;
+
+    console.log(formatedFragment.tag_details);
+    console.log(formatedFragment.tema_details);
+
+    delete formatedFragment.selectionId;
+
+    setNewFragments((prev) =>
+      prev.filter((fragment) => fragment.id !== formatedFragment.id)
+    );
+
+    setFragments((prev) => [...prev, formatedFragment]);
+    setAllFragments((prev) => [...prev, formatedFragment]);
+  }
+
+  function deleteFragment(frag: Selection) {
+    setFragments((prev) => prev.filter((fragment) => fragment.id !== frag.id));
+
+    setNewFragments((prev) =>
+      prev.filter((fragment) => fragment.selectionId !== frag.selectionId)
+    );
+
+    setAllFragments((prev) =>
+      prev.filter((fragment) => fragment.id !== frag.id)
+    );
+  }
+
   useEffect(() => {
     setAllFragments([...fragments, ...newFragments]);
+
     return () => {};
   }, [fragments, newFragments]);
 
@@ -100,6 +126,7 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
         methods: {
           create: createNewFragment,
           delete: deleteFragment,
+          save: saveFragment,
         },
       }}
     >
