@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getActivoPasivoCategorization } from '../../utils/asyncFunc';
 
 import AsyncSelect from 'react-select/async';
+import { GeneralOption } from '../../interfaces/generals';
 
 interface TagOption {
   id: number;
@@ -20,6 +21,7 @@ interface AsyncSelectActivoPasivoProps {
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
+  value?: GeneralOption[];
 }
 
 const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
@@ -29,6 +31,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   name = 'objetivo',
   maxHeight = 150,
   clear,
+  value,
 }) => {
   const [forceUpdate, setForceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
@@ -97,6 +100,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   return (
     <AsyncSelect
       isMulti={isMulti}
+      value={value}
       noOptionsMessage={() => 'Sin resultados'}
       className="mb-3"
       cacheOptions
