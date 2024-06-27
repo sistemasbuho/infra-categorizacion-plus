@@ -11,6 +11,8 @@ import {
   postFragment,
   deleteFragment as delFragment,
   editFragment,
+  postArticleCategorization,
+  deleteArticleCategorization,
 } from '../../../utils/asyncFunc';
 import { useArticleContext } from '../../../context/ArticleContext';
 import { useFragmentContext } from '../../../context/FragmentsContext';
@@ -25,7 +27,8 @@ import styles from '../../../assets/css/components/menu/categorization.module.cs
 import Select from 'react-select';
 
 function Categorization() {
-  const { articulo } = useArticleContext().articleState.article;
+  const { articulo, forms_data } = useArticleContext().articleState.article;
+  const { setArticle } = useArticleContext().articleState;
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
   const [selected, setSelected] = useState(1);
 
@@ -38,11 +41,20 @@ function Categorization() {
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
+  //fragments
   const [tagOptions, setTagOptions] = useState<Tags[] | null>();
   const [temaOption, setTemaOption] = useState<Temas[] | null>(null);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
+
+  // article
+  const [temaGeneral, setTemaGeneral] = useState<GeneralOption[]>(
+    forms_data.general.tema
+  );
+  const [tagGeneral, setTagGeneral] = useState<GeneralOption[]>(
+    forms_data.general.tag
+  );
 
   const sentimiento: SelectOption[] = [
     { value: 1, label: 'Positvo' },
@@ -50,25 +62,51 @@ function Categorization() {
     { value: 3, label: 'Negativo' },
   ];
 
-  // async function sendArticleCategorization(e: React.FormEvent) {
-  //   e.preventDefault();
-  //   const update = {
-  //     tema: forms_data.general.tema.map((item) => item.id),
-  //     tag: forms_data.general.tag.map((item) => item.id),
-  //   };
+  async function sendArticleCategorization(e: React.FormEvent) {
+    e.preventDefault();
+    const update = {
+      tema: temaGeneral.map((e) => e.id),
+      tag: tagGeneral.map((e) => e.id),
+    };
 
-  //   await postArticleCategorization(articulo.id, update);
-  // }
+    await postArticleCategorization(articulo.id, update)
+      .then(() => {
+        setArticle((prev) => ({
+          ...prev,
+          forms_data: {
+            ...prev.forms_data,
+            general: {
+              tag: tagGeneral,
+              tema: temaGeneral,
+            },
+          },
+        }));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
-  // async function deleteArticleCategorizaion() {
-  //   setArticle((prev) => {
-  //     console.log(prev);
-
-  //     return prev;
-  //   });
-
-  //   await delArticleCategorization(articulo.id);
-  // }
+  async function deleteArticleCategorizaion() {
+    await deleteArticleCategorization(articulo.id)
+      .then(() => {
+        setTemaGeneral([]);
+        setTagGeneral([]);
+        setArticle((prev) => ({
+          ...prev,
+          forms_data: {
+            ...prev.forms_data,
+            general: {
+              tag: [],
+              tema: [],
+            },
+          },
+        }));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   // Fragmento
   async function postCurrentFragment() {
@@ -372,7 +410,7 @@ function Categorization() {
             </>
           )}
 
-          {/* {selected === 2 && (
+          {selected === 2 && (
             <>
               <Form id="article-form" onSubmit={sendArticleCategorization}>
                 <Form.Group className="mb-3">
@@ -381,27 +419,12 @@ function Categorization() {
                   </Form.Label>
                   <Select
                     isMulti
-                    value={tagGeneral?.map((item) => ({
-                      label: item.nombre,
-                      value: item.id,
-                    }))}
-                    options={tags.map((item) => ({
-                      label: item.nombre,
-                      value: item.id,
-                    }))}
-                    onChange={(e) =>
-                      setTagGeneral(
-                        e.map((item) => ({
-                          id: item.value,
-                          nombre: item.label,
-                        }))
-                      )
-                    }
-                    defaultValue={ArticleCategorization.tags?.map((e) => ({
-                      label: e.nombre,
-                      value: e.id,
-                    }))}
-                  />{' '}
+                    value={tagGeneral}
+                    options={forms_data.tags}
+                    getOptionLabel={(e) => e.nombre}
+                    getOptionValue={(e) => String(e.id)}
+                    onChange={(e: GeneralOption[]) => setTagGeneral(e)}
+                  />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>
@@ -409,26 +432,11 @@ function Categorization() {
                   </Form.Label>
                   <Select
                     isMulti
-                    options={temas.map((item) => ({
-                      label: item.nombre,
-                      value: item.id,
-                    }))}
-                    value={temaGeneral?.map((item) => ({
-                      label: item.nombre,
-                      value: item.id,
-                    }))}
-                    onChange={(e) =>
-                      setTemaGeneral(
-                        e.map((item) => ({
-                          id: item.value,
-                          nombre: item.label,
-                        }))
-                      )
-                    }
-                    defaultValue={ArticleCategorization.temas?.map((e) => ({
-                      label: e.nombre,
-                      value: e.id,
-                    }))}
+                    value={temaGeneral}
+                    onChange={(e: GeneralOption[]) => setTemaGeneral(e)}
+                    options={forms_data.temas}
+                    getOptionLabel={(e) => e.nombre}
+                    getOptionValue={(e) => String(e.id)}
                   />
                 </Form.Group>
               </Form>
@@ -438,7 +446,7 @@ function Categorization() {
                 reject={{ text: 'Eliminar', event: deleteArticleCategorizaion }}
               />
             </>
-          )} */}
+          )}
         </div>
       </div>
     </>
