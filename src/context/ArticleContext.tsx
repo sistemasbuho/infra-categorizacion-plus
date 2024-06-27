@@ -67,17 +67,17 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
       await getArticleData(id).then((data) => {
-        const tagGeneral = data.general?.[0].tag_data;
-        const temaGeneral = data.general?.[0].tema_data;
+        const tagGeneral = data?.general?.[0]?.tag_data;
+        const temaGeneral = data?.general?.[0]?.tema_data;
 
         setArticle({
-          articulo: { ...data.articulo },
-          fragments: data.fragmentos,
+          articulo: { ...data?.articulo },
+          fragments: data?.fragmentos,
           forms_data: {
-            programa: data.programa,
-            tags: data.tags[0].tags,
-            temas: data.temas,
-            tipo: data.tipo,
+            programa: data?.programa,
+            tags: data?.tags[0]?.tags,
+            temas: data?.temas,
+            tipo: data?.tipo,
             general: {
               tag: tagGeneral,
               tema: temaGeneral,
