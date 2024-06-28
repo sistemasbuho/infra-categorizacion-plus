@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import AsyncSelect from 'react-select/async';
 import { searchAutor } from '../../utils/asyncFunc';
+import { GeneralOption } from '../../interfaces/generals';
 
 interface TagOption {
   id: number;
@@ -20,6 +21,7 @@ interface AsyncSelectAutor {
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
+  value: GeneralOption[];
 }
 
 const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
@@ -28,11 +30,11 @@ const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
   placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
-  clear,
+  value,
 }) => {
-  const [forceUpdate, setForceUpdate] = useState(false);
+  const [forceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
-  const [autorOptions, setAutorOptions] = useState<TagOption[]>([]);
+  const [autorOptions, setAutorOptions] = useState<TagOption[]>(value);
 
   const searchTimeoutRef = useRef<number | null>(null);
 
@@ -80,16 +82,6 @@ const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
     }
   }
 
-  function clearInput() {
-    setInputAutorValue('');
-    setAutorOptions([]);
-    setForceUpdate(!forceUpdate);
-  }
-
-  useEffect(() => {
-    clearInput();
-  }, [clear]);
-
   useEffect(() => {
     sendResponse(autorOptions, inputAutorValue);
   }, [autorOptions, sendResponse, inputAutorValue]);
@@ -102,6 +94,7 @@ const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
       cacheOptions
       key={`objective-${forceUpdate ? 'refresh' : 'normal'}`}
       name={name}
+      value={autorOptions}
       getOptionLabel={(e: TagOption) => {
         if (e.isNew) {
           return `${e.nombre} ( Nuevo )`;

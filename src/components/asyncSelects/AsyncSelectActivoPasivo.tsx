@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { getActivoPasivoCategorization } from '../../utils/asyncFunc';
 
 import AsyncSelect from 'react-select/async';
-import { GeneralOption } from '../../interfaces/generals';
 
 interface TagOption {
   id: number;
@@ -21,7 +20,7 @@ interface AsyncSelectActivoPasivoProps {
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
-  value?: GeneralOption[];
+  value?: TagOption[];
 }
 
 const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
@@ -30,12 +29,11 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
-  clear,
   value,
 }) => {
-  const [forceUpdate, setForceUpdate] = useState(false);
+  const [forceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
-  const [autorOptions, setAutorOptions] = useState<TagOption[]>([]);
+  const [autorOptions, setAutorOptions] = useState<TagOption[]>(value);
 
   const searchTimeoutRef = useRef<number | null>(null);
 
@@ -83,16 +81,6 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
     }
   }
 
-  function clearInput() {
-    setInputAutorValue('');
-    setAutorOptions([]);
-    setForceUpdate(!forceUpdate);
-  }
-
-  useEffect(() => {
-    clearInput();
-  }, [clear]);
-
   useEffect(() => {
     sendResponse(autorOptions, inputAutorValue);
   }, [autorOptions, sendResponse, inputAutorValue]);
@@ -100,7 +88,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   return (
     <AsyncSelect
       isMulti={isMulti}
-      value={value}
+      value={autorOptions}
       noOptionsMessage={() => 'Sin resultados'}
       className="mb-3"
       cacheOptions
@@ -117,9 +105,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
       getOptionValue={(e) => e.id.toString()}
       loadOptions={loadOptions}
       onInputChange={(value) => setInputAutorValue(value)}
-      onChange={(value) =>
-        setAutorOptions(Array.isArray(value) ? value : [value])
-      }
+      onChange={(e: TagOption[]) => setAutorOptions(e)}
       isClearable={false}
       placeholder={placeholder}
       menuPortalTarget={document.body}

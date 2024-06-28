@@ -20,6 +20,7 @@ interface AsyncSelectMedio {
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
+  value: TagOption[];
 }
 
 const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
@@ -28,11 +29,11 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
   placeholder = 'Buscar',
   name = 'objetivo',
   maxHeight = 150,
-  clear,
+  value,
 }) => {
-  const [forceUpdate, setForceUpdate] = useState(false);
+  const [forceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
-  const [autorOptions, setAutorOptions] = useState<TagOption[]>([]);
+  const [autorOptions, setAutorOptions] = useState<TagOption[]>(value);
 
   const searchTimeoutRef = useRef<number | null>(null);
 
@@ -68,16 +69,6 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
     }
   }
 
-  function clearInput() {
-    setInputAutorValue('');
-    setAutorOptions([]);
-    setForceUpdate(!forceUpdate);
-  }
-
-  useEffect(() => {
-    clearInput();
-  }, [clear]);
-
   useEffect(() => {
     sendResponse(autorOptions, inputAutorValue);
   }, [autorOptions, sendResponse, inputAutorValue]);
@@ -88,6 +79,7 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
       noOptionsMessage={() => 'No se encontraron resultados'}
       className="mb-3"
       cacheOptions
+      value={autorOptions}
       key={`objective-${forceUpdate ? 'refresh' : 'normal'}`}
       name={name}
       getOptionLabel={(e: TagOption) => e.nombre}
