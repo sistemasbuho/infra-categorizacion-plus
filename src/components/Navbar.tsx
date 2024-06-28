@@ -12,7 +12,7 @@ function Navbar() {
     <div className={styles.container}>
       <h1
         onClick={() => setOpen((prev) => !prev)}
-        className={open && styles.open}
+        className={` ${open ? styles.open : ''} `}
       >
         {titulo}
       </h1>

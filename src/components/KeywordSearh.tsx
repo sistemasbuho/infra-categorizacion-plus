@@ -3,7 +3,7 @@ import styles from '../assets/css/components/keywordSearch.module.css';
 import Search from './Search';
 
 function KeywordSearch() {
-  const [input, setInput] = useState<string | null>(null);
+  const [input, setInput] = useState<string | null>('');
   const keywords = [
     'Calma',
     'Tranquilidad',

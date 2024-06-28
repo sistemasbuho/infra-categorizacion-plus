@@ -54,10 +54,13 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
 
   useEffect(() => {
     if (articleFragments) {
-      articleFragments.map((item) => ({
-        ...item,
-        start_index: Number(item.start_index),
-      }));
+      articleFragments.map((item) => {
+        delete item?.selectionId;
+        return {
+          ...item,
+          start_index: Number(item.start_index),
+        };
+      });
       setFragments(articleFragments);
     }
     return () => {};
@@ -73,9 +76,6 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   function saveFragment(newFrag: Selection) {
     const formatedFragment = newFrag;
 
-    console.log(formatedFragment.tag_details);
-    console.log(formatedFragment.tema_details);
-
     delete formatedFragment.selectionId;
 
     setNewFragments((prev) =>
@@ -87,14 +87,20 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   }
 
   function deleteFragment(frag: Selection) {
-    setFragments((prev) => prev.filter((fragment) => fragment.id !== frag.id));
-
+    setCurrentFragment(null);
+    setFragments((prev) => prev.filter((fragment) => fragment.id !== frag?.id));
     setNewFragments((prev) =>
-      prev.filter((fragment) => fragment.selectionId !== frag.selectionId)
+      prev.filter(
+        (fragment) =>
+          fragment.selectionId !== frag?.selectionId || frag?.id !== frag?.id
+      )
     );
 
     setAllFragments((prev) =>
-      prev.filter((fragment) => fragment.id !== frag.id)
+      prev.filter(
+        (fragment) =>
+          fragment.selectionId !== frag?.selectionId || frag?.id !== frag?.id
+      )
     );
   }
 

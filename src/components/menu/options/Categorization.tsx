@@ -24,18 +24,18 @@ import styles from '../../../assets/css/components/menu/categorization.module.cs
 import Select from 'react-select';
 
 function Categorization() {
-  const { articulo, forms_data } = useArticleContext().articleState.article;
+  // Context
   const { setArticle } = useArticleContext().articleState;
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
-  const [selected, setSelected] = useState(1);
-
+  const { articulo, forms_data } = useArticleContext().articleState.article;
   const { current, methods, savedFragments, localFragments } =
     useFragmentContext();
   const { currentFragment, setCurrentFragment } = current;
   const { delete: deleteFragment, save: saveFragment } = methods;
-
   const { fragments } = savedFragments;
   const { newFragments } = localFragments;
+
+  const [selected, setSelected] = useState(1);
 
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
@@ -47,6 +47,12 @@ function Categorization() {
   const [pasivoOption, setPasivoOption] = useState([]);
   const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
 
+  const sentimiento: GeneralOption[] = [
+    { id: 1, nombre: 'Positvo' },
+    { id: 2, nombre: 'Neutral' },
+    { id: 3, nombre: 'Negativo' },
+  ];
+
   // article
   const [temaGeneral, setTemaGeneral] = useState<GeneralOption[]>(
     forms_data.general.tema
@@ -54,12 +60,6 @@ function Categorization() {
   const [tagGeneral, setTagGeneral] = useState<GeneralOption[]>(
     forms_data.general.tag
   );
-
-  const sentimiento: GeneralOption[] = [
-    { id: 1, nombre: 'Positvo' },
-    { id: 2, nombre: 'Neutral' },
-    { id: 3, nombre: 'Negativo' },
-  ];
 
   async function sendArticleCategorization(e: React.FormEvent) {
     e.preventDefault();
@@ -107,7 +107,6 @@ function Categorization() {
       });
   }
 
-  // Fragmento
   async function postCurrentFragment() {
     const update: FragmentCategorization = {
       articulo: articulo.id,
@@ -134,13 +133,17 @@ function Categorization() {
 
     return await postFragment(articulo.id, update).then((res) => {
       const { fragmento } = res;
-      saveFragment(fragmento);
+      const formatedFragment: Selection = fragmento;
+      delete formatedFragment.selectionId;
+
+      deleteFragment(formatedFragment);
+      saveFragment(formatedFragment);
     });
   }
 
   async function editCurrentFragment() {
     const update: editCategorization = {
-      tono: Number(tonoOption),
+      tono: tonoOption.id,
       tema: temaOption.map((item) => item.id),
       tag: tagOptions.map((item) => item.id),
       activo: activoOption.map((item) => item.id),
@@ -294,7 +297,7 @@ function Categorization() {
                         options={temas}
                         getOptionLabel={(e) => e.nombre}
                         getOptionValue={(e) => String(e.id)}
-                        value={temaOption || []}
+                        value={temaOption}
                         onChange={(e: GeneralOption[]) => setTemaOption(e)}
                         styles={{
                           control: (base) => ({
@@ -317,7 +320,7 @@ function Categorization() {
                         getOptionLabel={(e) => e.nombre}
                         getOptionValue={(e) => String(e.id)}
                         options={tags}
-                        value={tagOptions || []}
+                        value={tagOptions}
                         onChange={(e: GeneralOption[]) => setTagOptions(e)}
                       />
                     </Form.Group>
@@ -330,7 +333,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncActivo}
                         clear={forceUpdate}
-                        value={currentFragment?.activo_details || []}
+                        value={currentFragment?.activo_details}
                       />
                     </Form.Group>
 
@@ -342,7 +345,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncPasivo}
                         clear={forceUpdate}
-                        value={currentFragment?.pasivo_details || []}
+                        value={currentFragment?.pasivo_details}
                       />
                     </Form.Group>
 

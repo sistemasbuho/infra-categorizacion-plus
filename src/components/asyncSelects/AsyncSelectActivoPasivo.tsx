@@ -82,6 +82,11 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   }
 
   useEffect(() => {
+    setAutorOptions(value);
+    return () => {};
+  }, [value]);
+
+  useEffect(() => {
     sendResponse(autorOptions, inputAutorValue);
   }, [autorOptions, sendResponse, inputAutorValue]);
 

@@ -82,9 +82,7 @@ function Article(): JSX.Element {
   };
 
   useEffect(() => {
-    setFragments((sel) =>
-      sel.map((select) => ({ ...select, selectionId: Date.now() }))
-    );
+    setFragments((sel) => sel.map((select) => ({ ...select })));
     return () => {};
   }, []);
 
