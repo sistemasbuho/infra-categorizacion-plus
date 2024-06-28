@@ -10,7 +10,8 @@ import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
 
 function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { articulo: article } = useArticleContext().articleState.article;
+  const { articulo: article, siguiente_articulo } =
+    useArticleContext().articleState.article;
 
   const navigate = useNavigate();
 
@@ -19,7 +20,9 @@ function HeaderBar() {
   }
 
   async function finishArticle() {
-    return await finishArticleFunc(article.id);
+    return await finishArticleFunc(article.id).then(() => {
+      navigate(`/articulo/${siguiente_articulo}`);
+    });
   }
 
   return (
