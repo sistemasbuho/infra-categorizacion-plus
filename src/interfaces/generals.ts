@@ -1,6 +1,7 @@
 export interface articleContext {
   articulo: article;
   fragments: Selection[];
+  siguiente_articulo: number;
   forms_data: {
     programa: GeneralOption[];
     tags: GeneralOption[];
