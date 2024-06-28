@@ -57,11 +57,8 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   }
 
   function saveFragment(newFrag: Selection) {
-    console.log(newFragments.find((frag) => frag.id === newFrag.id));
-
     const formatedFragment = newFrag;
     delete formatedFragment.selectionId;
-
 
     setNewFragments((prev) =>
       prev.filter((fragment) => fragment.id !== formatedFragment.id)
@@ -96,9 +93,6 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
 
   useEffect(() => {
     const orderedFrags = [...fragments, ...newFragments];
-
-    console.log(orderedFrags.map((item) => item.id));
-    console.log(orderedFrags);
 
     setAllFragments(orderedFrags);
     return () => {};
