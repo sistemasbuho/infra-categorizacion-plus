@@ -105,7 +105,10 @@ function Header() {
             <Form.Label htmlFor="tipo">
               <h4>Medio</h4>
             </Form.Label>
-            <AsyncSelectMedio sendResponse={getMedio} />
+            <AsyncSelectMedio
+              sendResponse={getMedio}
+              value={[articulo.medio]}
+            />
           </Form.Group>
 
           <Form.Group className="mb-4">
@@ -126,7 +129,10 @@ function Header() {
             <Form.Label htmlFor="tipo">
               <h4>Autor</h4>
             </Form.Label>
-            <AsyncSelectAutor sendResponse={getAutor} />
+            <AsyncSelectAutor
+              sendResponse={getAutor}
+              value={[articulo.autor]}
+            />
           </Form.Group>
         </Form>
       </div>
