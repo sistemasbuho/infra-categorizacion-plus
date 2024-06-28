@@ -11,12 +11,10 @@ import { useFragmentContext } from '../context/FragmentsContext';
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
   const { texto } = useArticleContext().articleState.article.articulo;
-  const { localFragments, savedFragments, allFrags } = useFragmentContext();
+  const { allFrags, methods } = useFragmentContext();
 
   const { allFragments } = allFrags;
-  const { setFragments } = savedFragments;
-  const { setNewFragments } = localFragments;
-
+  const { create: createFrag } = methods;
   const [articleModified, setArticleModified] = useState(texto);
   const articleRef = useRef<HTMLParagraphElement>(null);
 
@@ -43,21 +41,19 @@ function Article(): JSX.Element {
       const length = selectedText.length;
 
       if (!isOverlappingFragment({ startIndex, length, allFragments })) {
-        setNewFragments((prevSelections) => [
-          ...prevSelections,
-          {
-            id: Date.now(),
-            article_fragment: selectedText,
-            selectionId: Date.now(),
-            tema: [],
-            start_index: Number(startIndex),
-            tag_details: [],
-            tema_details: [],
-            activo_details: [],
-            pasivo_details: [],
-            tono: null,
-          },
-        ]);
+        const newFragment = {
+          id: Date.now(),
+          article_fragment: selectedText,
+          selectionId: Date.now(),
+          tema: [],
+          start_index: Number(startIndex),
+          tag_details: [],
+          tema_details: [],
+          activo_details: [],
+          pasivo_details: [],
+          tono: null,
+        };
+        createFrag(newFragment);
       }
     }
   };
@@ -85,11 +81,6 @@ function Article(): JSX.Element {
 
     return modifiedText;
   };
-
-  useEffect(() => {
-    setFragments((sel) => sel.map((select) => ({ ...select })));
-    return () => {};
-  }, []);
 
   useEffect(() => {
     const modifiedText = applySelections(texto, allFragments);

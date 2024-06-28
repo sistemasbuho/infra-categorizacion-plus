@@ -28,12 +28,10 @@ function Categorization() {
   const { setArticle } = useArticleContext().articleState;
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
   const { articulo, forms_data } = useArticleContext().articleState.article;
-  const { current, methods, savedFragments, localFragments } =
-    useFragmentContext();
+  const { current, methods, allFrags } = useFragmentContext();
   const { currentFragment, setCurrentFragment } = current;
   const { delete: deleteFragment, save: saveFragment } = methods;
-  const { fragments } = savedFragments;
-  const { newFragments } = localFragments;
+  const { allFragments } = allFrags;
 
   const [selected, setSelected] = useState(1);
 
@@ -136,7 +134,6 @@ function Categorization() {
       const formatedFragment: Selection = fragmento;
       delete formatedFragment.selectionId;
 
-      deleteFragment(formatedFragment);
       saveFragment(formatedFragment);
     });
   }
@@ -245,36 +242,38 @@ function Categorization() {
                   <h4>Fragmentos</h4>
 
                   <div className={styles.list}>
-                    {[...fragments, ...newFragments].length > 0 ? (
-                      [...fragments, ...newFragments].map((frag, i) => {
-                        return (
-                          <a
-                            href={`#${frag.start_index}_${frag.article_fragment.length}`}
-                            key={i}
-                          >
-                            <div
-                              className={`
+                    {allFragments.length > 0 ? (
+                      allFragments
+                        .sort((a, b) => a.id - b.id)
+                        .map((frag, i) => {
+                          return (
+                            <a
+                              href={`#${frag.start_index}_${frag.article_fragment.length}`}
+                              key={i}
+                            >
+                              <div
+                                className={`
                               ${styles.fragment}
                               ${!frag?.selectionId && styles.fragment_saved} 
                               ${
                                 currentFragment?.id === frag?.id &&
                                 styles.fragment_selected
                               }`}
-                              onClick={() => setCurrentFragment(frag)}
-                            >
-                              <p>{frag.article_fragment}</p>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteCurrentFragment(frag);
-                                }}
+                                onClick={() => setCurrentFragment(frag)}
                               >
-                                <FontAwesomeIcon icon={faClose} />
-                              </button>
-                            </div>
-                          </a>
-                        );
-                      })
+                                <p>{frag.article_fragment}</p>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteCurrentFragment(frag);
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faClose} />
+                                </button>
+                              </div>
+                            </a>
+                          );
+                        })
                     ) : (
                       <p className="text-center m-0">Aún no hay fragmentos</p>
                     )}
@@ -294,6 +293,7 @@ function Categorization() {
                       </Form.Label>
                       <Select
                         isMulti
+                        isClearable={false}
                         options={temas}
                         getOptionLabel={(e) => e.nombre}
                         getOptionValue={(e) => String(e.id)}
@@ -317,6 +317,7 @@ function Categorization() {
 
                       <Select
                         isMulti
+                        isClearable={false}
                         getOptionLabel={(e) => e.nombre}
                         getOptionValue={(e) => String(e.id)}
                         options={tags}

@@ -1,12 +1,14 @@
-
-
 .page {
   border-radius: 10px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .page > p {
-  width: fit-content;
-  margin: 0 auto;
+  transition: font-size 0.5s ease;
   color: var(--text-primary);
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

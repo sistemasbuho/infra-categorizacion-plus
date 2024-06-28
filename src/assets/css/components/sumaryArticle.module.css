@@ -4,20 +4,24 @@
   gap: 1rem;
   background-color: var(--box-color);
   box-shadow: var(--box-shadow);
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
+  border-radius: 10px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .container p {
   color: var(--text-primary);
   margin: 0;
-}
-
-.container > div {
-  flex-grow: 1;
+  transition: font-size 0.5s ease;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .container > div {
   width: 100%;
+  flex-grow: 1;
 }

@@ -52,61 +52,55 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   const { fragments: articleFragments } =
     useArticleContext().articleState.article;
 
-  useEffect(() => {
-    if (articleFragments) {
-      articleFragments.map((item) => {
-        delete item?.selectionId;
-        return {
-          ...item,
-          start_index: Number(item.start_index),
-        };
-      });
-      setFragments(articleFragments);
-    }
-    return () => {};
-  }, [articleFragments]);
-
-  // para los nuevos fragmentos, no es para los fragmentos guardados en la base de datos
   function createNewFragment(newFragment: Selection) {
     setNewFragments((prev) => [...prev, newFragment]);
-    setAllFragments((prev) => [...prev, newFragment]);
   }
 
-  // solo se debe usar para fragmentos guardados en la base de datos
   function saveFragment(newFrag: Selection) {
-    const formatedFragment = newFrag;
+    console.log(newFragments.find((frag) => frag.id === newFrag.id));
 
+    const formatedFragment = newFrag;
     delete formatedFragment.selectionId;
+
 
     setNewFragments((prev) =>
       prev.filter((fragment) => fragment.id !== formatedFragment.id)
     );
 
     setFragments((prev) => [...prev, formatedFragment]);
-    setAllFragments((prev) => [...prev, formatedFragment]);
   }
 
   function deleteFragment(frag: Selection) {
-    setCurrentFragment(null);
+    setCurrentFragment((prev) => (prev?.id === frag?.id ? null : prev));
     setFragments((prev) => prev.filter((fragment) => fragment.id !== frag?.id));
     setNewFragments((prev) =>
       prev.filter(
         (fragment) =>
-          fragment.selectionId !== frag?.selectionId || frag?.id !== frag?.id
-      )
-    );
-
-    setAllFragments((prev) =>
-      prev.filter(
-        (fragment) =>
-          fragment.selectionId !== frag?.selectionId || frag?.id !== frag?.id
+          fragment?.selectionId !== frag?.selectionId || frag?.id !== frag?.id
       )
     );
   }
 
   useEffect(() => {
-    setAllFragments([...fragments, ...newFragments]);
+    if (articleFragments) {
+      articleFragments.map((item) => {
+        return {
+          ...item,
+          start_index: Number(item.start_index),
+        };
+      });
+      setFragments([...articleFragments]);
+    }
+    return () => {};
+  }, [articleFragments]);
 
+  useEffect(() => {
+    const orderedFrags = [...fragments, ...newFragments];
+
+    console.log(orderedFrags.map((item) => item.id));
+    console.log(orderedFrags);
+
+    setAllFragments(orderedFrags);
     return () => {};
   }, [fragments, newFragments]);
 

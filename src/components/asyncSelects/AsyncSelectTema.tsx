@@ -97,7 +97,6 @@ const AsyncSelectTema: React.FC<AsyncSelectTemaProps> = ({
       onChange={(value) =>
         setAutorOptions(Array.isArray(value) ? value : [value])
       }
-      isClearable={false}
       placeholder={placeholder}
       menuPortalTarget={document.body}
       maxMenuHeight={maxHeight}
