@@ -51,6 +51,11 @@ function Article(): JSX.Element {
             selectionId: Date.now(),
             tema: [],
             start_index: Number(startIndex),
+            tag_details: [],
+            tema_details: [],
+            activo_details: [],
+            pasivo_details: [],
+            tono: null,
           },
         ]);
       }
