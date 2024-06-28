@@ -16,6 +16,7 @@ const initialArticleState = {
   articulo: {},
   fragments: [],
   siguiente_articulo: null,
+  proyecto: '',
   forms_data: {
     programa: [],
     tags: [],
@@ -62,6 +63,7 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
           articulo: { ...data?.articulo },
           fragments: data?.fragmentos,
           siguiente_articulo: data?.siguiente_articulo || null,
+          proyecto: data.proyecto[0].nombre,
           forms_data: {
             programa: data?.programa,
             tags: data?.tags[0]?.tags,

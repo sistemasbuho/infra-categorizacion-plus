@@ -5,9 +5,8 @@ import styles from '../assets/css/components/navbar.module.css';
 
 function Navbar() {
   const [open, setOpen] = useState(false);
-  const { titulo, proyecto } =
-    useArticleContext().articleState.article.articulo;
-
+  const { titulo } = useArticleContext().articleState.article.articulo;
+  const { proyecto } = useArticleContext().articleState.article;
   return (
     <div className={styles.container}>
       <h1
@@ -16,7 +15,7 @@ function Navbar() {
       >
         {titulo}
       </h1>
-      <p>{`Proyecto: ${proyecto}`}</p>
+      <p>{proyecto}</p>
     </div>
   );
 }
