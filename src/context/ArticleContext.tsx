@@ -15,6 +15,7 @@ import { useParams } from 'react-router';
 const initialArticleState = {
   articulo: {},
   fragments: [],
+  siguiente_articulo: null,
   forms_data: {
     programa: [],
     tags: [],
@@ -60,6 +61,7 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
         setArticle({
           articulo: { ...data?.articulo },
           fragments: data?.fragmentos,
+          siguiente_articulo: data?.siguiente_articulo || null,
           forms_data: {
             programa: data?.programa,
             tags: data?.tags[0]?.tags,
