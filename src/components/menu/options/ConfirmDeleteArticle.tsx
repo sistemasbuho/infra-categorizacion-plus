@@ -1,13 +1,14 @@
-import { article, GeneralOption } from '../../../interfaces/generals';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
-import { putArticle } from '../../../utils/asyncFunc';
+import { article, GeneralOption } from '../../../interfaces/generals';
 import { useArticleContext } from '../../../context/ArticleContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { putArticle } from '../../../utils/asyncFunc';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 
+import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/modals/modals.module.css';
 import Select from 'react-select';
-import ButtonControls from '../../controls/ButtonControls';
+import toast from 'react-hot-toast';
 
 interface Props {
   article: article;
@@ -77,7 +78,7 @@ function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
       justificacion,
     };
 
-    return await putArticle(article?.articulo.id, update).then(() => {
+    await putArticle(article?.articulo.id, update).then(() => {
       const state = update.estado === 'True' ? true : false;
       setArticle((prev) => {
         return {
@@ -85,6 +86,11 @@ function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
           articulo: { ...prev.articulo, state },
         };
       });
+
+      toast.success(
+        estado !== 'True' ? 'El artículo se activó' : 'El artículo se desactivó'
+      );
+
       closeModal();
     });
   }

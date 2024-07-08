@@ -20,12 +20,16 @@
   --scroll-background: #ccc;
   --scroll-color: #62769a;
 
-  --fragment-saved-bg: #00ada1;
+  --fragment-saved-bg: #131f1e;
   --fragment-saved-color: #fff;
 
   --bg-fragment: transparent;
   --box-shadow-fragment: 0px 3px 6px #00000029;
   --border-fragment: 1px solid #fff;
+
+  --bg-toast-succes: #00ada1;
+  --border-toast-succes: #00ada1;
+  --color-toast-succes: #ffffff;
 }
 
 .App.dark {
