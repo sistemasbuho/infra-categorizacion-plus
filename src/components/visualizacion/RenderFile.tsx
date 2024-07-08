@@ -1,13 +1,13 @@
+import { useArticleContext } from '../../context/ArticleContext';
 import RenderPDF from './renders/RenderPDF';
 
-interface Props {
-  fileUrl: string;
-}
 
-function RenderFile({ fileUrl }: Props): React.ReactElement {
+function RenderFile(): React.ReactElement {
+  const { image_media_file}= useArticleContext().articleState.article.articulo
+
   return (
     <>
-      <RenderPDF pdfUrl={fileUrl} />
+      <RenderPDF pdfUrl={image_media_file} />
     </>
   );
 }

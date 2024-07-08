@@ -8,6 +8,7 @@ import Menu from './components/menu/Menu.tsx';
 import Loader from './components/Loader.tsx';
 import { useArticleContext } from './context/ArticleContext.tsx';
 import Navbar from './components/Navbar.tsx';
+import RenderFile from './components/visualizacion/RenderFile.tsx';
 
 function ComponentManager() {
   const { isLoading } = useArticleContext().loadingState;
@@ -34,9 +35,9 @@ function ComponentManager() {
                   <SummaryArticle />
                 </MinContainer>
 
-                {/* <MinContainer title="Visualización PDF" isDeployable>
-                <RenderFile fileUrl={article.image_media_file} />
-              </MinContainer> */}
+                <MinContainer title="Visualización PDF" isDeployable>
+                <RenderFile  />
+              </MinContainer>
 
                 <MinContainer title="Transcripción" isDeployable>
                   <Article />
