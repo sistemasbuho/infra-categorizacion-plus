@@ -1,3 +1,5 @@
+import { useArticleContext } from './context/ArticleContext.tsx';
+
 import HeaderBar from './components/HeaderBar.tsx';
 import MinContainer from './components/MinContainer.tsx';
 import KeywordSearh from './components/KeywordSearh.tsx';
@@ -6,7 +8,6 @@ import Article from './components/Article.tsx';
 import styles from './assets/css/app.module.css';
 import Menu from './components/menu/Menu.tsx';
 import Loader from './components/Loader.tsx';
-import { useArticleContext } from './context/ArticleContext.tsx';
 import Navbar from './components/Navbar.tsx';
 import RenderFile from './components/visualizacion/RenderFile.tsx';
 
@@ -36,8 +37,8 @@ function ComponentManager() {
                 </MinContainer>
 
                 <MinContainer title="Visualización PDF" isDeployable>
-                <RenderFile  />
-              </MinContainer>
+                  <RenderFile />
+                </MinContainer>
 
                 <MinContainer title="Transcripción" isDeployable>
                   <Article />
