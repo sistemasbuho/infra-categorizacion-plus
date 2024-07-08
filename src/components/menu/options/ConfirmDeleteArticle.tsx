@@ -16,7 +16,7 @@ interface Props {
 
 function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
   const [justificacion, setJustificacion] = useState(null);
-  const { article } = useArticleContext().articleState;
+  const { article, setArticle } = useArticleContext().articleState;
 
   const OptionsFromInactive: GeneralOption[] = [
     {
@@ -78,13 +78,13 @@ function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
     };
 
     return await putArticle(article?.articulo.id, update).then(() => {
-      // const state = update.estado === 'True' ? true : false;
-      // setArticle((prev) => {
-      //   return {
-      //     ...prev,
-      //     articulo: { ...prev.articulo, state },
-      //   };
-      // });
+      const state = update.estado === 'True' ? true : false;
+      setArticle((prev) => {
+        return {
+          ...prev,
+          articulo: { ...prev.articulo, state },
+        };
+      });
       closeModal();
     });
   }
