@@ -111,3 +111,7 @@ export async function putArticle(id: number, body) {
 export async function finishArticle(id: number) {
   return await GeneralRequest(`finalizar/${id}`, 'PUT');
 }
+
+export async function reportarTiempo(id: number, body) {
+  return await GeneralRequest(`registrar_tiempo/${id}`, 'PUT', body);
+}

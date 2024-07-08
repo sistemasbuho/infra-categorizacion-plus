@@ -56,6 +56,7 @@ export interface article {
   tipo_articulo?: { id: number; nombre: string };
   programa?: { id: number; nombre: string };
   fecha?: string;
+  asignado_a: number;
 }
 
 export interface ArticleCategorization {
