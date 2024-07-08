@@ -21,7 +21,8 @@ function HeaderBar() {
 
   async function finishArticle() {
     return await finishArticleFunc(article.id).then(() => {
-      navigate(`/articulo/${siguiente_articulo}`);
+      if (siguiente_articulo?.[0]?.id)
+        navigate(`/articulo/${siguiente_articulo[0].id}`);
     });
   }
 
