@@ -22,6 +22,7 @@ import AsyncSelectActivoPasivo from '../../asyncSelects/AsyncSelectActivoPasivo'
 import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 
 function Categorization() {
   // Context
@@ -51,6 +52,11 @@ function Categorization() {
     { id: 3, nombre: 'Negativo' },
   ];
 
+  interface FormData {
+    tema: number[];
+    tag: number[];
+  }
+
   // article
   const [temaGeneral, setTemaGeneral] = useState<GeneralOption[]>(
     forms_data.general.tema
@@ -61,7 +67,7 @@ function Categorization() {
 
   async function sendArticleCategorization(e: React.FormEvent) {
     e.preventDefault();
-    const update = {
+    const update: FormData = {
       tema: temaGeneral.map((e) => e.id),
       tag: tagGeneral.map((e) => e.id),
     };
@@ -78,9 +84,12 @@ function Categorization() {
             },
           },
         }));
+
+        toast.success('Categorización general guardada');
       })
       .catch((err) => {
         console.error(err);
+        toast.error(err.message);
       });
   }
 
