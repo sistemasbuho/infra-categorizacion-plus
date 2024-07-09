@@ -30,6 +30,10 @@
   --bg-toast-succes: #00ada1;
   --border-toast-succes: #00ada1;
   --color-toast-succes: #ffffff;
+
+  --bg-toast-error: #ff7588;
+  --border-toast-error: #ff7588;
+  --color-toast-error: #ffffff;
 }
 
 .App.dark {
