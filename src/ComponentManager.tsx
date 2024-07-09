@@ -60,7 +60,7 @@ function ComponentManager() {
   return (
     <>
       {!isLoading ? (
-        <>
+        <div className={styles.component_manager}>
           <Navbar />
           <section className={`${styles.cont_global}`}>
             <section className={styles.cont_article_sections}>
@@ -91,7 +91,7 @@ function ComponentManager() {
 
             <Menu />
           </section>
-        </>
+        </div>
       ) : (
         <Loader isLoading={isLoading} />
       )}

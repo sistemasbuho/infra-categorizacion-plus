@@ -7,6 +7,7 @@ import { useArticleContext } from '../context/ArticleContext';
 
 import styles from '../assets/css/components/headerBar.module.css';
 import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
+import toast from 'react-hot-toast';
 
 function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -21,6 +22,11 @@ function HeaderBar() {
 
   async function finishArticle() {
     return await finishArticleFunc(article.id).then(() => {
+
+      toast.success('Articulo finalizado')
+      setTimeout(() => {
+        
+      }, 3000);
       if (siguiente_articulo?.[0]?.id)
         navigate(`/articulo/${siguiente_articulo[0].id}`);
     });

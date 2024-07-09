@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Button, FormControl } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
+import animations from '../assets/css/animations.module.css';
+
 function Home(): React.ReactElement {
   const [input, setInput] = useState('1204095');
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ function Home(): React.ReactElement {
 
   return (
     <div
-      className="d-flex flex-column justify-content-center align-items-center gap-3"
+      className={` d-flex flex-column justify-content-center align-items-center gap-3 ${animations.fade}`}
       style={{ height: '100vh' }}
     >
       <h1>Modulo de Categorization</h1>

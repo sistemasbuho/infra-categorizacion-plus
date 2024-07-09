@@ -1,3 +1,16 @@
+.component_manager {
+  animation: fade 0.5s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .cont_global {
   display: grid;
   grid-template-columns: 1fr 337px;

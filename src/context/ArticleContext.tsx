@@ -55,6 +55,7 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       await getArticleData(id).then((data) => {
         const tagGeneral = data?.general?.[0]?.tag_data;
         const temaGeneral = data?.general?.[0]?.tema_data;
@@ -75,7 +76,6 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
             },
           },
         });
-
         setIsLoading(false);
       });
     }
