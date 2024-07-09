@@ -138,13 +138,22 @@ function Categorization() {
       tono: Number(tonoOption.id),
     };
 
-    return await postFragment(articulo.id, update).then((res) => {
-      const { fragmento } = res;
-      const formatedFragment: Selection = fragmento;
-      delete formatedFragment.selectionId;
+    return await postFragment(articulo.id, update)
+      .then((res) => {
+        const { fragmento } = res;
+        const formatedFragment: Selection = fragmento;
+        delete formatedFragment.selectionId;
 
-      saveFragment(formatedFragment);
-    });
+        saveFragment(formatedFragment);
+        setCurrentFragment(null);
+
+        toast.success('Fragmento categorizado');
+      })
+      .catch((err) => {
+        console.error(err);
+
+        toast.error('Ha ocurrido un error');
+      });
   }
 
   async function editCurrentFragment() {
@@ -156,7 +165,15 @@ function Categorization() {
       pasivo: pasivoOption.map((item) => item.id),
     };
 
-    return await editFragment(articulo.id, currentFragment.id, update);
+    return await editFragment(articulo.id, currentFragment.id, update)
+      .then(() => {
+        toast.success('Fragmento editado');
+      })
+      .catch((err) => {
+        console.error(err);
+
+        toast.error('Ha ocurrido un error');
+      });
   }
 
   async function deleteCurrentFragment(frag: Selection) {
@@ -263,7 +280,11 @@ function Categorization() {
                               <div
                                 className={`
                               ${styles.fragment}
-                              ${!frag?.selectionId && styles.fragment_saved} 
+                              ${
+                                !frag?.selectionId &&
+                                frag?.id &&
+                                styles.fragment_saved
+                              } 
                               ${
                                 currentFragment?.id === frag?.id &&
                                 styles.fragment_selected
@@ -284,7 +305,9 @@ function Categorization() {
                           );
                         })
                     ) : (
-                      <p className="text-center m-0">Aún no hay fragmentos</p>
+                      <p className="text-center m-0 py-2">
+                        Aún no hay fragmentos
+                      </p>
                     )}
                   </div>
 

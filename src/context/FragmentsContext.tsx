@@ -37,6 +37,8 @@ interface ContextProps {
     create: (frag: Selection) => void;
     delete: (frag: Selection) => void;
     save: (frag: Selection) => void;
+    clearCurrentFragment: () => void;
+    newCurrentFragment: (frag: Selection) => void;
   };
 }
 
@@ -54,17 +56,32 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
 
   function createNewFragment(newFragment: Selection) {
     setNewFragments((prev) => [...prev, newFragment]);
+    setAllFragments((prev) => [...prev, newFragment]);
   }
 
   function saveFragment(newFrag: Selection) {
+    deleteFragment(newFrag);
+
     const formatedFragment = newFrag;
     delete formatedFragment.selectionId;
 
-    setNewFragments((prev) =>
-      prev.filter((fragment) => fragment.id !== formatedFragment.id)
-    );
-
     setFragments((prev) => [...prev, formatedFragment]);
+    setAllFragments((prev) =>
+      prev.map((savedFrag) => {
+        if (savedFrag.id === formatedFragment.id) {
+          return formatedFragment;
+        }
+        return savedFrag;
+      })
+    );
+  }
+
+  function clearCurrentFragment(): void {
+    setCurrentFragment(null);
+  }
+
+  function newCurrentFragment(fragment: Selection): void {
+    setCurrentFragment(fragment);
   }
 
   function deleteFragment(frag: Selection) {
@@ -73,8 +90,12 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
     setNewFragments((prev) =>
       prev.filter(
         (fragment) =>
-          fragment?.selectionId !== frag?.selectionId || frag?.id !== frag?.id
+          fragment?.selectionId !== frag?.selectionId ||
+          fragment?.id !== frag?.id
       )
+    );
+    setAllFragments((prev) =>
+      prev.filter((savedFrag) => savedFrag.id !== frag.id)
     );
   }
 
@@ -87,16 +108,10 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
         };
       });
       setFragments([...articleFragments]);
+      setAllFragments([...articleFragments]);
     }
     return () => {};
   }, [articleFragments]);
-
-  useEffect(() => {
-    const orderedFrags = [...fragments, ...newFragments];
-
-    setAllFragments(orderedFrags);
-    return () => {};
-  }, [fragments, newFragments]);
 
   return (
     <FragmentContext.Provider
@@ -121,6 +136,8 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
           create: createNewFragment,
           delete: deleteFragment,
           save: saveFragment,
+          clearCurrentFragment,
+          newCurrentFragment,
         },
       }}
     >
