@@ -1,7 +1,7 @@
 import { Form } from 'react-bootstrap';
 import { postHeader } from '../../../utils/asyncFunc';
 import { useState } from 'react';
-import { SelectOption } from '../../../interfaces/generals';
+import { GeneralOption } from '../../../interfaces/generals';
 import { useArticleContext } from '../../../context/ArticleContext';
 
 import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
@@ -14,23 +14,21 @@ function Header() {
   const { programa: programas, tipo: tipos } =
     useArticleContext().articleState.article.forms_data;
 
-  const [programaOption, setProgramaOption] = useState<SelectOption>({
-    label: articulo.programa?.nombre,
-    value: articulo.programa?.id,
-  });
-  const [tipoOption, setTipoOption] = useState<SelectOption>({
-    label: articulo.tipo_articulo?.nombre,
-    value: articulo.tipo_articulo?.id,
-  });
-  const [fechaOption, setfechaOption] = useState(articulo.fecha);
-  const [autorOption, setAutorOption] = useState<SelectOption | null>({
-    label: articulo.autor?.nombre,
-    value: articulo.autor?.id,
-  });
-  const [medioOption, setMedioOption] = useState<SelectOption | null>({
-    label: articulo.medio?.nombre,
-    value: articulo.medio?.id,
-  });
+  const [programaOption, setProgramaOption] = useState<GeneralOption | null>(
+    articulo.programa
+  );
+  const [tipoOption, setTipoOption] = useState<GeneralOption | null>(
+    articulo.tipo_articulo
+  );
+  const [fechaOption, setfechaOption] = useState<string | null>(
+    articulo?.fecha ? articulo.fecha : null
+  );
+  const [autorOption, setAutorOption] = useState<GeneralOption | null>(
+    articulo.autor
+  );
+  const [medioOption, setMedioOption] = useState<GeneralOption | null>(
+    articulo.medio
+  );
   async function sendHeaderCategorization(e: React.FormEvent) {
     e.stopPropagation();
     e.preventDefault();
@@ -46,8 +44,8 @@ function Header() {
 
     const update = {
       articulo_id: articulo.id,
-      tipo_articulo_id: tipoOption.value,
-      programa_id: programaOption.value,
+      tipo_articulo_id: tipoOption.id,
+      programa_id: programaOption.id,
       fecha: fullDate,
       medio_id: [
         medioOption[0].isNew ? medioOption[0].nombre : medioOption[0].id,
@@ -66,6 +64,8 @@ function Header() {
     setAutorOption(option);
   }
 
+  console.log(tipoOption);
+
   return (
     <>
       <div>
@@ -78,11 +78,10 @@ function Header() {
               <h4>Tipo</h4>
             </Form.Label>
             <Select
-              options={tipos.map((item) => ({
-                label: item.nombre,
-                value: item.id,
-              }))}
-              defaultValue={tipoOption}
+              options={tipos}
+              getOptionLabel={(e: GeneralOption) => e.nombre}
+              getOptionValue={(e: GeneralOption) => e.id.toString()}
+              value={tipoOption}
               onChange={(e) => setTipoOption(e)}
             />
           </Form.Group>
@@ -116,11 +115,10 @@ function Header() {
               <h4>Programa</h4>
             </Form.Label>
             <Select
-              options={programas.map((item) => ({
-                label: item.nombre,
-                value: item.id,
-              }))}
-              defaultValue={programaOption}
+              options={programas}
+              getOptionLabel={(e: GeneralOption) => e.nombre}
+              getOptionValue={(e: GeneralOption) => e.id.toString()}
+              value={programaOption}
               onChange={(e) => setProgramaOption(e)}
             />
           </Form.Group>
