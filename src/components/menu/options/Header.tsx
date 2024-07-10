@@ -41,7 +41,9 @@ function Header() {
     e.stopPropagation();
     e.preventDefault();
 
-    const time = new Date(fechaOption).toLocaleTimeString();
+    const time = new Date(fechaOption).toLocaleTimeString('es-CO', {
+      hour12: false,
+    });
     const date = new Date(fechaOption)
       .toLocaleDateString()
       .split('/')
@@ -104,8 +106,8 @@ function Header() {
 
   return (
     <div>
-      <div className='mb-3'>
-        <h2 >ENCABEZADO</h2>
+      <div className="mb-3">
+        <h2>ENCABEZADO</h2>
       </div>
       <div className="mb-4">
         <Form id="header-form" onSubmit={sendHeaderCategorization}>
