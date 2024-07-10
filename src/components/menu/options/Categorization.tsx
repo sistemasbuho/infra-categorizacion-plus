@@ -241,11 +241,11 @@ function Categorization() {
 
   return (
     <div>
-      <div className='mb-3'>
+      <div className="mb-3">
         <h2>CATEGORIZACIÓN</h2>
       </div>
 
-      <div className={`${styles.body} p-0`}>
+      <div className={`${styles.body} `}>
         <div className={styles.nav}>
           <button
             className={`${selected === 1 && styles.selected}`}
@@ -260,7 +260,7 @@ function Categorization() {
             General
           </button>
         </div>
-        <div className={`${styles.section_body} p-0`}>
+        <div className={`${styles.section_body}`}>
           {selected === 1 && (
             <>
               <div className={styles.fragments_cont}>
@@ -399,7 +399,7 @@ function Categorization() {
                 </div>
               </div>
 
-              <p className="text-center mb-0">
+              <p className="text-center mb-0 pb-3">
                 {!currentFragment
                   ? 'Por favor seleccione un fragmento'
                   : !isValidTema
