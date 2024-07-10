@@ -21,12 +21,18 @@ function HeaderBar() {
   }
 
   async function finishArticle() {
-    return await finishArticleFunc(article.id).then(() => {
+    if (
+      !article.programa?.id ||
+      !article.tipo_articulo?.id ||
+      !article.medio?.id ||
+      !article.autor?.id
+    ) {
+      return toast.error('Encabezado del articulo sin completar');
+    }
 
-      toast.success('Articulo finalizado')
-      setTimeout(() => {
-        
-      }, 3000);
+    return await finishArticleFunc(article.id).then(() => {
+      toast.success('Articulo finalizado');
+      setTimeout(() => {}, 3000);
       if (siguiente_articulo?.[0]?.id)
         navigate(`/articulo/${siguiente_articulo[0].id}`);
     });

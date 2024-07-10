@@ -8,27 +8,35 @@ import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
 import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
 import ButtonControls from '../../controls/ButtonControls';
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 
 function Header() {
-  const { articulo } = useArticleContext().articleState.article;
+  const { article, setArticle } = useArticleContext().articleState;
+
+  const { articulo } = article;
   const { programa: programas, tipo: tipos } =
     useArticleContext().articleState.article.forms_data;
 
   const [programaOption, setProgramaOption] = useState<GeneralOption | null>(
     articulo.programa
   );
+
   const [tipoOption, setTipoOption] = useState<GeneralOption | null>(
     articulo.tipo_articulo
   );
+
   const [fechaOption, setfechaOption] = useState<string | null>(
     articulo?.fecha ? articulo.fecha : null
   );
+
   const [autorOption, setAutorOption] = useState<GeneralOption | null>(
     articulo.autor
   );
+
   const [medioOption, setMedioOption] = useState<GeneralOption | null>(
     articulo.medio
   );
+
   async function sendHeaderCategorization(e: React.FormEvent) {
     e.stopPropagation();
     e.preventDefault();
@@ -43,17 +51,43 @@ function Header() {
     const fullDate = `${date} ${time}`;
 
     const update = {
-      articulo_id: articulo.id,
-      tipo_articulo_id: tipoOption.id,
-      programa_id: programaOption.id,
+      articulo_id: articulo?.id,
+      tipo_articulo_id: tipoOption?.id,
+      programa_id: programaOption?.id,
       fecha: fullDate,
       medio_id: [
-        medioOption[0].isNew ? medioOption[0].nombre : medioOption[0].id,
+        medioOption[0]?.isNew ? medioOption[0]?.nombre : medioOption[0]?.id,
       ],
-      autor_id: [autorOption[0].nombre],
+      autor_id: [autorOption[0]?.nombre],
     };
 
-    return await postHeader(articulo.id, update);
+    if (
+      !tipoOption?.id ||
+      !programaOption?.id ||
+      fullDate.length <= 0 ||
+      [medioOption[0].isNew ? medioOption[0].nombre : medioOption[0].id]
+        .length <= 0 ||
+      [autorOption[0].nombre].length <= 0
+    ) {
+      return toast.error('Faltan campos por diligenciar');
+    }
+    return await postHeader(articulo.id, update).then((res) => {
+      console.log(res);
+
+      setArticle((prev) => ({
+        ...prev,
+        articulo: {
+          ...prev.articulo,
+          medio: res.medio,
+          programa: res.programa,
+          fecha: res.fecha,
+          tipo_articulo: res.tipo_articulo,
+          autor: res.autor,
+        },
+      }));
+
+      toast.success('Encabezado guardado');
+    });
   }
 
   function getMedio(option) {
@@ -63,8 +97,6 @@ function Header() {
   function getAutor(option) {
     setAutorOption(option);
   }
-
-  console.log(tipoOption);
 
   return (
     <>

@@ -53,10 +53,10 @@ export interface article {
   resumen?: string;
   medio?: GeneralOption;
   autor?: GeneralOption;
-  tipo_articulo?: { id: number; nombre: string };
   programa?: { id: number; nombre: string };
   fecha?: string;
   asignado_a: number;
+  tipo_articulo?: GeneralOption
 }
 
 export interface ArticleCategorization {
