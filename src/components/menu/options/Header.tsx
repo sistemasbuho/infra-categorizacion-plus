@@ -1,6 +1,6 @@
 import { Form } from 'react-bootstrap';
 import { postHeader } from '../../../utils/asyncFunc';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GeneralOption } from '../../../interfaces/generals';
 import { useArticleContext } from '../../../context/ArticleContext';
 
@@ -72,23 +72,27 @@ function Header() {
       return toast.error('Faltan campos por diligenciar');
     }
     return await postHeader(articulo.id, update).then((res) => {
-      console.log(res);
+      const { medio, programa, fecha, tipo_articulo, autor } = res.data;
 
       setArticle((prev) => ({
         ...prev,
         articulo: {
           ...prev.articulo,
-          medio: res.medio,
-          programa: res.programa,
-          fecha: res.fecha,
-          tipo_articulo: res.tipo_articulo,
-          autor: res.autor,
+          medio,
+          programa,
+          fecha,
+          tipo_articulo,
+          autor,
         },
       }));
 
       toast.success('Encabezado guardado');
     });
   }
+
+  useEffect(() => {
+    return () => {};
+  }, [article]);
 
   function getMedio(option) {
     setMedioOption(option);
