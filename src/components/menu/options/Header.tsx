@@ -103,9 +103,9 @@ function Header() {
   }
 
   return (
-    <>
-      <div>
-        <h2>ENCABEZADO</h2>
+    <div>
+      <div className='mb-3'>
+        <h2 >ENCABEZADO</h2>
       </div>
       <div className="mb-4">
         <Form id="header-form" onSubmit={sendHeaderCategorization}>
@@ -171,7 +171,7 @@ function Header() {
         </Form>
       </div>
       <ButtonControls form="header-form" />
-    </>
+    </div>
   );
 }
 

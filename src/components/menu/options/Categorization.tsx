@@ -240,8 +240,8 @@ function Categorization() {
   }, [temaOption]);
 
   return (
-    <>
-      <div>
+    <div>
+      <div className='mb-3'>
         <h2>CATEGORIZACIÓN</h2>
       </div>
 
@@ -416,7 +416,7 @@ function Categorization() {
           )}
 
           {selected === 2 && (
-            <>
+            <div>
               <Form id="article-form" onSubmit={sendArticleCategorization}>
                 <Form.Group className="mb-3">
                   <Form.Label>
@@ -450,11 +450,11 @@ function Categorization() {
                 form={'article-form'}
                 reject={{ text: 'Eliminar', event: deleteArticleCategorizaion }}
               />
-            </>
+            </div>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

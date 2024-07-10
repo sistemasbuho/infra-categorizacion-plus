@@ -9,37 +9,39 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 function Menu() {
-  const [currentOption, setCurrentOption] = useState(1);
+  const [currentOption, setCurrentOption] = useState<number>(1);
 
   return (
     <>
       <section className={styles.cont_options_bar}>
         <header>
           <button
+            className={`${currentOption == 0 && styles.selected}`}
+            onClick={() => setCurrentOption(0)}
+          >
+            <FontAwesomeIcon icon={faBook} />
+          </button>
+
+          <button
             className={`${currentOption == 1 && styles.selected}`}
             onClick={() => setCurrentOption(1)}
           >
-            <FontAwesomeIcon icon={faBook} />
+            <FontAwesomeIcon icon={faListUl} />
           </button>
 
           <button
             className={`${currentOption == 2 && styles.selected}`}
             onClick={() => setCurrentOption(2)}
           >
-            <FontAwesomeIcon icon={faListUl} />
-          </button>
-
-          <button
-            className={`${currentOption == 3 && styles.selected}`}
-            onClick={() => setCurrentOption(3)}
-          >
             <FontAwesomeIcon icon={faGear} />
           </button>
         </header>
         <div className={optionStyles.option_cont}>
-          {currentOption === 1 && <Header />}
-          {currentOption === 2 && <Categorization />}
-          {currentOption === 3 && <Config />}
+          <div style={{ left: `${-337 * currentOption}px` }}>
+            <Header />
+            <Categorization />
+            <Config />
+          </div>
         </div>
       </section>
     </>
