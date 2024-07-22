@@ -18,7 +18,7 @@ function ComponentManager() {
   const { isLoading } = useArticleContext().loadingState;
   const { asignado_a } = useArticleContext().articleState.article.articulo;
   const { id } = useParams();
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<number | null>(null);
 
   function enviarSegundo() {
     const update = {
