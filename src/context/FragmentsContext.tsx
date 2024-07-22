@@ -63,6 +63,7 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
     deleteFragment(newFrag);
 
     const formatedFragment = newFrag;
+    formatedFragment.tag = newFrag.tag;
     delete formatedFragment.selectionId;
 
     setFragments((prev) => [...prev, formatedFragment]);
