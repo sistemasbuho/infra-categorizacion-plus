@@ -5,8 +5,10 @@ import styles from '../assets/css/components/search.module.css';
 import { Dispatch, SetStateAction } from 'react';
 
 interface Props {
-  state: string | null;
-  setState: Dispatch<SetStateAction<string>>;
+  state: string | number | readonly string[] | undefined;
+  setState: Dispatch<
+    SetStateAction<string | number | readonly string[] | undefined>
+  >;
 }
 
 function Search({ state, setState }: Props) {

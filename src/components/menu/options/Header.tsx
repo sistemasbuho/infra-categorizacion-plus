@@ -1,9 +1,8 @@
 import { Form } from 'react-bootstrap';
 import { postHeader } from '../../../utils/asyncFunc';
 import { useEffect, useState } from 'react';
-import { GeneralOption } from '../../../interfaces/generals';
+import { Autores, GeneralOption, Medios } from '../../../interfaces/generals';
 import { useArticleContext } from '../../../context/ArticleContext';
-
 import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
 import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
 import ButtonControls from '../../controls/ButtonControls';
@@ -17,90 +16,85 @@ function Header() {
   const { programa: programas, tipo: tipos } =
     useArticleContext().articleState.article.forms_data;
 
-  const [programaOption, setProgramaOption] = useState<GeneralOption | null>(
-    articulo.programa
-  );
-
-  const [tipoOption, setTipoOption] = useState<GeneralOption | null>(
+  const [programaOption, setProgramaOption] = useState<
+    GeneralOption | undefined
+  >(articulo.programa);
+  const [tipoOption, setTipoOption] = useState<GeneralOption | undefined>(
     articulo.tipo_articulo
   );
-
-  const [fechaOption, setfechaOption] = useState<string | null>(
-    articulo?.fecha ? articulo.fecha : null
+  const [fechaOption, setfechaOption] = useState<string | undefined>(
+    articulo?.fecha && articulo.fecha
+  );
+  const [autorOption, setAutorOption] = useState<Autores[]>(
+    Array.isArray(articulo.autor) ? articulo.autor : [articulo.autor]
+  );
+  const [medioOption, setMedioOption] = useState<Medios[]>(
+    Array.isArray(articulo.medio) ? articulo.medio : [articulo.medio]
   );
 
-  const [autorOption, setAutorOption] = useState<GeneralOption | null>(
-    articulo.autor
-  );
-
-  const [medioOption, setMedioOption] = useState<GeneralOption | null>(
-    articulo.medio
-  );
-
-  async function sendHeaderCategorization(e: React.FormEvent) {
+  async function sendHeaderCategorization(e: React.FormEvent<HTMLFormElement>) {
     e.stopPropagation();
     e.preventDefault();
 
-    const time = new Date(fechaOption).toLocaleTimeString('es-CO', {
-      hour12: false,
-    });
-    const date = new Date(fechaOption)
-      .toLocaleDateString()
-      .split('/')
-      .reverse()
-      .join('-');
+    if (fechaOption) {
+      const time = new Date(fechaOption).toLocaleTimeString('es-CO', {
+        hour12: false,
+      });
+      const date = new Date(fechaOption)
+        .toLocaleDateString()
+        .split('/')
+        .reverse()
+        .join('-');
+      const fullDate = `${date} ${time}`;
 
-    const fullDate = `${date} ${time}`;
+      const update = {
+        articulo_id: articulo?.id,
+        tipo_articulo_id: tipoOption?.id,
+        programa_id: programaOption?.id,
+        fecha: fullDate,
+        medio_id: medioOption?.map((item) => item.id),
+        autor_id: autorOption?.map((item) => item.id),
+      };
 
-    const update = {
-      articulo_id: articulo?.id,
-      tipo_articulo_id: tipoOption?.id,
-      programa_id: programaOption?.id,
-      fecha: fullDate,
-      medio_id: [
-        medioOption[0]?.isNew ? medioOption[0]?.nombre : medioOption[0]?.id,
-      ],
-      autor_id: [autorOption[0]?.nombre],
-    };
+      if (
+        !tipoOption?.id ||
+        !programaOption?.id ||
+        fullDate.length <= 0 ||
+        medioOption.length <= 0 ||
+        autorOption.length <= 0
+      ) {
+        return toast.error('Faltan campos por diligenciar');
+      }
 
-    if (
-      !tipoOption?.id ||
-      !programaOption?.id ||
-      fullDate.length <= 0 ||
-      [medioOption[0].isNew ? medioOption[0].nombre : medioOption[0].id]
-        .length <= 0 ||
-      [autorOption[0].nombre].length <= 0
-    ) {
-      return toast.error('Faltan campos por diligenciar');
+      return await postHeader(articulo.id, update).then((res) => {
+        const { medio, programa, fecha, tipo_articulo, autor } = res.data;
+
+        setArticle((prev) => ({
+          ...prev,
+          articulo: {
+            ...prev.articulo,
+            medio,
+            programa,
+            fecha,
+            tipo_articulo,
+            autor,
+          },
+        }));
+
+        toast.success('Encabezado guardado');
+      });
     }
-    return await postHeader(articulo.id, update).then((res) => {
-      const { medio, programa, fecha, tipo_articulo, autor } = res.data;
-
-      setArticle((prev) => ({
-        ...prev,
-        articulo: {
-          ...prev.articulo,
-          medio,
-          programa,
-          fecha,
-          tipo_articulo,
-          autor,
-        },
-      }));
-
-      toast.success('Encabezado guardado');
-    });
   }
 
   useEffect(() => {
     return () => {};
   }, [article]);
 
-  function getMedio(option) {
+  function getMedio(option: Medios[]) {
     setMedioOption(option);
   }
 
-  function getAutor(option) {
+  function getAutor(option: Autores[]) {
     setAutorOption(option);
   }
 
@@ -120,12 +114,12 @@ function Header() {
               getOptionLabel={(e: GeneralOption) => e.nombre}
               getOptionValue={(e: GeneralOption) => e.id.toString()}
               value={tipoOption}
-              onChange={(e) => setTipoOption(e)}
+              onChange={(e) => setTipoOption(e as GeneralOption)}
             />
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label htmlFor="tipo">
+            <Form.Label htmlFor="fecha">
               <h4>Fecha</h4>
             </Form.Label>
             <input
@@ -139,17 +133,14 @@ function Header() {
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label htmlFor="tipo">
+            <Form.Label htmlFor="medio">
               <h4>Medio</h4>
             </Form.Label>
-            <AsyncSelectMedio
-              sendResponse={getMedio}
-              value={[articulo.medio]}
-            />
+            <AsyncSelectMedio sendResponse={getMedio} value={articulo.medio} />
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label htmlFor="tipo">
+            <Form.Label htmlFor="programa">
               <h4>Programa</h4>
             </Form.Label>
             <Select
@@ -157,18 +148,15 @@ function Header() {
               getOptionLabel={(e: GeneralOption) => e.nombre}
               getOptionValue={(e: GeneralOption) => e.id.toString()}
               value={programaOption}
-              onChange={(e) => setProgramaOption(e)}
+              onChange={(e) => setProgramaOption(e as GeneralOption)}
             />
           </Form.Group>
 
           <Form.Group>
-            <Form.Label htmlFor="tipo">
+            <Form.Label htmlFor="autor">
               <h4>Autor</h4>
             </Form.Label>
-            <AsyncSelectAutor
-              sendResponse={getAutor}
-              value={[articulo.autor]}
-            />
+            <AsyncSelectAutor sendResponse={getAutor} value={articulo.autor} />
           </Form.Group>
         </Form>
       </div>

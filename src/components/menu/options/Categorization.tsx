@@ -31,8 +31,9 @@ function Categorization() {
   const { articulo, forms_data } = useArticleContext().articleState.article;
   const { current, methods, allFrags } = useFragmentContext();
   const { currentFragment, setCurrentFragment } = current;
-  const { delete: deleteFragment, save: saveFragment } = methods;
   const { allFragments } = allFrags;
+
+  const { delete: deleteFragment, save: saveFragment } = methods;
 
   const [selected, setSelected] = useState(1);
 
@@ -142,8 +143,6 @@ function Categorization() {
       .then((res) => {
         const { fragmento } = res;
         const formatedFragment: Selection = fragmento;
-        delete formatedFragment.selectionId;
-
         saveFragment(formatedFragment);
         setCurrentFragment(null);
 
@@ -266,7 +265,6 @@ function Categorization() {
               <div className={styles.fragments_cont}>
                 <div>
                   <h4>Fragmentos</h4>
-
                   <div className={styles.list}>
                     {allFragments.length > 0 ? (
                       allFragments

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef, useState, useCallback } from 'react';
 import AsyncSelect from 'react-select/async';
 import { searchMedio } from '../../utils/asyncFunc';
+import { Medios } from '../../interfaces/generals';
 
 interface TagOption {
   id: number;
@@ -10,20 +10,17 @@ interface TagOption {
   isNew?: boolean;
 }
 
-interface AsyncSelectMedio {
-  sendResponse: (
-    response: TagOption | TagOption[] | null,
-    input: string
-  ) => void;
+interface AsyncSelectMedioProps {
+  sendResponse: (response: Medios[]) => void;
   isMulti?: boolean;
   placeholder?: string;
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
-  value: TagOption[];
+  value: Medios[];
 }
 
-const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
+const AsyncSelectMedio: React.FC<AsyncSelectMedioProps> = ({
   sendResponse,
   isMulti = false,
   placeholder = 'Buscar',
@@ -32,8 +29,8 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
   value,
 }) => {
   const [forceUpdate] = useState(false);
-  const [inputAutorValue, setInputAutorValue] = useState('');
-  const [autorOptions, setAutorOptions] = useState<TagOption[]>(value);
+  // const [inputAutorValue, setInputAutorValue] = useState('');
+  const [autorOptions, setAutorOptions] = useState<Medios[]>(value);
 
   const searchTimeoutRef = useRef<number | null>(null);
 
@@ -69,9 +66,13 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
     }
   }
 
+  const sendResponseCallback = useCallback(() => {
+    sendResponse(autorOptions);
+  }, [autorOptions, sendResponse]);
+
   useEffect(() => {
-    sendResponse(autorOptions, inputAutorValue);
-  }, [autorOptions, sendResponse, inputAutorValue]);
+    sendResponseCallback();
+  }, [autorOptions, sendResponseCallback]);
 
   return (
     <AsyncSelect
@@ -85,7 +86,7 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedio> = ({
       getOptionLabel={(e: TagOption) => e.nombre}
       getOptionValue={(e) => e.id.toString()}
       loadOptions={loadOptions}
-      onInputChange={(value) => setInputAutorValue(value)}
+      // onInputChange={(value) => setInputAutorValue(value)}
       onChange={(value) =>
         setAutorOptions(Array.isArray(value) ? value : [value])
       }

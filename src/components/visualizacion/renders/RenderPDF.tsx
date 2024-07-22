@@ -1,7 +1,7 @@
 import styles from '../../../assets/css/components/render/pdf.module.css';
 
 interface Props {
-  pdfUrl: string;
+  pdfUrl: string | undefined;
 }
 
 function RenderPDF({ pdfUrl }: Props): React.ReactElement {

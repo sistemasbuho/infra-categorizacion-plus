@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import AsyncSelect from 'react-select/async';
 import { searchAutor } from '../../utils/asyncFunc';
-import { GeneralOption } from '../../interfaces/generals';
+import { Autores } from '../../interfaces/generals';
 
 interface TagOption {
   id: number;
@@ -12,16 +12,13 @@ interface TagOption {
 }
 
 interface AsyncSelectAutor {
-  sendResponse: (
-    response: TagOption | TagOption[] | null,
-    input: string
-  ) => void;
+  sendResponse: (response: Autores | Autores[] | null, input: string) => void;
   isMulti?: boolean;
   placeholder?: string;
   name?: string;
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
-  value: GeneralOption[];
+  value: Autores[];
 }
 
 const AsyncSelectAutor: React.FC<AsyncSelectAutor> = ({
