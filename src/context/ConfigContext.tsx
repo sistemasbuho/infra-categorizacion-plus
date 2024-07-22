@@ -26,6 +26,7 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   } | null>(null);
 
   const setFontSize = (size: number) => {
+    if ( size >= 12 && size <= 28 )
     setConfig((prevConfig) => ({
       ...prevConfig,
       fontSize: size,
