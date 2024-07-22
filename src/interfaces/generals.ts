@@ -22,14 +22,10 @@ interface OriginalFragment {
   end_index?: number;
   articulo?: number;
   tag?: GeneralOption[];
-  tema: GeneralOption[];
+  tema?: GeneralOption[];
   tono?: number;
   activo?: GeneralOption[];
   pasivo?: GeneralOption[];
-  tag_details?: GeneralOption[];
-  tema_details?: GeneralOption[];
-  pasivo_details?: GeneralOption[];
-  activo_details?: GeneralOption[];
 }
 
 export interface GeneralOption {
@@ -56,7 +52,7 @@ export interface article {
   programa?: { id: number; nombre: string };
   fecha?: string;
   asignado_a: number;
-  tipo_articulo?: GeneralOption
+  tipo_articulo?: GeneralOption;
 }
 
 export interface ArticleCategorization {
