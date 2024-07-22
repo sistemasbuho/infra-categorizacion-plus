@@ -47,8 +47,8 @@ export interface article {
   image_media_file?: string;
   state: boolean;
   resumen?: string;
-  medio?: GeneralOption;
-  autor?: GeneralOption;
+  medio?: Medios[];
+  autor?: Autores[];
   programa?: { id: number; nombre: string };
   fecha?: string;
   asignado_a: number;
@@ -61,8 +61,6 @@ export interface ArticleCategorization {
 }
 
 export interface headerArticle extends article {
-  medio?: GeneralOption;
-  autor?: GeneralOption;
   tipo_articulo?: { id: number; nombre: string };
   programa?: { id: number; nombre: string };
   fecha?: string;
