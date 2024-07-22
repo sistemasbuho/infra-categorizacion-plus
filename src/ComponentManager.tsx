@@ -1,24 +1,27 @@
-import { useArticleContext } from './context/ArticleContext.tsx';
+import { useArticleContext } from './context/ArticleContext';
 import { useEffect, useRef } from 'react';
-import { reportarTiempo } from './utils/asyncFunc.ts';
-
-import HeaderBar from './components/HeaderBar.tsx';
-import MinContainer from './components/MinContainer.tsx';
-import KeywordSearh from './components/KeywordSearh.tsx';
-import SummaryArticle from './components/SummaryArticle.tsx';
-import Article from './components/Article.tsx';
-import styles from './assets/css/app.module.css';
-import Menu from './components/menu/Menu.tsx';
-import Loader from './components/Loader.tsx';
-import Navbar from './components/Navbar.tsx';
-import RenderFile from './components/visualizacion/RenderFile.tsx';
+import { reportarTiempo } from './utils/asyncFunc';
 import { useParams } from 'react-router';
+
+import HeaderBar from './components/HeaderBar';
+import MinContainer from './components/MinContainer';
+import KeywordSearh from './components/KeywordSearh';
+import SummaryArticle from './components/SummaryArticle';
+import Article from './components/Article';
+import styles from './assets/css/app.module.css';
+import Menu from './components/menu/Menu';
+import Loader from './components/Loader';
+import Navbar from './components/Navbar';
+import RenderFile from './components/visualizacion/RenderFile';
+import usePageAndWindowVisibility from './hooks/usePageAndWindowVisibility';
 
 function ComponentManager() {
   const { isLoading } = useArticleContext().loadingState;
   const { asignado_a } = useArticleContext().articleState.article.articulo;
   const { id } = useParams();
   const intervalRef = useRef<number | null>(null);
+
+  const isPageVisible = usePageAndWindowVisibility();
 
   function enviarSegundo() {
     const update = {
@@ -30,32 +33,24 @@ function ComponentManager() {
   }
 
   useEffect(() => {
-    function handleVisibilityChange() {
-      if (document.visibilityState === 'visible' && asignado_a) {
-        if (!intervalRef.current) {
-          intervalRef.current = setInterval(enviarSegundo, 1000);
-        }
-      } else {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
+    if (isPageVisible && asignado_a) {
+      if (!intervalRef.current) {
+        intervalRef.current = window.setInterval(enviarSegundo, 1000);
       }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    if (document.visibilityState === 'visible' && asignado_a) {
-      intervalRef.current = setInterval(enviarSegundo, 1000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     }
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [asignado_a, id]);
+  }, [isPageVisible, asignado_a, id]);
 
   return (
     <>
