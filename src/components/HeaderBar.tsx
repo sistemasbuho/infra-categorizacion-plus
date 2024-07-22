@@ -24,8 +24,8 @@ function HeaderBar() {
     if (
       !article.programa?.id ||
       !article.tipo_articulo?.id ||
-      !article.medio?.id ||
-      !article.autor?.id
+      article.medio.length <= 0 ||
+      article.autor.length <= 0
     ) {
       return toast.error('Encabezado del articulo sin completar');
     }
