@@ -52,8 +52,14 @@ function Header() {
         tipo_articulo_id: tipoOption?.id,
         programa_id: programaOption?.id,
         fecha: fullDate,
-        medio_id: medioOption?.map((item) => item.id),
-        autor_id: autorOption?.map((item) => item.id),
+        medio_id: (Array.isArray(medioOption)
+          ? medioOption
+          : [medioOption]
+        ).map((item) => item.id),
+        autor_id: (Array.isArray(autorOption)
+          ? autorOption
+          : [autorOption]
+        ).map((item) => item.id),
       };
 
       if (
