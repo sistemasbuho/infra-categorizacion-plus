@@ -60,21 +60,20 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
   }
 
   function saveFragment(newFrag: Selection) {
-    deleteFragment(newFrag);
-
     const formatedFragment = newFrag;
     formatedFragment.tag = newFrag.tag;
-    delete formatedFragment.selectionId;
 
-    setFragments((prev) => [...prev, formatedFragment]);
     setAllFragments((prev) =>
       prev.map((savedFrag) => {
-        if (savedFrag.id === formatedFragment.id) {
+        if (savedFrag.id === currentFragment.id) {
           return formatedFragment;
         }
         return savedFrag;
       })
     );
+    delete formatedFragment.selectionId;
+    setFragments((prev) => [...prev, formatedFragment]);
+    setCurrentFragment(null);
   }
 
   function clearCurrentFragment(): void {
@@ -98,6 +97,7 @@ function FragmentsProvider({ children }: Props): React.ReactElement {
     setAllFragments((prev) =>
       prev.filter((savedFrag) => savedFrag.id !== frag.id)
     );
+    setCurrentFragment((prev) => (prev?.id === frag?.id ? null : prev));
   }
 
   useEffect(() => {
