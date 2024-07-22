@@ -221,10 +221,10 @@ function Categorization() {
   }
 
   useEffect(() => {
-    setTagOptions(currentFragment?.tag_details);
-    setTemaOption(currentFragment?.tema_details);
-    setPasivoOption(currentFragment?.pasivo_details);
-    setActivoOption(currentFragment?.activo_details);
+    setTagOptions(currentFragment?.tag);
+    setTemaOption(currentFragment?.tema);
+    setPasivoOption(currentFragment?.pasivo);
+    setActivoOption(currentFragment?.activo);
     setTonoOption(
       sentimiento.find((sent) => sent?.id === currentFragment?.tono)
     );
@@ -366,7 +366,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncActivo}
                         clear={forceUpdate}
-                        value={currentFragment?.activo_details}
+                        value={currentFragment?.activo}
                       />
                     </Form.Group>
 
@@ -378,7 +378,7 @@ function Categorization() {
                         isMulti
                         sendResponse={getAsyncPasivo}
                         clear={forceUpdate}
-                        value={currentFragment?.pasivo_details}
+                        value={currentFragment?.pasivo}
                       />
                     </Form.Group>
 
