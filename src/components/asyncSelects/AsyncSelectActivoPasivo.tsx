@@ -33,7 +33,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
 }) => {
   const [forceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
-  const [autorOptions, setAutorOptions] = useState<TagOption[]>(value);
+  const [autorOptions, setAutorOptions] = useState<TagOption[]>();
 
   const searchTimeoutRef = useRef<number | null>(null);
 
@@ -88,7 +88,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
 
   useEffect(() => {
     sendResponse(autorOptions, inputAutorValue);
-  }, [autorOptions, sendResponse, inputAutorValue]);
+  }, [sendResponse, autorOptions, inputAutorValue]);
 
   return (
     <AsyncSelect
