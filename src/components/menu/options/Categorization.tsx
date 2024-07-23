@@ -157,7 +157,7 @@ function Categorization() {
 
   async function editCurrentFragment() {
     const update: editCategorization = {
-      tono: tonoOption.id,
+      tono: tonoOption?.id,
       tema: temaOption.map((item) => item.id),
       tag: tagOptions.map((item) => item.id),
       activo: activoOption.map((item) => item.id),
