@@ -72,23 +72,28 @@ function Header() {
         return toast.error('Faltan campos por diligenciar');
       }
 
-      return await postHeader(articulo.id, update).then((res) => {
-        const { medio, programa, fecha, tipo_articulo, autor } = res.data;
+      return await postHeader(articulo.id, update)
+        .then((res) => {
+          const { medio, programa, fecha, tipo_articulo, autor } = res.data;
 
-        setArticle((prev) => ({
-          ...prev,
-          articulo: {
-            ...prev.articulo,
-            medio,
-            programa,
-            fecha,
-            tipo_articulo,
-            autor,
-          },
-        }));
+          setArticle((prev) => ({
+            ...prev,
+            articulo: {
+              ...prev.articulo,
+              medio,
+              programa,
+              fecha,
+              tipo_articulo,
+              autor,
+            },
+          }));
 
-        toast.success('Encabezado guardado');
-      });
+          toast.success('Encabezado guardado');
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error('Ocurrió un error');
+        });
     }
   }
 
