@@ -170,7 +170,7 @@ function FragmentForm() {
     return setIsValidTema(true);
   }, [temaOption]);
   return (
-    <>
+    <div>
       <div className={styles.fragments_cont}>
         <div>
           <h4>Fragmentos</h4>
@@ -310,7 +310,7 @@ function FragmentForm() {
         accept={{ disabled: !currentFragment || !isValidTema }}
         reject={{ disabled: !currentFragment, event: clearForm }}
       />
-    </>
+    </div>
   );
 }
 

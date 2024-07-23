@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 import styles from '../../assets/css/app.module.css';
-import Categorization from './options/Categorization';
+import Categorization from './options/categorization/Categorization';
 import Header from './options/Header';
 import Config from './options/Config';
 
