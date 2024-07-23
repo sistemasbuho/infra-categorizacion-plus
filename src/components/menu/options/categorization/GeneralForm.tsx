@@ -79,7 +79,7 @@ function GeneralForm() {
 
   return (
     <div>
-      <Form id="article-form" onSubmit={sendArticleCategorization}>
+      <Form className='mb-3' id="article-form" onSubmit={sendArticleCategorization}>
         <Form.Group className="mb-3">
           <Form.Label>
             <h4>Asignar tags al artículo</h4>
