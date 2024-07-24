@@ -1,25 +1,20 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
 import styles from '../assets/css/components/search.module.css';
-import { Dispatch, SetStateAction } from 'react';
 
-interface Props {
-  state: string | number | readonly string[] | undefined;
-  setState: Dispatch<
-    SetStateAction<string | number | readonly string[] | undefined>
-  >;
-}
+function Search() {
+  const [input, setInput] = useState<string | null>('');
 
-function Search({ state, setState }: Props) {
   return (
     <div className={styles.container_search}>
       <input
         type="text"
         id="search"
         placeholder="Buscar"
-        value={state}
-        onChange={(e) => setState(e.target.value)}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
       />
 
       <button>

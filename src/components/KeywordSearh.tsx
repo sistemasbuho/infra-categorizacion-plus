@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import styles from '../assets/css/components/keywordSearch.module.css';
 import Search from './Search';
 
 function KeywordSearch() {
-  const [input, setInput] = useState<string | null>('');
   const keywords = [
     'Calma',
     'Tranquilidad',
@@ -30,7 +28,7 @@ function KeywordSearch() {
         })}
       </p>
       <div>
-        <Search state={input} setState={setInput} />
+        <Search />
       </div>
     </div>
   );
