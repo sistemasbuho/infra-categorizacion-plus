@@ -27,6 +27,7 @@ const initialArticleState = {
       tema: [],
     },
   },
+  keywords: [],
 };
 
 interface Props {
@@ -45,6 +46,12 @@ interface ContextProps {
   };
 }
 
+interface keywordsFormatted {
+  start_index: number;
+  article_fragment: string;
+  color: string;
+}
+
 const ArticleContext = createContext(null);
 
 export const ArticleProvider: FC<Props> = ({ children }) => {
@@ -52,6 +59,31 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
   const [article, setArticle] = useState(initialArticleState);
 
   const { id } = useParams();
+
+  function getIdxAndLengthOfKeywords(
+    keywords: string[],
+    text: string
+  ): keywordsFormatted[] {
+    const results: keywordsFormatted[] = [];
+
+    const lowerCaseString = text.toLowerCase();
+
+    keywords.forEach((keyword) => {
+      const lowerCaseKeyword = keyword.toLowerCase();
+      let index = lowerCaseString.indexOf(lowerCaseKeyword);
+      while (index !== -1) {
+        results.push({
+          start_index: index,
+          article_fragment: lowerCaseKeyword,
+          color: 'yellow',
+        });
+        index = lowerCaseString.indexOf(lowerCaseKeyword, index + 1);
+      }
+    });
+    return results;
+  }
+
+  const keys = ['ley'];
 
   useEffect(() => {
     async function fetchData() {
@@ -75,7 +107,9 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
               tema: temaGeneral,
             },
           },
+          keywords: getIdxAndLengthOfKeywords(keys, data?.articulo.texto),
         });
+
         setIsLoading(false);
       });
     }

@@ -11,6 +11,8 @@ import { useFragmentContext } from '../context/FragmentsContext';
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
   const { texto } = useArticleContext().articleState.article.articulo;
+  const { keywords } = useArticleContext().articleState.article;
+  // const { setArticle } = useArticleContext().articleState;
   const { allFrags, methods } = useFragmentContext();
 
   const { allFragments } = allFrags;
@@ -59,11 +61,23 @@ function Article(): JSX.Element {
 
   const applySelections = (text, selections) => {
     let modifiedText = text;
-    const sortedSelections = selections.sort(
+
+    const filteredKeywords = keywords.filter((keyword) => {
+      return !selections.some((selection) => {
+        return (
+          keyword.start_index <
+            selection.start_index + selection.article_fragment.length &&
+          keyword.start_index + keyword.article_fragment.length >
+            selection.start_index
+        );
+      });
+    });
+
+    const finalSelections = [...selections, ...filteredKeywords].sort(
       (a, b) => b.start_index - a.start_index
     );
 
-    sortedSelections.forEach(({ start_index, article_fragment }) => {
+    finalSelections.forEach(({ start_index, article_fragment, color }) => {
       start_index = Number(start_index);
 
       const before = modifiedText.substring(0, start_index);
@@ -75,7 +89,11 @@ function Article(): JSX.Element {
         start_index + article_fragment.length
       );
 
-      modifiedText = `${before}<span id='${start_index}_${article_fragment.length}' style="background-color: blueviolet; color: whitesmoke;">${selected}</span>${after}`;
+      modifiedText = `${before}<span id='${start_index}_${
+        article_fragment.length
+      }' style="background-color:${color || 'blueviolet'}; color: ${
+        color ? 'black' : 'whitesmoke'
+      };">${selected}</span>${after}`;
     });
 
     return modifiedText;
