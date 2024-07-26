@@ -1,11 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ConfigProvider } from './context/ConfigContext';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { Toaster } from 'react-hot-toast';
 
 import GlobalComponent from './GlobalComponent';
 import Home from './pages/Home';
-import { Toaster } from 'react-hot-toast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import Login from './components/Login/Login';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/*" element={<Home />} />
           <Route path="/articulo/:id" element={<GlobalComponent />} />
         </Routes>
