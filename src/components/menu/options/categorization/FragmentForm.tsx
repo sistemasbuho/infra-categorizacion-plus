@@ -34,18 +34,20 @@ function FragmentForm() {
   const [isValidTema, setIsValidTema] = useState<boolean>(false);
   const [forceUpdate, setForceUpdate] = useState(false);
 
-  //fragments
-  const [tagOptions, setTagOptions] = useState<GeneralOption[] | null>();
-  const [temaOption, setTemaOption] = useState<GeneralOption[] | null>(null);
-  const [activoOption, setActivoOption] = useState([]);
-  const [pasivoOption, setPasivoOption] = useState([]);
-  const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
-
   const sentimiento: GeneralOption[] = [
     { id: 1, nombre: 'Positvo' },
     { id: 2, nombre: 'Neutral' },
     { id: 3, nombre: 'Negativo' },
   ];
+
+  //fragments
+  const [tagOptions, setTagOptions] = useState<GeneralOption[] | null>();
+  const [temaOption, setTemaOption] = useState<GeneralOption[] | null>(null);
+  const [activoOption, setActivoOption] = useState([]);
+  const [pasivoOption, setPasivoOption] = useState([]);
+  const [tonoOption, setTonoOption] = useState<GeneralOption | null>(
+    sentimiento[0]
+  );
 
   async function postCurrentFragment() {
     const update: FragmentCategorization = {
@@ -68,7 +70,7 @@ function FragmentForm() {
         }
         return item.id;
       }),
-      tono: Number(tonoOption.id),
+      tono: Number(tonoOption?.id),
     };
 
     return await postFragment(articulo.id, update)
