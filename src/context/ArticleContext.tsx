@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { articleContext } from '../interfaces/generals';
+import { articleContext, Keywords } from '../interfaces/generals';
 import { getArticleData } from '../utils/asyncFunc';
 import { useParams } from 'react-router';
 
@@ -46,12 +46,6 @@ interface ContextProps {
   };
 }
 
-interface keywordsFormatted {
-  start_index: number;
-  article_fragment: string;
-  color: string;
-}
-
 const ArticleContext = createContext(null);
 
 export const ArticleProvider: FC<Props> = ({ children }) => {
@@ -63,8 +57,8 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
   function getIdxAndLengthOfKeywords(
     keywords: string[],
     text: string
-  ): keywordsFormatted[] {
-    const results: keywordsFormatted[] = [];
+  ): Keywords[] {
+    const results: Keywords[] = [];
 
     const lowerCaseString = text.toLowerCase();
 

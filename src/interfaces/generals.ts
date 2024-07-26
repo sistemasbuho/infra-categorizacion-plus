@@ -13,6 +13,13 @@ export interface articleContext {
       tema: GeneralOption[];
     };
   };
+  keywords: Keywords[];
+}
+
+export interface Keywords {
+  start_index: number;
+  article_fragment: string;
+  color: string;
 }
 
 interface OriginalFragment {
