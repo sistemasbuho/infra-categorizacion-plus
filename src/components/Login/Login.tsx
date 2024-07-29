@@ -1,19 +1,19 @@
 import styles from '../../assets/css/components/Login.module.css';
-import FormLogin from './FormLogin';
+import GoogleLoginButton from './GoogleLoginButton';
 
 function Login() {
   return (
-    <div className={styles.Login_component}>
-      <div className={styles.components_cont}>
-        <div>header</div>
-
-        <div>
-          <h2>Inicia sesión para poder categorizar</h2>
-
-          <FormLogin />
+    <div className={styles.Login}>
+      <div className={styles.login_modal}>
+        <div className={styles.header}>
+          <h4>Te damos la bienvenida al módulo de categorización</h4>
         </div>
 
-        <div>footer</div>
+        <div className={styles.body}>
+          <p>Por favor inicia sesión con tu cuenta empresarial</p>
+
+          <GoogleLoginButton />
+        </div>
       </div>
     </div>
   );
