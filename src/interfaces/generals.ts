@@ -53,6 +53,7 @@ export interface article {
   article_fragment?: string;
   titulo: string;
   image_media_file?: string;
+  audio_media_file?: string;
   state: boolean;
   resumen?: string;
   medio?: Medios[];
