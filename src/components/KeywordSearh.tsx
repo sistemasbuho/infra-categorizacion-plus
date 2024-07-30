@@ -1,30 +1,15 @@
 import styles from '../assets/css/components/keywordSearch.module.css';
+import { useArticleContext } from '../context/ArticleContext';
 import Search from './Search';
 
 function KeywordSearch() {
-  const keywords = [
-    'Calma',
-    'Tranquilidad',
-    'Meditación',
-    'Yoga',
-    'Relajación',
-    'Crecer',
-    'Espiritualidad',
-
-    'Calma',
-    'Tranquilidad',
-    'Meditación',
-    'Yoga',
-    'Relajación',
-    'Crecer',
-    'Espiritualidad',
-  ];
+  const { keywords } = useArticleContext().articleState.article;
 
   return (
     <div className={styles.container}>
       <p className={styles.text_important}>
-        {keywords.map((keyword, index) => {
-          return `${index + 1}. ${keyword} `;
+        {keywords.map((key, index) => {
+          return `${index + 1}. ${key} `;
         })}
       </p>
       <div>
