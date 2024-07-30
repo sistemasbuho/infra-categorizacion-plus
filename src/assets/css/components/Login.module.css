@@ -19,7 +19,7 @@
 }
 
 .login_modal {
-  width: 600px;
+  width: min(600px, calc(100% - 5rem));
   background-color: whitesmoke;
   box-shadow: 3px 3px 6px gray;
   border-radius: 10px;
@@ -45,4 +45,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  text-align: center;
+  white-space: balance;
 }

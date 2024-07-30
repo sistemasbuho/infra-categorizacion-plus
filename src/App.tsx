@@ -8,13 +8,12 @@ import { decodedToken } from './components/Login/isValidToken';
 
 import GlobalComponent from './GlobalComponent';
 import Login from './components/Login/Login';
+import Home from './pages/Home';
 
 function App() {
   const [showLoginView, setshowLoginView] = useState<boolean>(false);
   useEffect(() => {
     const token = localStorage.getItem('token');
-
-    console.log(token);
 
     if (!token) {
       setshowLoginView(true);
@@ -58,6 +57,7 @@ function App() {
       {!showLoginView && (
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/articulo/:id" element={<GlobalComponent />} />
           </Routes>
         </BrowserRouter>
