@@ -14,6 +14,7 @@ export interface articleContext {
     };
   };
   keywords: Keywords[];
+  keys: Keywords[];
 }
 
 export interface Keywords {

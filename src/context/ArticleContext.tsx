@@ -28,6 +28,7 @@ const initialArticleState = {
     },
   },
   keywords: [],
+  keys: [],
 };
 
 interface Props {
@@ -77,8 +78,6 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
     return results;
   }
 
-  const keys = ['ley'];
-
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
@@ -101,7 +100,11 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
               tema: temaGeneral,
             },
           },
-          keywords: getIdxAndLengthOfKeywords(keys, data?.articulo.texto),
+          keywords: data.keyword.map((item) => item.nombre),
+          keys: getIdxAndLengthOfKeywords(
+            [...data.keyword.map((item) => item.nombre)],
+            data?.articulo.texto
+          ),
         });
 
         setIsLoading(false);

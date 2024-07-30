@@ -11,8 +11,8 @@ import { useFragmentContext } from '../context/FragmentsContext';
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
   const { texto } = useArticleContext().articleState.article.articulo;
-  const { keywords } = useArticleContext().articleState.article;
-  // const { setArticle } = useArticleContext().articleState;
+  const { keys } = useArticleContext().articleState.article;
+
   const { allFrags, methods } = useFragmentContext();
 
   const { allFragments } = allFrags;
@@ -62,7 +62,7 @@ function Article(): JSX.Element {
   const applySelections = (text, selections) => {
     let modifiedText = text;
 
-    const filteredKeywords = keywords.filter((keyword) => {
+    const filteredKeywords = keys.filter((keyword) => {
       return !selections.some((selection) => {
         return (
           keyword.start_index <
