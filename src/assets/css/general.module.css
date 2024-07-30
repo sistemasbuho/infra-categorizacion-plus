@@ -34,6 +34,9 @@
   --bg-toast-error: #ff7588;
   --border-toast-error: #ff7588;
   --color-toast-error: #ffffff;
+
+  --btn-control-video: silver;
+  --hover-btn-control-video: #00ada1;
 }
 
 .App.dark {
@@ -61,6 +64,9 @@
   --bg-fragment: transparent;
   --box-shadow-fragment: 0px 3px 6px #00000029;
   --border-fragment: 1px solid #fff;
+
+  --btn-control-video: #00ada1;
+  --hover-btn-control-video: #00ada1;
 }
 
 * {
