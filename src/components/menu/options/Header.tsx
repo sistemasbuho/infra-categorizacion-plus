@@ -64,7 +64,6 @@ function Header() {
 
       if (
         !tipoOption?.id ||
-        !programaOption?.id ||
         fullDate.length <= 0 ||
         medioOption.length <= 0 ||
         autorOption.length <= 0
