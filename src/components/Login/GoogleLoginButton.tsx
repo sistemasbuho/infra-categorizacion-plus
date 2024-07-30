@@ -4,6 +4,7 @@ import {
   CredentialResponse,
 } from '@react-oauth/google';
 import { Dispatch, SetStateAction } from 'react';
+import { decodedToken } from './isValidToken';
 
 interface Props {
   setShow: Dispatch<SetStateAction<boolean>>;
@@ -11,11 +12,14 @@ interface Props {
 
 function GoogleLoginButton({ setShow }: Props) {
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
+    const decoded = decodedToken();
+
     localStorage.setItem(
       'token',
       JSON.stringify(credentialResponse.credential)
     );
 
+    localStorage.setItem('user_email', JSON.stringify(decoded.email));
     setShow(false);
   };
 
