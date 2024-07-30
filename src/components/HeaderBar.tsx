@@ -22,7 +22,6 @@ function HeaderBar() {
 
   async function finishArticle() {
     if (
-      !article.programa?.id ||
       !article.tipo_articulo?.id ||
       article.medio.length <= 0 ||
       article.autor.length <= 0
