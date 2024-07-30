@@ -3,29 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ConfigProvider } from './context/ConfigContext';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { Toaster } from 'react-hot-toast';
-// import { useEffect } from 'react';
-// import { decodedToken } from './components/Login/isValidToken';
 
 import GlobalComponent from './GlobalComponent';
 import Home from './pages/Home';
 
 function App() {
-  // const [showLoginView, setshowLoginView] = useState<boolean>(false);
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-
-  //   if (!token) {
-  //     setshowLoginView(true);
-  //   }
-
-  //   if (token) {
-  //     const decoded = decodedToken(token);
-
-  //     console.log(`Email: ${decoded.email}`);
-  //   }
-  //   return () => {};
-  // }, []);
-
   return (
     <ConfigProvider>
       <Toaster
