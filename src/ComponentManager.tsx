@@ -17,7 +17,6 @@ import usePageAndWindowVisibility from './hooks/usePageAndWindowVisibility';
 
 function ComponentManager() {
   const { isLoading } = useArticleContext().loadingState;
-  const { asignado_a } = useArticleContext().articleState.article.articulo;
   const { id } = useParams();
   const intervalRef = useRef<number | null>(null);
 
@@ -26,14 +25,14 @@ function ComponentManager() {
   function enviarSegundo() {
     const update = {
       tiempo_segundos: 1,
-      asignado_a,
+      asignado_a: JSON.parse(localStorage.getItem('user_email')),
     };
 
     reportarTiempo(Number(id), update);
   }
 
   useEffect(() => {
-    if (isPageVisible && asignado_a) {
+    if (isPageVisible) {
       if (!intervalRef.current) {
         intervalRef.current = window.setInterval(enviarSegundo, 1000);
       }
@@ -50,7 +49,7 @@ function ComponentManager() {
         intervalRef.current = null;
       }
     };
-  }, [isPageVisible, asignado_a, id]);
+  }, [isPageVisible, id]);
 
   return (
     <>
