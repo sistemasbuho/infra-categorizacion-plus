@@ -3,12 +3,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ConfigProvider } from './context/ConfigContext';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+import { decodedToken } from './components/Login/isValidToken';
 
 import GlobalComponent from './GlobalComponent';
-import Home from './pages/Home';
 import Login from './components/Login/Login';
 
 function App() {
+  const [showLoginView, setshowLoginView] = useState<boolean>(false);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    console.log(token);
+
+    if (!token) {
+      setshowLoginView(true);
+    }
+
+    if (token) {
+      const decoded = decodedToken(token);
+
+      console.log(`Email: ${decoded.email}`);
+    }
+    return () => {};
+  }, []);
+
   return (
     <ConfigProvider>
       <Toaster
@@ -34,14 +53,15 @@ function App() {
           },
         }}
       />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/*" element={<Home />} />
-          <Route path="/articulo/:id" element={<GlobalComponent />} />
-        </Routes>
-      </BrowserRouter>
+
+      {showLoginView && <Login setShow={setshowLoginView} />}
+      {!showLoginView && (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/articulo/:id" element={<GlobalComponent />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </ConfigProvider>
   );
 }

@@ -3,10 +3,20 @@ import {
   GoogleLogin,
   CredentialResponse,
 } from '@react-oauth/google';
+import { Dispatch, SetStateAction } from 'react';
 
-function GoogleLoginButton() {
+interface Props {
+  setShow: Dispatch<SetStateAction<boolean>>;
+}
+
+function GoogleLoginButton({ setShow }: Props) {
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
-    console.log('Login Success:', credentialResponse);
+    localStorage.setItem(
+      'token',
+      JSON.stringify(credentialResponse.credential)
+    );
+
+    setShow(false);
   };
 
   const handleLoginFailure = () => {
@@ -14,14 +24,12 @@ function GoogleLoginButton() {
   };
 
   return (
-    <GoogleOAuthProvider clientId="976472882522-jfcok79uuii12i78tv4nkvs52g2ismuc.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <GoogleLogin
         onSuccess={handleLoginSuccess}
         onError={handleLoginFailure}
         auto_select={true}
         useOneTap={true}
-        
-        
       />
     </GoogleOAuthProvider>
   );
