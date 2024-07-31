@@ -1,7 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-
-import styles from '../../../assets/css/components/media/renderVideo.module.css';
-import ReactPlayer from 'react-player/lazy';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPause,
@@ -9,6 +6,9 @@ import {
   faVolumeHigh,
   faVolumeXmark,
 } from '@fortawesome/free-solid-svg-icons';
+
+import styles from '../../../assets/css/components/media/renderVideo.module.css';
+import ReactPlayer from 'react-player/lazy';
 
 interface Props {
   url: string;
@@ -49,13 +49,7 @@ function RenderVideo({ url }: Props) {
   return (
     <>
       <div ref={contVideoRef} className={styles.renderVideo}>
-        <div
-          className={
-            !isVisible && videoPLaying !== null
-              ? styles.floatContainer
-              : styles.container
-          }
-        >
+        <div className={styles.container}>
           <div className={styles.cont_video}>
             <ReactPlayer
               ref={videoRef}
@@ -68,7 +62,11 @@ function RenderVideo({ url }: Props) {
             />
           </div>
 
-          <div className={styles.controls}>
+          <div
+            className={`${styles.controls} ${
+              !isVisible && videoPLaying !== null && styles.floatControls
+            }`}
+          >
             <button onClick={() => setVideoRate(1)}>x1</button>
             <button onClick={() => setVideoRate(1.25)}>x1.25</button>
             <button onClick={() => setVideoRate(1.5)}>x1.5</button>

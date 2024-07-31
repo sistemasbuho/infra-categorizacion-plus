@@ -37,7 +37,7 @@
 
 .controls button {
   width: 80px;
-  height: 80px;
+  padding: 0.5rem;
   border-width: 0px;
   border-radius: 5px;
   background-color: var(--btn-control-video);
@@ -53,25 +53,26 @@
   scale: 0.9;
 }
 
-.floatContainer {
-  width: clamp(300px, 25vw, 400px);
-  aspect-ratio: 16/9;
+.floatControls {
+  width: fit-content;
   position: fixed;
-  left: 1rem;
-  bottom: 1rem;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-100%);
   display: flex;
-  flex-direction: column;
   gap: 1rem;
   padding: 1rem;
   border-radius: 5px;
   background-color: whitesmoke;
-  box-shadow: 3px 3px 6px silver;
+  box-shadow: var(--box-shadow);
   animation: fade 0.4s ease forwards;
 }
 
-.floatContainer .controls button {
+.floatControls button {
   width: 50px;
-  height: 50px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0.5rem;
 }
 
 @keyframes fade {
