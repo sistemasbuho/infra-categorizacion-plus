@@ -5,8 +5,6 @@ import FragmentForm from './FragmentForm';
 import GeneralForm from './GeneralForm';
 
 function Categorization() {
-  // Context
-
   const [selectedMenu, setSelectedMenu] = useState(0);
 
   return (

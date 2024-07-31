@@ -227,6 +227,7 @@ function FragmentForm() {
                 <h4>Tema</h4>
               </Form.Label>
               <Select
+                isDisabled={!currentFragment}
                 isMulti
                 isClearable={false}
                 options={temas}
@@ -249,6 +250,7 @@ function FragmentForm() {
               </Form.Label>
 
               <Select
+                isDisabled={!currentFragment}
                 isMulti
                 isClearable={false}
                 getOptionLabel={(e) => e.nombre}
@@ -264,6 +266,7 @@ function FragmentForm() {
                 <h4>Activo</h4>
               </Form.Label>
               <AsyncSelectActivoPasivo
+                isDisabled={!currentFragment}
                 isMulti
                 sendResponse={getAsyncActivo}
                 clear={forceUpdate}
@@ -276,6 +279,7 @@ function FragmentForm() {
                 <h4>Pasivo</h4>
               </Form.Label>
               <AsyncSelectActivoPasivo
+                isDisabled={!currentFragment}
                 isMulti
                 sendResponse={getAsyncPasivo}
                 clear={forceUpdate}
@@ -288,6 +292,7 @@ function FragmentForm() {
                 <h4>Sentimiento</h4>
               </Form.Label>
               <Select
+                isDisabled={!currentFragment}
                 options={sentimiento}
                 placeholder={'Buscar'}
                 onChange={(e) => setTonoOption(e)}

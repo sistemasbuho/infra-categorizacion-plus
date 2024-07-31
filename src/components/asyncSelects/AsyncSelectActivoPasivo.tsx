@@ -21,6 +21,7 @@ interface AsyncSelectActivoPasivoProps {
   maxHeight?: number;
   clear?: React.SetStateAction<boolean>;
   value?: TagOption[];
+  isDisabled: boolean;
 }
 
 const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
@@ -30,6 +31,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
   name = 'objetivo',
   maxHeight = 150,
   value,
+  isDisabled = false,
 }) => {
   const [forceUpdate] = useState(false);
   const [inputAutorValue, setInputAutorValue] = useState('');
@@ -92,6 +94,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
 
   return (
     <AsyncSelect
+      isDisabled={isDisabled}
       isMulti={isMulti}
       value={autorOptions}
       noOptionsMessage={() => 'Sin resultados'}
