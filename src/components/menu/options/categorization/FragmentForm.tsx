@@ -289,7 +289,7 @@ function FragmentForm() {
 
             <Form.Group>
               <Form.Label htmlFor="pasivo">
-                <h4>Sentimiento</h4>
+                <h4>Tonalidad</h4>
               </Form.Label>
               <Select
                 isDisabled={!currentFragment}
