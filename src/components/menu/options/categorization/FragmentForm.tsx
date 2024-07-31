@@ -45,9 +45,7 @@ function FragmentForm() {
   const [temaOption, setTemaOption] = useState<GeneralOption[] | null>(null);
   const [activoOption, setActivoOption] = useState([]);
   const [pasivoOption, setPasivoOption] = useState([]);
-  const [tonoOption, setTonoOption] = useState<GeneralOption | null>(
-    sentimiento[0]
-  );
+  const [tonoOption, setTonoOption] = useState<GeneralOption | null>(null);
 
   async function postCurrentFragment() {
     const update: FragmentCategorization = {
@@ -159,7 +157,8 @@ function FragmentForm() {
     setPasivoOption(currentFragment?.pasivo);
     setActivoOption(currentFragment?.activo);
     setTonoOption(
-      sentimiento.find((sent) => sent?.id === currentFragment?.tono) || null
+      sentimiento.find((sent) => sent?.id === currentFragment?.tono) ||
+        sentimiento[1]
     );
 
     return () => {};
