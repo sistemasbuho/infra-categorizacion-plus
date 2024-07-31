@@ -7,15 +7,17 @@ import styles from '../assets/css/components/minContainer.module.css';
 interface ContainerProps {
   title: string;
   isDeployable: boolean;
+  defaultOpened?: boolean;
   children: React.ReactNode;
 }
 
 function MinContainer({
   children,
   title,
+  defaultOpened = false,
   isDeployable = false,
 }: ContainerProps) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(defaultOpened);
 
   return (
     <section className={styles.container}>

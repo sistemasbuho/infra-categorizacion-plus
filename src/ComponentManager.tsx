@@ -77,7 +77,7 @@ function ComponentManager() {
                   <RenderFile />
                 </MinContainer>
 
-                <MinContainer title="Transcripción" isDeployable>
+                <MinContainer title="Transcripción" isDeployable defaultOpened>
                   <Article />
                 </MinContainer>
               </div>
