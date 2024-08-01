@@ -16,10 +16,12 @@ import RenderFile from './components/visualizacion/RenderFile';
 import usePageAndWindowVisibility from './hooks/usePageAndWindowVisibility';
 
 function ComponentManager() {
+  const { image_media_file, audio_media_file } =
+    useArticleContext().articleState.article.articulo;
+
   const { isLoading } = useArticleContext().loadingState;
   const { id } = useParams();
   const intervalRef = useRef<number | null>(null);
-
   const isPageVisible = usePageAndWindowVisibility();
 
   function enviarSegundo() {
@@ -73,7 +75,12 @@ function ComponentManager() {
                   <SummaryArticle />
                 </MinContainer>
 
-                <MinContainer title="Visualización PDF" isDeployable>
+                <MinContainer
+                  title={`Visualización ${
+                    image_media_file?.length > 0 ? 'PDF' : 'Multimedia'
+                  }`}
+                  isDeployable
+                >
                   <RenderFile />
                 </MinContainer>
 
