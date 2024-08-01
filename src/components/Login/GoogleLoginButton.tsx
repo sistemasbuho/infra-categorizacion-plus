@@ -12,14 +12,14 @@ interface Props {
 
 function GoogleLoginButton({ setShow }: Props) {
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
-    const decoded = decodedToken();
-
+    const { email } = decodedToken();
     localStorage.setItem(
       'token',
       JSON.stringify(credentialResponse.credential)
     );
 
-    localStorage.setItem('user_email', JSON.stringify(decoded.email));
+    email && localStorage.setItem('user_email', JSON.stringify(email));
+
     setShow(false);
   };
 

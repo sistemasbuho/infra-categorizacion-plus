@@ -7,11 +7,11 @@ interface DecodedObject {
 
 export function decodedToken(): DecodedObject {
   try {
-    const token: string | undefined= JSON.parse(localStorage.getItem('token'));
+    const token: string | undefined = JSON.parse(localStorage.getItem('token'));
     if (token) {
       return jwtDecode(token);
     }
-    
+
     if (!token) {
       throw new Error('Invalid token');
     }
