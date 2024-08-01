@@ -5,17 +5,22 @@ interface DecodedObject {
   hd: string;
 }
 
-export function decodedToken(): DecodedObject {
+export function decodedTokenInLocalStorage(): DecodedObject | undefined {
   try {
     const token: string | undefined = JSON.parse(localStorage.getItem('token'));
+
     if (token) {
       return jwtDecode(token);
     }
 
     if (!token) {
-      throw new Error('Invalid token');
+      return undefined;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+}
+
+export function decodedToken(token: string): DecodedObject {
+  return jwtDecode(token);
 }
