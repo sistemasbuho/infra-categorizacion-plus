@@ -6,15 +6,14 @@ import { Toaster } from 'react-hot-toast';
 
 import GlobalComponent from './GlobalComponent';
 import Home from './pages/Home';
-import { decodedToken } from './components/Login/isValidToken';
+import { decodedTokenInLocalStorage } from './components/Login/isValidToken';
 import { useEffect, useState } from 'react';
 import Login from './components/Login/Login';
 function App() {
   const [showLogin, setshowLogin] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const token = decodedToken();
-    console.log(token);
+    const token = decodedTokenInLocalStorage();
 
     token ? setshowLogin(false) : setshowLogin(true);
     return () => {};
