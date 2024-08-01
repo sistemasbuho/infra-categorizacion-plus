@@ -62,6 +62,7 @@ export interface article {
   fecha?: string;
   asignado_a: number;
   tipo_articulo?: GeneralOption;
+  url?: string;
 }
 
 export interface ArticleCategorization {
