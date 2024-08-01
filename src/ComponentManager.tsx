@@ -16,7 +16,7 @@ import RenderFile from './components/visualizacion/RenderFile';
 import usePageAndWindowVisibility from './hooks/usePageAndWindowVisibility';
 
 function ComponentManager() {
-  const { image_media_file, audio_media_file } =
+  const { image_media_file } =
     useArticleContext().articleState.article.articulo;
 
   const { isLoading } = useArticleContext().loadingState;
