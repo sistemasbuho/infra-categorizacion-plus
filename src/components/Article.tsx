@@ -1,121 +1,153 @@
 import { useEffect, useRef, useState } from 'react';
 import { isOverlappingFragment } from '../utils/funcs';
-
-import globalStyles from '../assets/css/general.module.css';
-import styles from '../assets/css/article.module.css';
-
 import { useConfig } from '../context/ConfigContext';
 import { useArticleContext } from '../context/ArticleContext';
 import { useFragmentContext } from '../context/FragmentsContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { HighlightSelection } from '../interfaces/generals';
+
+import globalStyles from '../assets/css/general.module.css';
+import styles from '../assets/css/article.module.css';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
   const { texto } = useArticleContext().articleState.article.articulo;
   const { keys } = useArticleContext().articleState.article;
 
+  // Fragmento editable
+  const [esEditable, setEsEditable] = useState(false);
+  const [fragmentoTextoEditado, setFragmentoTextoEditado] = useState(texto);
+
   const { allFrags, methods } = useFragmentContext();
-
   const { allFragments } = allFrags;
-  const { create: createFrag } = methods;
-  const [articleModified, setArticleModified] = useState(texto);
-  const articleRef = useRef<HTMLParagraphElement>(null);
+  const { create: crearFragmento } = methods;
+  const [articuloModificado, setArticuloModificado] = useState(texto);
+  const articuloRef = useRef<HTMLParagraphElement>(null);
 
-  const handleSelection = (event: React.MouseEvent<HTMLParagraphElement>) => {
+  const manejarSeleccion = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const selection = window.getSelection();
+    const seleccion = window.getSelection();
     if (
-      selection &&
-      selection.rangeCount > 0 &&
-      articleRef.current?.contains(selection.anchorNode)
+      seleccion &&
+      seleccion.rangeCount > 0 &&
+      articuloRef.current?.contains(seleccion.anchorNode)
     ) {
-      if (selection.getRangeAt(0).toString().length <= 2) {
+      if (seleccion.getRangeAt(0).toString().length <= 2) {
         return;
       }
 
-      const range = selection.getRangeAt(0);
-      const selectedText = range.toString();
-      const preSelectionRange = range.cloneRange();
-      preSelectionRange.selectNodeContents(articleRef.current);
-      preSelectionRange.setEnd(range.startContainer, range.startOffset);
-      const startIndex = preSelectionRange.toString().length;
-      const length = selectedText.length;
+      const rango = seleccion.getRangeAt(0);
+      const textoSeleccionado = rango.toString();
+      const rangoPreSeleccion = rango.cloneRange();
+      rangoPreSeleccion.selectNodeContents(articuloRef.current);
+      rangoPreSeleccion.setEnd(rango.startContainer, rango.startOffset);
+      const indiceInicio = rangoPreSeleccion.toString().length;
+      const longitud = textoSeleccionado.length;
 
-      if (!isOverlappingFragment({ startIndex, length, allFragments })) {
-        const newFragment = {
+      if (
+        indiceInicio + longitud <= texto.length &&
+        !isOverlappingFragment({
+          startIndex: indiceInicio,
+          length: longitud,
+          allFragments,
+        })
+      ) {
+        const nuevoFragmento = {
           id: Date.now(),
-          article_fragment: selectedText,
+          article_fragment: textoSeleccionado,
           selectionId: Date.now(),
-          start_index: Number(startIndex),
+          start_index: indiceInicio,
           tema: [],
           tag: [],
           activo: [],
           pasivo: [],
           tono: null,
         };
-        createFrag(newFragment);
+        crearFragmento(nuevoFragmento);
       }
     }
   };
 
-  const applySelections = (text, selections) => {
-    let modifiedText = text;
+  const aplicarSelecciones = (
+    texto: string,
+    selecciones: HighlightSelection[]
+  ) => {
+    let textoModificado = texto;
 
-    const filteredKeywords = keys.filter((keyword) => {
-      return !selections.some((selection) => {
+    const palabrasClaveFiltradas = keys.filter((keyword) => {
+      return !selecciones.some((seleccion) => {
         return (
           keyword.start_index <
-            selection.start_index + selection.article_fragment.length &&
+            seleccion.start_index + seleccion.article_fragment.length &&
           keyword.start_index + keyword.article_fragment.length >
-            selection.start_index
+            seleccion.start_index
         );
       });
     });
 
-    const finalSelections = [...selections, ...filteredKeywords].sort(
+    const seleccionesFinales = [...selecciones, ...palabrasClaveFiltradas].sort(
       (a, b) => b.start_index - a.start_index
     );
 
-    finalSelections.forEach(({ start_index, article_fragment, color }) => {
-      start_index = Number(start_index);
+    seleccionesFinales.forEach(({ start_index, article_fragment, color }) => {
+      const indiceInicio = Number(start_index);
 
-      const before = modifiedText.substring(0, start_index);
-      const selected = modifiedText.substring(
-        start_index,
-        start_index + article_fragment.length
+      const antes = textoModificado.substring(0, indiceInicio);
+      const seleccionado = textoModificado.substring(
+        indiceInicio,
+        indiceInicio + article_fragment.length
       );
-      const after = modifiedText.substring(
-        start_index + article_fragment.length
+      const despues = textoModificado.substring(
+        indiceInicio + article_fragment.length
       );
 
-      modifiedText = `${before}<span id='${start_index}_${
+      textoModificado = `${antes}<span id='${indiceInicio}_${
         article_fragment.length
       }' style="background-color:${color || 'blueviolet'}; color: ${
         color ? 'black' : 'whitesmoke'
-      };">${selected}</span>${after}`;
+      };">${seleccionado}</span>${despues}`;
     });
 
-    return modifiedText;
+    return textoModificado;
   };
 
   useEffect(() => {
-    const modifiedText = applySelections(texto, allFragments);
-    setArticleModified(modifiedText);
-    return () => {};
-  }, [allFragments]);
+    const textoModificado = aplicarSelecciones(texto, allFragments);
+    setArticuloModificado(textoModificado);
+  }, [texto, allFragments]);
 
   return (
     <>
       <div className={`${globalStyles.bg_sec}`}>
         <article className={styles.page}>
-          <p
-            ref={articleRef}
-            onMouseUp={handleSelection}
-            style={{ fontSize: fontSize }}
+          <button
+            className={styles.edit_btn}
+            onClick={() => setEsEditable((prev) => !prev)}
           >
-            <span dangerouslySetInnerHTML={{ __html: articleModified }} />
-          </p>
+            <FontAwesomeIcon icon={faPencil} />
+            Editar
+          </button>
+          {esEditable ? (
+            <div
+              style={{ fontSize }}
+              className={styles.page_editable}
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => setFragmentoTextoEditado(e.target.innerHTML)}
+              dangerouslySetInnerHTML={{ __html: fragmentoTextoEditado }}
+            />
+          ) : (
+            <p
+              ref={articuloRef}
+              onMouseUp={manejarSeleccion}
+              style={{ fontSize }}
+            >
+              <span dangerouslySetInnerHTML={{ __html: articuloModificado }} />
+            </p>
+          )}
         </article>
       </div>
     </>

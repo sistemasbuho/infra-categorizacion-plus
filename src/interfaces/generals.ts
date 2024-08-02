@@ -36,6 +36,10 @@ interface OriginalFragment {
   pasivo?: GeneralOption[];
 }
 
+export interface HighlightSelection extends OriginalFragment {
+  color?: string;
+}
+
 export interface GeneralOption {
   id: number;
   nombre: string;

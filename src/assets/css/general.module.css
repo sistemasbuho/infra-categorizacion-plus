@@ -76,6 +76,10 @@
   scroll-behavior: smooth;
 }
 
+html {
+  overflow: hidden;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   height: 100vh;
