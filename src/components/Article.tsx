@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { isOverlappingFragment } from '../utils/funcs';
-import globalStyles from '../assets/css/general.module.css';
-import styles from '../assets/css/article.module.css';
 import { useConfig } from '../context/ConfigContext';
 import { useArticleContext } from '../context/ArticleContext';
 import { useFragmentContext } from '../context/FragmentsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { HighlightSelection } from '../interfaces/generals';
+
+import globalStyles from '../assets/css/general.module.css';
+import styles from '../assets/css/article.module.css';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
@@ -69,7 +71,10 @@ function Article(): JSX.Element {
     }
   };
 
-  const aplicarSelecciones = (texto: string, selecciones: any[]) => {
+  const aplicarSelecciones = (
+    texto: string,
+    selecciones: HighlightSelection[]
+  ) => {
     let textoModificado = texto;
 
     const palabrasClaveFiltradas = keys.filter((keyword) => {
