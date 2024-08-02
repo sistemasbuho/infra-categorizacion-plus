@@ -21,10 +21,14 @@
   animation: fade 0.5s ease forwards;
 }
 
+.container h1:hover {
+  text-decoration: underline;
+}
+
 .container p {
   margin: 0;
   white-space: nowrap;
-  font-size: clamp(.8rem, .8vw, 2rem);
+  font-size: clamp(0.8rem, 0.8vw, 2rem);
 }
 
 @keyframes fade {
