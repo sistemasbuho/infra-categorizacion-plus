@@ -1,6 +1,5 @@
 .renderVideo {
   width: 100%;
-  min-height: 700px;
   padding: 2rem;
   display: flex;
   gap: 1rem;
