@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { audioExtensions } from '../../../utils/audioExtensions';
 import {
   faPause,
   faPlay,
@@ -15,6 +16,9 @@ interface Props {
 }
 
 function RenderVideo({ url }: Props) {
+  const fileExtensionPoint = url.lastIndexOf('.') + 1;
+  const fileType: string = url.slice(fileExtensionPoint, url.length);
+
   const [isVisible, setIsVisible] = useState<boolean | null>(null);
   const [videoRate, setVideoRate] = useState<number>(1);
   const [videoPLaying, setVideoPLaying] = useState<boolean>(null);
@@ -46,21 +50,39 @@ function RenderVideo({ url }: Props) {
     };
   }, []);
 
+  console.log();
+
   return (
     <>
       <div ref={contVideoRef} className={styles.renderVideo}>
         <div className={styles.container}>
-          <div className={styles.cont_video}>
+          {audioExtensions.some(
+            (ext) => ext.toLocaleLowerCase() === fileType.toLocaleLowerCase()
+          ) ? (
             <ReactPlayer
               ref={videoRef}
               url={url}
-              width={'100%'}
-              height={'100%'}
+              height={'fit-content'}
               playbackRate={videoRate}
               playing={videoPLaying}
               muted={videoMuted}
+              onPlay={() => setVideoPLaying(true)}
+              onPause={() => setVideoPLaying(false)}
+              controls
             />
-          </div>
+          ) : (
+            <div className={styles.cont_video}>
+              <ReactPlayer
+                ref={videoRef}
+                url={url}
+                width={'100%'}
+                height={'100%'}
+                playbackRate={videoRate}
+                playing={videoPLaying}
+                muted={videoMuted}
+              />
+            </div>
+          )}
 
           <div
             className={`${styles.controls} ${
