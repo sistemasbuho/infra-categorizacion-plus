@@ -139,10 +139,12 @@ function Article(): JSX.Element {
         <article className={styles.page}>
           {allFragments.length === 0 && (
             <div className={styles.edit_controls}>
-              <button className={styles.save_btn} onClick={guardarEdicion}>
-                <FontAwesomeIcon icon={faCloudArrowUp} />
-                Guardar
-              </button>
+              {fragmentoTextoEditado !== texto && (
+                <button className={styles.save_btn} onClick={guardarEdicion}>
+                  <FontAwesomeIcon icon={faCloudArrowUp} />
+                  Guardar
+                </button>
+              )}
 
               <button
                 className={styles.edit_btn}
