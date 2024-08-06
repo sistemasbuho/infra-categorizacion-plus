@@ -304,7 +304,7 @@ function FragmentForm() {
         </div>
       </div>
 
-      <p className="text-center mb-0 pb-3">
+      <p className={styles.text_warn_color}>
         {!currentFragment
           ? 'Por favor seleccione un fragmento'
           : !isValidTema
