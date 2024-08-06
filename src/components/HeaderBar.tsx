@@ -30,10 +30,13 @@ function HeaderBar() {
     }
 
     return await finishArticleFunc(article.id).then(() => {
-      toast.success('Articulo finalizado');
-      setTimeout(() => {}, 3000);
-      if (siguiente_articulo?.[0]?.id)
-        navigate(`/articulo/${siguiente_articulo[0].id}`);
+      toast.success('Articulo finalizado', {
+        position: 'bottom-center',
+      });
+      setTimeout(() => {
+        if (siguiente_articulo?.[0]?.id)
+          navigate(`/articulo/${siguiente_articulo[0].id}`);
+      }, 2000);
     });
   }
 
