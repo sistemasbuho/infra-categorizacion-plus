@@ -140,3 +140,8 @@
   opacity: 1;
   margin: 0;
 }
+
+.text_warn_color {
+  text-align: center;
+  color: var(--text-primary);
+}
