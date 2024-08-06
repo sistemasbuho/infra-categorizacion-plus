@@ -4,7 +4,7 @@ import { useConfig } from '../context/ConfigContext';
 import { useArticleContext } from '../context/ArticleContext';
 import { useFragmentContext } from '../context/FragmentsContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faCloudArrowUp, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { HighlightSelection } from '../interfaces/generals';
 
 import globalStyles from '../assets/css/general.module.css';
@@ -12,11 +12,12 @@ import styles from '../assets/css/article.module.css';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
+  const { setArticle } = useArticleContext().articleState;
+
   const { texto } = useArticleContext().articleState.article.articulo;
   const { keys } = useArticleContext().articleState.article;
 
-  // Fragmento editable
-  const [esEditable, setEsEditable] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   const [fragmentoTextoEditado, setFragmentoTextoEditado] = useState(texto);
 
   const { allFrags, methods } = useFragmentContext();
@@ -114,6 +115,18 @@ function Article(): JSX.Element {
     return textoModificado;
   };
 
+  const guardarEdicion = () => {
+    setArticle((prev) => ({
+      ...prev,
+      articulo: {
+        ...prev.articulo,
+        texto: fragmentoTextoEditado,
+      },
+    }));
+
+    setIsEditable(false);
+  };
+
   useEffect(() => {
     const textoModificado = aplicarSelecciones(texto, allFragments);
     setArticuloModificado(textoModificado);
@@ -123,14 +136,29 @@ function Article(): JSX.Element {
     <>
       <div className={`${globalStyles.bg_sec}`}>
         <article className={styles.page}>
-          <button
-            className={styles.edit_btn}
-            onClick={() => setEsEditable((prev) => !prev)}
-          >
-            <FontAwesomeIcon icon={faPencil} />
-            Editar
-          </button>
-          {esEditable ? (
+          {allFragments.length === 0 && (
+            <div className={styles.edit_controls}>
+              <button className={styles.save_btn} onClick={guardarEdicion}>
+                <FontAwesomeIcon icon={faCloudArrowUp} />
+                Guardar
+              </button>
+
+              <button
+                className={styles.edit_btn}
+                onClick={() => setIsEditable((prev) => !prev)}
+              >
+                {isEditable ? (
+                  'Cancelar'
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon={faPencil} />
+                    Editar
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+          {isEditable ? (
             <div
               style={{ fontSize }}
               className={styles.page_editable}
