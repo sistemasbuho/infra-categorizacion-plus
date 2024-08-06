@@ -1,6 +1,6 @@
-import styles from '../assets/css/components/keywordSearch.module.css';
 import { useArticleContext } from '../context/ArticleContext';
-import Search from './Search';
+
+import styles from '../assets/css/components/keywordSearch.module.css';
 
 function KeywordSearch() {
   const { keywords } = useArticleContext().articleState.article;
@@ -12,9 +12,6 @@ function KeywordSearch() {
           return `${index + 1}. ${key} `;
         })}
       </p>
-      <div>
-        <Search />
-      </div>
     </div>
   );
 }
