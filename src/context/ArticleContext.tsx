@@ -85,6 +85,8 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
         const tagGeneral = data?.general?.[0]?.tag_data;
         const temaGeneral = data?.general?.[0]?.tema_data;
 
+        document.title = data.articulo.titulo;
+
         setArticle({
           articulo: { ...data?.articulo },
           fragments: data?.fragmentos,
