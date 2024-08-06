@@ -12,7 +12,7 @@ import styles from '../assets/css/article.module.css';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
-  const { setArticle } = useArticleContext().articleState;
+  const { setArticle, article } = useArticleContext().articleState;
 
   const { texto } = useArticleContext().articleState.article.articulo;
   const { keys } = useArticleContext().articleState.article;
@@ -24,7 +24,8 @@ function Article(): JSX.Element {
   const { allFragments } = allFrags;
   const { create: crearFragmento } = methods;
   const [articuloModificado, setArticuloModificado] = useState(texto);
-  const articuloRef = useRef<HTMLParagraphElement>(null);
+  const articuloRef = useRef<HTMLParagraphElement | null>(null);
+  const textAreaRef = useRef(null);
 
   const manejarSeleccion = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.preventDefault();
@@ -130,7 +131,7 @@ function Article(): JSX.Element {
   useEffect(() => {
     const textoModificado = aplicarSelecciones(texto, allFragments);
     setArticuloModificado(textoModificado);
-  }, [texto, allFragments]);
+  }, [article, allFragments]);
 
   return (
     <>
@@ -159,13 +160,12 @@ function Article(): JSX.Element {
             </div>
           )}
           {isEditable ? (
-            <div
+            <textarea
+              ref={textAreaRef}
               style={{ fontSize }}
-              className={styles.page_editable}
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => setFragmentoTextoEditado(e.target.innerHTML)}
-              dangerouslySetInnerHTML={{ __html: fragmentoTextoEditado }}
+              className={`${styles.page_editable}`}
+              value={fragmentoTextoEditado}
+              onChange={(e) => setFragmentoTextoEditado(e.target.value)}
             />
           ) : (
             <p
