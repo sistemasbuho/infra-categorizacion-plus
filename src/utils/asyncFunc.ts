@@ -116,6 +116,6 @@ export async function reportarTiempo(id: number, body) {
   return await GeneralRequest(`registrar_tiempo/${id}`, 'PUT', body);
 }
 
-export async function editArticleText(id: number, body: string) {
+export async function editArticleText(id: number, body: { texto: string }) {
   return await GeneralRequest(`editar_texto/${id}`, 'PUT', body);
 }
