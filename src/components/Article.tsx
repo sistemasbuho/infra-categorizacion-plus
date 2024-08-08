@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { isOverlappingFragment } from '../utils/funcs';
-import { useConfig } from '../context/ConfigContext';
-import { useArticleContext } from '../context/ArticleContext';
-import { useFragmentContext } from '../context/FragmentsContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudArrowUp, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { isOverlappingFragment } from '../utils/funcs';
+import { useFragmentContext } from '../context/FragmentsContext';
 import { HighlightSelection } from '../interfaces/generals';
+import { useArticleContext } from '../context/ArticleContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { editArticleText } from '../utils/asyncFunc';
+import { useConfig } from '../context/ConfigContext';
 
 import globalStyles from '../assets/css/general.module.css';
 import styles from '../assets/css/article.module.css';
+import toast from 'react-hot-toast';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
@@ -117,15 +119,23 @@ function Article(): JSX.Element {
   };
 
   const guardarEdicion = () => {
-    setArticle((prev) => ({
-      ...prev,
-      articulo: {
-        ...prev.articulo,
-        texto: fragmentoTextoEditado,
-      },
-    }));
+    editArticleText(article.articulo.id, { texto: fragmentoTextoEditado })
+      .then(() => {
+        setIsEditable(false);
+        toast.success('Texto editado');
 
-    setIsEditable(false);
+        setArticle((prev) => ({
+          ...prev,
+          articulo: {
+            ...prev.articulo,
+            texto: fragmentoTextoEditado,
+          },
+        }));
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error('Ha ocurrido un error');
+      });
   };
 
   useEffect(() => {
