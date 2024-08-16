@@ -134,7 +134,7 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
           keywords: data.keyword.map((item) => item.nombre),
           keys: getIdxAndLengthOfKeywords(
             [...data.keyword.map((item) => item.nombre)],
-            data?.articulo.texto
+            data?.articulo.texto.replace(/\r/g, '')
           ),
         });
 
