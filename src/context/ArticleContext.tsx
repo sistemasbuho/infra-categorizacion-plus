@@ -55,6 +55,31 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
 
   const { id } = useParams();
 
+  function filterKeywordsResult(results: Keywords[]) {
+    results.sort((a, b) => a.start_index - b.start_index);
+
+    return results.filter((elemento, index, self) =>
+      self.every((otro, otroIndex) => {
+        if (index === otroIndex) return true;
+
+        const rangoElemento = {
+          inicio: elemento.start_index,
+          fin: elemento.start_index + elemento.article_fragment.length,
+        };
+
+        const rangoOtro = {
+          inicio: otro.start_index,
+          fin: otro.start_index + otro.article_fragment.length,
+        };
+
+        return !(
+          rangoElemento.inicio >= rangoOtro.inicio &&
+          rangoElemento.fin <= rangoOtro.fin
+        );
+      })
+    );
+  }
+
   function getIdxAndLengthOfKeywords(
     keywords: string[],
     text: string
@@ -75,7 +100,8 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
         index = lowerCaseString.indexOf(lowerCaseKeyword, index + 1);
       }
     });
-    return results;
+
+    return filterKeywordsResult(results);
   }
 
   useEffect(() => {
