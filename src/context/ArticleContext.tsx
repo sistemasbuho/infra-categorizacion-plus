@@ -114,7 +114,10 @@ export const ArticleProvider: FC<Props> = ({ children }) => {
         document.title = data.articulo.titulo;
 
         setArticle({
-          articulo: { ...data?.articulo },
+          articulo: {
+            ...data?.articulo,
+            texto: data.articulo.texto.replace(/\r/g, ''),
+          },
           fragments: data?.fragmentos,
           siguiente_articulo: data?.siguiente_articulo || null,
           proyecto: data.proyecto[0].nombre,
