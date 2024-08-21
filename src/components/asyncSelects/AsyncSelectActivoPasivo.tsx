@@ -7,6 +7,7 @@ interface TagOption {
   id: number;
   nombre: string;
   ubicacion_nombre?: string | null;
+  organizacion_nombre?: string | null;
   isNew?: boolean;
 }
 
@@ -106,7 +107,7 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
         if (e.isNew) {
           return `${e.nombre} ( Nuevo )`;
         } else if (e.ubicacion_nombre) {
-          return `${e.nombre} | ${e.ubicacion_nombre}`;
+          return `${e.nombre} | ${e.organizacion_nombre} | ${e.ubicacion_nombre}`;
         }
         return e.nombre;
       }}
