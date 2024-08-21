@@ -9,7 +9,7 @@ import Header from './options/Header';
 import Config from './options/Config';
 
 function Menu() {
-  const [currentOption, setCurrentOption] = useState<number>(1);
+  const [currentOption, setCurrentOption] = useState<number>(0);
 
   return (
     <>
