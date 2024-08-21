@@ -83,7 +83,7 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedioProps> = ({
       value={autorOptions}
       key={`objective-${forceUpdate ? 'refresh' : 'normal'}`}
       name={name}
-      getOptionLabel={(e: TagOption) => e.nombre}
+      getOptionLabel={(e: TagOption) => `${e.nombre} | ${e.ubicacion_nombre}`}
       getOptionValue={(e) => e.id.toString()}
       loadOptions={loadOptions}
       // onInputChange={(value) => setInputAutorValue(value)}
