@@ -20,12 +20,15 @@ function App() {
 
     window.addEventListener('resize', handleResize);
 
-    if (ancho <= 1500)
-      document.getElementById('root').classList.add(`${styles.zoom90}`);
+    if (ancho <= 1500) {
+      document.getElementById('root').classList.add(`${styles.zoom70}`);
+    } else {
+      document.getElementById('root').classList.remove(`${styles.zoom70}`);
+    }
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [ancho]);
 
   useEffect(() => {
     const token = decodedTokenInLocalStorage();
