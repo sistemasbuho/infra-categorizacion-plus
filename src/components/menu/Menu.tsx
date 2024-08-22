@@ -37,7 +37,7 @@ function Menu() {
           </button>
         </header>
         <div className={optionStyles.option_cont}>
-          <div style={{ left: `${-337 * currentOption}px` }}>
+          <div style={{ left: `${-500 * currentOption}px` }}>
             <Header />
             <Categorization />
             <Config />

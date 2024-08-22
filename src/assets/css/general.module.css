@@ -100,3 +100,17 @@ body {
   width: 111.1%;
   height: 111.1%;
 }
+
+.zoom80 {
+  transform: scale(0.8);
+  transform-origin: top left;
+  width: 125%;
+  height: 125%;
+}
+
+.zoom70 {
+  transform: scale(0.7);
+  transform-origin: top left;
+  width: 142.86%;
+  height: 142.86%;
+}

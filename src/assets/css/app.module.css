@@ -13,7 +13,7 @@
 
 .cont_global {
   display: grid;
-  grid-template-columns: 1fr 337px;
+  grid-template-columns: 1fr 500px;
   height: calc(100vh - 60px);
   padding-inline: 2rem;
   background-color: var(--bg-primary);
@@ -24,7 +24,7 @@
   top: 60px;
   right: 0;
   bottom: 0;
-  width: 337px;
+  width: 500px;
   opacity: 1;
   height: 100%;
   display: flex;
