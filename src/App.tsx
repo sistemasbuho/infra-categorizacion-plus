@@ -1,4 +1,6 @@
+import { decodedTokenInLocalStorage } from './components/Login/isValidToken';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ConfigProvider } from './context/ConfigContext';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -6,11 +8,24 @@ import { Toaster } from 'react-hot-toast';
 
 import GlobalComponent from './GlobalComponent';
 import Home from './pages/Home';
-import { decodedTokenInLocalStorage } from './components/Login/isValidToken';
-import { useEffect, useState } from 'react';
 import Login from './components/Login/Login';
+import styles from './assets/css/general.module.css';
+
 function App() {
   const [showLogin, setshowLogin] = useState<boolean | null>(null);
+  const [ancho, setAncho] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setAncho(window.innerWidth);
+
+    window.addEventListener('resize', handleResize);
+
+    if (ancho <= 1500)
+      document.getElementById('root').classList.add(`${styles.zoom90}`);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const token = decodedTokenInLocalStorage();

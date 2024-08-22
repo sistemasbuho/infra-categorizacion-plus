@@ -93,3 +93,10 @@ body {
   box-shadow: var(--box-shadow);
   padding: 2.5rem 2rem;
 }
+
+.zoom90 {
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 111.1%;
+  height: 111.1%;
+}
