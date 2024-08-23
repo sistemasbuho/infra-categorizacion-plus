@@ -31,8 +31,8 @@ function GeneralForm() {
   async function sendArticleCategorization(e: React.FormEvent) {
     e.preventDefault();
     const update: FormData = {
-      tema: temaGeneral.map((e) => e.id),
-      tag: tagGeneral.map((e) => e.id),
+      tema: temaGeneral && temaGeneral.map((e) => e.id),
+      tag: tagGeneral && tagGeneral.map((e) => e.id),
     };
 
     await postArticleCategorization(articulo.id, update)
@@ -79,7 +79,11 @@ function GeneralForm() {
 
   return (
     <div>
-      <Form className='mb-3' id="article-form" onSubmit={sendArticleCategorization}>
+      <Form
+        className="mb-3"
+        id="article-form"
+        onSubmit={sendArticleCategorization}
+      >
         <Form.Group className="mb-3">
           <Form.Label>
             <h4>Asignar tags al artículo</h4>
