@@ -32,9 +32,18 @@ function Header() {
     Array.isArray(articulo.medio) ? articulo.medio : [articulo.medio]
   );
 
+  function validateForm() {
+    if (tipoOption === null) return toast.error('Tipo no seleccionado');
+    if (fechaOption === null) return toast.error('Fecha no seleccionada');
+    if (medioOption === null) return toast.error('Medio no seleccionado');
+    if (autorOption === null) return toast.error('Autor no seleccionado');
+  }
+
   async function sendHeaderCategorization(e: React.FormEvent<HTMLFormElement>) {
     e.stopPropagation();
     e.preventDefault();
+
+    validateForm();
 
     if (fechaOption) {
       const time = new Date(fechaOption).toLocaleTimeString('es-CO', {
@@ -59,7 +68,7 @@ function Header() {
         autor_id: (Array.isArray(autorOption)
           ? autorOption
           : [autorOption]
-        ).map((item) => item.id),
+        ).map((item) => (item.isNew ? item?.nombre : item?.id)),
       };
 
       if (
