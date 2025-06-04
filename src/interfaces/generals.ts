@@ -1,3 +1,11 @@
+export type BasicProperties = {
+  id: string | number;
+  created_at?: string;
+  modified_at?: string;
+  created_by?: string;
+  modified_by?: string;
+};
+
 export interface articleContext {
   articulo: article;
   fragments: Selection[];
