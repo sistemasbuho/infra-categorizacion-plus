@@ -83,34 +83,11 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
   height: 100vh;
-  /* overflow-X: hidden; */
   scroll-behavior: smooth;
   background: var(--bg-body) !important;
 }
 
-.bg_sec {
-  background-color: var(--box-color);
-  box-shadow: var(--box-shadow);
-  padding: 2.5rem 2rem;
-}
-
-.zoom90 {
-  transform: scale(0.9);
-  transform-origin: top left;
-  width: 111.1%;
-  height: 111.1%;
-}
-
-.zoom80 {
-  transform: scale(0.8);
-  transform-origin: top left;
-  width: 125%;
-  height: 125%;
-}
-
-.zoom70 {
-  transform: scale(0.7);
-  transform-origin: top left;
-  width: 142.86%;
-  height: 142.86%;
+.App {
+  height: 100%;
+  overflow: hidden;
 }

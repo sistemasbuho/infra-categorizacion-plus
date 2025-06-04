@@ -9,6 +9,12 @@
   gap: 2rem;
 }
 
+.container div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .container h1 {
   margin: 0;
   font-size: clamp(1rem, 1vw, 3rem);

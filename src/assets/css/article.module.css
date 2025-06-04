@@ -1,17 +1,13 @@
 .page_editable {
+  margin-top: 0.5rem;
   border-radius: 10px;
   transition: font-size 0.5s ease;
-  color: var(--text-primary);
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
   padding: 1rem;
   width: 100%;
-  height: 70vh;
-  resize: none;
-  background-color: var(--box-color);
-  border: 0px;
-  outline: 2px dashed var(--btn-primary-hover);
+  height: 50vh;
 }
 
 .page {

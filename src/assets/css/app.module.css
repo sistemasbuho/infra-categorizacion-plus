@@ -1,7 +1,3 @@
-.component_manager {
-  animation: fade 0.5s ease;
-}
-
 @keyframes fade {
   from {
     opacity: 0;
@@ -11,20 +7,8 @@
   }
 }
 
-.cont_global {
-  display: grid;
-  grid-template-columns: 1fr 500px;
-  height: calc(100vh - 60px);
-  padding-inline: 2rem;
-  background-color: var(--bg-primary);
-}
-
 .cont_options_bar {
-  position: fixed;
-  top: 60px;
-  right: 0;
-  bottom: 0;
-  width: 500px;
+  /* width: 400px; */
   opacity: 1;
   height: 100%;
   display: flex;
@@ -72,7 +56,7 @@
 .scrolled_section {
   height: 100%;
   overflow: hidden;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

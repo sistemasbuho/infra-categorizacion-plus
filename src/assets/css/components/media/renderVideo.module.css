@@ -1,57 +1,3 @@
-.renderVideo {
-  width: 100%;
-  padding: 2rem;
-  display: flex;
-  gap: 1rem;
-  background-color: var(--box-color);
-  box-shadow: var(--box-shadow);
-  border-radius: 10px;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 2rem;
-}
-
-.cont_video {
-  width: min(600px, 100%);
-  aspect-ratio: 16/9;
-}
-
-.controls {
-  width: min(600px, 100%);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.controls button {
-  width: 80px;
-  padding: 0.5rem;
-  border-width: 0px;
-  border-radius: 5px;
-  background-color: var(--btn-control-video);
-  color: var(--text-primary);
-  transition: background-color 0.2s ease, scale 0.2s ease;
-}
-
-.controls button:hover {
-  background-color: var(--hover-btn-control-video);
-}
-
-.controls button:active {
-  scale: 0.9;
-}
-
 .floatControls {
   width: fit-content;
   position: fixed;
@@ -65,13 +11,6 @@
   background-color: whitesmoke;
   box-shadow: var(--box-shadow);
   animation: fade 0.4s ease forwards;
-}
-
-.floatControls button {
-  width: 50px;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 0.5rem;
 }
 
 @keyframes fade {

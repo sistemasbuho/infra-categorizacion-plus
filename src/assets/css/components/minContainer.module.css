@@ -10,7 +10,7 @@
 }
 
 .container > div:first-child {
-  padding: 1rem 2rem;
+  padding: .5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,7 +20,7 @@
 }
 
 .container > div:first-child h2 {
-  font: normal normal 400 15px/20px Segoe UI;
+  font: normal normal 400 14px/20px Segoe UI;
   letter-spacing: 1.75px;
   color: var(--text-primary);
   text-transform: uppercase;
