@@ -23,14 +23,14 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
   const [config, setConfig] = useState<{
     fontSize: number;
     darkMode: boolean;
-  } | null>(null);
+  } | null>({ fontSize: 20, darkMode: false });
 
   const setFontSize = (size: number) => {
-    if ( size >= 12 && size <= 28 )
-    setConfig((prevConfig) => ({
-      ...prevConfig,
-      fontSize: size,
-    }));
+    if (size >= 12 && size <= 28)
+      setConfig((prevConfig) => ({
+        ...prevConfig,
+        fontSize: size,
+      }));
   };
 
   const toggleDarkMode = () => {

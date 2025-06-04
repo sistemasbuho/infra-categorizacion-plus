@@ -1,18 +1,19 @@
 import { useArticleContext } from '../context/ArticleContext';
-
-import styles from '../assets/css/components/keywordSearch.module.css';
+import { Badge, Flex } from '@chakra-ui/react';
 
 function KeywordSearch() {
   const { keywords } = useArticleContext().articleState.article;
 
   return (
-    <div className={styles.container}>
-      <p className={styles.text_important}>
-        {keywords.map((key, index) => {
-          return `${index + 1}. ${key} `;
-        })}
-      </p>
-    </div>
+    <Flex gap={2} p={2} flexWrap={'wrap'}>
+      {(keywords as unknown as string[]).map((key, index) => {
+        return (
+          <Badge key={index} p={2} variant={'outline'}>
+            {key}
+          </Badge>
+        );
+      })}
+    </Flex>
   );
 }
 

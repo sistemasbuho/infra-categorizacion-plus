@@ -9,18 +9,19 @@ import {
   deleteFragment as delFragment,
   editFragment,
 } from '../../../../utils/asyncFunc';
-import { useArticleContext } from '../../../../context/ArticleContext';
-import { useFragmentContext } from '../../../../context/FragmentsContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, Field, Separator, Text, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useFragmentContext } from '../../../../context/FragmentsContext';
+import { useArticleContext } from '../../../../context/ArticleContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
-import { Form } from 'react-bootstrap';
 
 import AsyncSelectActivoPasivo from '../../../asyncSelects/AsyncSelectActivoPasivo';
 import ButtonControls from '../../../controls/ButtonControls';
 import styles from '../../../../assets/css/components/menu/categorization.module.css';
 import Select from 'react-select';
 import toast from 'react-hot-toast';
+
 function FragmentForm() {
   // Context
   const { temas, tags } = useArticleContext().articleState.article.forms_data;
@@ -172,59 +173,55 @@ function FragmentForm() {
   }, [temaOption]);
 
   return (
-    <div>
-      <div className={styles.fragments_cont}>
-        <div>
-          <h4>Fragmentos</h4>
-          <div className={styles.list}>
-            {allFragments.length > 0 ? (
-              allFragments
-                .sort((a, b) => a.id - b.id)
-                .map((frag, i) => {
-                  return (
-                    <a
-                      href={`#${frag.start_index}_${frag.article_fragment.length}`}
-                      key={i}
-                    >
-                      <div
-                        className={`
+    <Box>
+      <Box className={styles.fragments_cont}>
+        <Box className={styles.list}>
+          {allFragments.length > 0 ? (
+            allFragments
+              .sort((a, b) => a.id - b.id)
+              .map((frag, i) => {
+                return (
+                  <a
+                    href={`#${frag.start_index}_${frag.article_fragment.length}`}
+                    key={i}
+                  >
+                    <Box
+                      p={2}
+                      className={`
                   ${styles.fragment}
                   ${!frag?.selectionId && frag?.id && styles.fragment_saved} 
                   ${
                     currentFragment?.id === frag?.id && styles.fragment_selected
                   }`}
-                        onClick={() => setCurrentFragment(frag)}
+                      onClick={() => setCurrentFragment(frag)}
+                    >
+                      <p>{frag.article_fragment}</p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteCurrentFragment(frag);
+                        }}
                       >
-                        <p>{frag.article_fragment}</p>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteCurrentFragment(frag);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faClose} />
-                        </button>
-                      </div>
-                    </a>
-                  );
-                })
-            ) : (
-              <p className="text-center m-0 py-2">Aún no hay fragmentos</p>
-            )}
-          </div>
+                        <FontAwesomeIcon icon={faClose} />
+                      </button>
+                    </Box>
+                  </a>
+                );
+              })
+          ) : (
+            <Text className="text-center m-0 py-2">Aún no hay fragmentos</Text>
+          )}
+        </Box>
 
-          <hr />
-        </div>
-        <div className={styles.form}>
-          <Form
-            id="categorization-form"
-            onSubmit={sendCategorization}
-            className="mb-3"
-          >
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <h4>Tema</h4>
-              </Form.Label>
+        <Separator my={2} size={'lg'} />
+
+        <form id="categorization-form" onSubmit={sendCategorization}>
+          <VStack display={'flex'} flexDir={'column'} gap={2}>
+            <Field.Root>
+              <Field.Label>
+                Tema
+                <Field.RequiredIndicator />
+              </Field.Label>
               <Select
                 isDisabled={!currentFragment}
                 isMulti
@@ -235,19 +232,26 @@ function FragmentForm() {
                 value={temaOption}
                 onChange={(e: GeneralOption[]) => setTemaOption(e)}
                 styles={{
+                  container: (base) => ({
+                    ...base,
+                    width: '100%',
+                  }),
+
                   control: (base) => ({
                     ...base,
                     borderColor: isValidTema ? 'hsl( 0, 0%, 80%)' : 'red',
                   }),
                 }}
               />
-            </Form.Group>
+              <Field.HelperText />
+              <Field.ErrorText />
+            </Field.Root>
 
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <h4>Tag</h4>
-              </Form.Label>
-
+            <Field.Root>
+              <Field.Label>
+                Tag
+                <Field.RequiredIndicator />
+              </Field.Label>
               <Select
                 isDisabled={!currentFragment}
                 isMulti
@@ -257,13 +261,22 @@ function FragmentForm() {
                 options={tags}
                 value={tagOptions}
                 onChange={(e: GeneralOption[]) => setTagOptions(e)}
+                styles={{
+                  container: (base) => ({
+                    ...base,
+                    width: '100%',
+                  }),
+                }}
               />
-            </Form.Group>
+              <Field.HelperText />
+              <Field.ErrorText />
+            </Field.Root>
 
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <h4>Activo</h4>
-              </Form.Label>
+            <Field.Root>
+              <Field.Label>
+                Activo
+                <Field.RequiredIndicator />
+              </Field.Label>
               <AsyncSelectActivoPasivo
                 isDisabled={!currentFragment}
                 isMulti
@@ -271,12 +284,15 @@ function FragmentForm() {
                 clear={forceUpdate}
                 value={currentFragment?.activo}
               />
-            </Form.Group>
+              <Field.HelperText />
+              <Field.ErrorText />
+            </Field.Root>
 
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="pasivo">
-                <h4>Pasivo</h4>
-              </Form.Label>
+            <Field.Root>
+              <Field.Label>
+                Pasivo
+                <Field.RequiredIndicator />
+              </Field.Label>
               <AsyncSelectActivoPasivo
                 isDisabled={!currentFragment}
                 isMulti
@@ -284,12 +300,15 @@ function FragmentForm() {
                 clear={forceUpdate}
                 value={currentFragment?.pasivo}
               />
-            </Form.Group>
+              <Field.HelperText />
+              <Field.ErrorText />
+            </Field.Root>
 
-            <Form.Group>
-              <Form.Label htmlFor="pasivo">
-                <h4>Tonalidad</h4>
-              </Form.Label>
+            <Field.Root>
+              <Field.Label>
+                Tonalidad
+                <Field.RequiredIndicator />
+              </Field.Label>
               <Select
                 isDisabled={!currentFragment}
                 options={sentimiento}
@@ -298,26 +317,34 @@ function FragmentForm() {
                 getOptionLabel={(e) => e.nombre}
                 getOptionValue={(e) => String(e.id)}
                 value={tonoOption}
+                styles={{
+                  container: (base) => ({
+                    ...base,
+                    width: '100%',
+                  }),
+                }}
               />
-            </Form.Group>
-          </Form>
-        </div>
-      </div>
+              <Field.HelperText />
+              <Field.ErrorText />
+            </Field.Root>
+          </VStack>
+        </form>
+      </Box>
 
-      <p className={styles.text_warn_color}>
+      <Text className={styles.text_warn_color} my={2}>
         {!currentFragment
           ? 'Por favor seleccione un fragmento'
           : !isValidTema
           ? 'Por favor seleccione un tema'
           : null}
-      </p>
+      </Text>
 
       <ButtonControls
         form="categorization-form"
         accept={{ disabled: !currentFragment || !isValidTema }}
         reject={{ disabled: !currentFragment, event: clearForm }}
       />
-    </div>
+    </Box>
   );
 }
 

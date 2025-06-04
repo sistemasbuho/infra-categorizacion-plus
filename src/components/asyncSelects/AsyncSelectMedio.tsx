@@ -95,6 +95,10 @@ const AsyncSelectMedio: React.FC<AsyncSelectMedioProps> = ({
       menuPortalTarget={document.body}
       maxMenuHeight={maxHeight}
       styles={{
+        container: (base) => ({
+          ...base,
+          width: '100%',
+        }),
         menuPortal: (base) => ({ ...base, zIndex: 9999 }),
         control: (base) => ({
           ...base,

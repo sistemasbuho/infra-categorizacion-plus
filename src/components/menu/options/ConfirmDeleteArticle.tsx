@@ -9,6 +9,7 @@ import ButtonControls from '../../controls/ButtonControls';
 import styles from '../../../assets/css/components/modals/modals.module.css';
 import Select from 'react-select';
 import toast from 'react-hot-toast';
+import { Button, Heading, Text } from '@chakra-ui/react';
 
 interface Props {
   article: article;
@@ -103,24 +104,23 @@ function ConfirmDeleteArticle({ setShow }: Props): React.ReactElement {
     <div className={styles.overlay}>
       <div className={styles.modal_cont}>
         <div className={styles.header}>
-          <h2>Cambiar estado</h2>
+          <Heading mb={4}>Cambiar estado</Heading>
 
-          <button onClick={closeModal}>
+          <Button onClick={closeModal}>
             <FontAwesomeIcon icon={faClose} />
-          </button>
+          </Button>
         </div>
 
         <div className={styles.body}>
-          <p>Esto cambiara de estado siguiente artículo:</p>
-
-          <p>
+          <Text>
+            Esto cambiara de estado el artículo:{' '}
             <strong>{article.articulo.titulo}</strong>
-          </p>
+          </Text>
 
-          <p>
+          <Text my={4}>
             Seleccioné el motivo por el cual desea cambiar el estado del
             artículo:
-          </p>
+          </Text>
 
           <form
             id="disable_article"

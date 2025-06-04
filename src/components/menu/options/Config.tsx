@@ -1,41 +1,51 @@
-import { useConfig } from '../../../context/ConfigContext';
+import { Button, Flex, Heading, IconButton, Text } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
-
-import ToggleSwitch from '../../controls/ToggleSwitch';
-
-import styles from '../../../assets/css/components/menu/config.module.css';
+import { ColorModeButton } from '../../ui/color-mode';
+import { useConfig } from '../../../context/ConfigContext';
+import { FaFont } from 'react-icons/fa';
 
 const Config: React.FC = () => {
-  const { fontSize, setFontSize, darkMode, toggleDarkMode } = useConfig();
+  const { fontSize, setFontSize } = useConfig();
 
   return (
-    <div className={styles.config}>
-      <div>
-        <h2>Personalización</h2>
-      </div>
+    <div>
+      <Heading size={'md'} mb={3}>
+        Personalización
+      </Heading>
 
-      <div className={styles.config}>
-        <div className="d-flex gap-3 justify-content-between align-items-center">
-          <p className="m-0">Tamaño letra</p>
+      <Flex gap={2} flexDir={'column'}>
+        <Flex justify={'space-between'} alignItems={'center'}>
+          <Text>Tamaño letra</Text>
 
-          <div className="d-flex gap-2 align-items-center">
-            <button onClick={() => setFontSize(fontSize - 2)}>
+          <Flex gap={2} alignItems={'center'}>
+            <Button
+              onClick={() => setFontSize(fontSize - 2)}
+              size={'sm'}
+              variant={'outline'}
+            >
               <FontAwesomeIcon icon={faMinus} />
-            </button>
+            </Button>
 
-            <h3>Aa</h3>
-            <button onClick={() => setFontSize(fontSize + 2)}>
+            <IconButton variant={'plain'}>
+              <FaFont />
+            </IconButton>
+
+            <Button
+              onClick={() => setFontSize(fontSize + 2)}
+              size={'sm'}
+              variant={'outline'}
+            >
               <FontAwesomeIcon icon={faPlus} />
-            </button>
-          </div>
-        </div>
-
-        <div className="d-flex gap-3 justify-content-between align-items-center">
-          <p className=" m-0">Modo oscuro</p>
-          <ToggleSwitch checked={darkMode} onChange={toggleDarkMode} />
-        </div>
-      </div>
+            </Button>
+          </Flex>
+        </Flex>
+        {/* <ToggleSwitch } /> */}
+        <Flex justify={'space-between'} alignItems={'center'}>
+          <Text>Modo oscuro</Text>
+          <ColorModeButton />
+        </Flex>
+      </Flex>
     </div>
   );
 };

@@ -1,39 +1,28 @@
-import { useState } from 'react';
-
-import styles from '../../../../assets/css/components/menu/categorization.module.css';
 import FragmentForm from './FragmentForm';
 import GeneralForm from './GeneralForm';
+import { Box, Tabs, Text } from '@chakra-ui/react';
 
 function Categorization() {
-  const [selectedMenu, setSelectedMenu] = useState(0);
-
   return (
-    <div>
-      <div className="mb-3">
-        <h2>CATEGORIZACIÓN</h2>
-      </div>
+    <Box>
+      <Tabs.Root defaultValue="fragmentos" variant={'line'}>
+        <Tabs.List gap={1} mb={2}>
+          <Tabs.Trigger p={2} value="fragmentos">
+            <Text>Fragmentos</Text>
+          </Tabs.Trigger>
+          <Tabs.Trigger p={2} value="general">
+            <Text>General</Text>
+          </Tabs.Trigger>
+        </Tabs.List>
 
-      <div className={`${styles.body} `}>
-        <div className={styles.nav}>
-          <button
-            className={`${selectedMenu === 0 && styles.selected}`}
-            onClick={() => setSelectedMenu(0)}
-          >
-            Por fragmentos
-          </button>
-          <button
-            className={`${selectedMenu === 1 && styles.selected}`}
-            onClick={() => setSelectedMenu(1)}
-          >
-            General
-          </button>
-        </div>
-        <div className={`${styles.section_body}`}>
-          {selectedMenu === 0 && <FragmentForm />}
-          {selectedMenu === 1 && <GeneralForm />}
-        </div>
-      </div>
-    </div>
+        <Tabs.Content value="fragmentos">
+          <FragmentForm />
+        </Tabs.Content>
+        <Tabs.Content value="general">
+          <GeneralForm />
+        </Tabs.Content>
+      </Tabs.Root>
+    </Box>
   );
 }
 

@@ -2,10 +2,12 @@ import { ArticleProvider } from './context/ArticleContext';
 import { useConfig } from './context/ConfigContext';
 
 import FragmentsProvider from './context/FragmentsContext';
-import ComponentManager from './ComponentManager';
+import ArticleLayout from './ArticleLayout';
 import stylesGeneral from './assets/css/general.module.css';
 
-function GlobalComponent() {
+import './assets/css/general.module.css';
+
+function ArticleManager() {
   const { darkMode } = useConfig();
 
   return (
@@ -14,11 +16,11 @@ function GlobalComponent() {
         <div
           className={`${stylesGeneral.App} ${darkMode && stylesGeneral.dark}`}
         >
-          <ComponentManager />
+          <ArticleLayout />
         </div>
       </FragmentsProvider>
     </ArticleProvider>
   );
 }
 
-export default GlobalComponent;
+export default ArticleManager;

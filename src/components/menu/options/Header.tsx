@@ -1,8 +1,9 @@
-import { Form } from 'react-bootstrap';
-import { postHeader } from '../../../utils/asyncFunc';
-import { useEffect, useState } from 'react';
 import { Autores, GeneralOption, Medios } from '../../../interfaces/generals';
+import { useEffect, useState } from 'react';
 import { useArticleContext } from '../../../context/ArticleContext';
+import { postHeader } from '../../../utils/asyncFunc';
+import { Box, Field, Input } from '@chakra-ui/react';
+
 import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
 import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
 import ButtonControls from '../../controls/ButtonControls';
@@ -118,69 +119,99 @@ function Header() {
   }
 
   return (
-    <div>
-      <div className="mb-3">
-        <h2>ENCABEZADO</h2>
-      </div>
-      <div className="mb-4">
-        <Form id="header-form" onSubmit={sendHeaderCategorization}>
-          <Form.Group className="mb-4">
-            <Form.Label htmlFor="tipo">
-              <h4>Tipo</h4>
-            </Form.Label>
+    <Box>
+      <Box mb={4}>
+        <form
+          id="header-form"
+          onSubmit={sendHeaderCategorization}
+          style={{ width: '100%' }}
+        >
+          <Field.Root>
+            <Field.Label>
+              Tipo
+              <Field.RequiredIndicator />
+            </Field.Label>
             <Select
               options={tipos}
               getOptionLabel={(e: GeneralOption) => e.nombre}
               getOptionValue={(e: GeneralOption) => e.id.toString()}
               value={tipoOption}
               onChange={(e) => setTipoOption(e as GeneralOption)}
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: '100%',
+                }),
+              }}
             />
-          </Form.Group>
+            <Field.HelperText />
+            <Field.ErrorText />
+          </Field.Root>
 
-          <Form.Group className="mb-4">
-            <Form.Label htmlFor="fecha">
-              <h4>Fecha</h4>
-            </Form.Label>
-            <input
-              className="form-control"
+          <Field.Root>
+            <Field.Label>
+              Fecha
+              <Field.RequiredIndicator />
+            </Field.Label>
+            <Input
+              px={2}
+              border={'1px solid hsl(0, 0%, 80%)'}
               type="datetime-local"
               value={fechaOption}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setfechaOption(e.target.value)
               }
             />
-          </Form.Group>
+            <Field.HelperText />
+            <Field.ErrorText />
+          </Field.Root>
 
-          <Form.Group className="mb-4">
-            <Form.Label htmlFor="medio">
-              <h4>Medio</h4>
-            </Form.Label>
+          <Field.Root>
+            <Field.Label>
+              Medio
+              <Field.RequiredIndicator />
+            </Field.Label>
             <AsyncSelectMedio sendResponse={getMedio} value={articulo.medio} />
-          </Form.Group>
+            <Field.HelperText />
+            <Field.ErrorText />
+          </Field.Root>
 
-          <Form.Group className="mb-4">
-            <Form.Label htmlFor="programa">
-              <h4>Programa</h4>
-            </Form.Label>
+          <Field.Root>
+            <Field.Label>
+              Programa
+              <Field.RequiredIndicator />
+            </Field.Label>
             <Select
               options={programas}
               getOptionLabel={(e: GeneralOption) => e.nombre}
               getOptionValue={(e: GeneralOption) => e.id.toString()}
               value={programaOption}
               onChange={(e) => setProgramaOption(e as GeneralOption)}
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: '100%',
+                }),
+              }}
             />
-          </Form.Group>
+            <Field.HelperText />
+            <Field.ErrorText />
+          </Field.Root>
 
-          <Form.Group>
-            <Form.Label htmlFor="autor">
-              <h4>Autor</h4>
-            </Form.Label>
+          <Field.Root>
+            <Field.Label>
+              Autor
+              <Field.RequiredIndicator />
+            </Field.Label>
             <AsyncSelectAutor sendResponse={getAutor} value={articulo.autor} />
-          </Form.Group>
-        </Form>
-      </div>
+
+            <Field.HelperText />
+            <Field.ErrorText />
+          </Field.Root>
+        </form>
+      </Box>
       <ButtonControls form="header-form" />
-    </div>
+    </Box>
   );
 }
 

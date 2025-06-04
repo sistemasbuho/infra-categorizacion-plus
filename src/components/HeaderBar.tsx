@@ -1,16 +1,18 @@
-import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { finishArticle as finishArticleFunc } from '../utils/asyncFunc';
+import { Button, Flex, IconButton, Text } from '@chakra-ui/react';
+import { useArticleContext } from '../context/ArticleContext';
+import { useColorModeValue } from './ui/color-mode';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
-import { useArticleContext } from '../context/ArticleContext';
+import { FaChevronLeft, FaLink } from 'react-icons/fa';
 
-import styles from '../assets/css/components/headerBar.module.css';
 import ConfirmDeleteArticle from './menu/options/ConfirmDeleteArticle';
 import toast from 'react-hot-toast';
+import Menu from './menu/Menu';
 
 function HeaderBar() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const { articulo: article, siguiente_articulo } =
     useArticleContext().articleState.article;
 
@@ -42,27 +44,44 @@ function HeaderBar() {
 
   return (
     <>
-      <nav className={styles.container}>
-        <div onClick={exit}>
-          <FontAwesomeIcon icon={faCaretLeft} />
-          <p>Atrás</p>
-        </div>
+      <Flex justifyContent={'space-between'}>
+        <Flex gap={2} alignItems={'center'} onClick={exit}>
+          <FaChevronLeft />
+          <Text>Atrás</Text>
+        </Flex>
 
-        <div className="d-flex gap-3">
-          <button
-            className={`${styles.btn} ${styles.btn_delete}`}
-            onClick={() => setShowDeleteModal(true)}
-          >
+        <Flex gap={4}>
+          <Button onClick={() => setShowDeleteModal(true)} p={2}>
             {article?.state ? 'Activar articulo' : 'Eliminar articulo'}
-          </button>
-          <button
-            className={`${styles.btn} ${styles.btn_finish}`}
-            onClick={finishArticle}
-          >
+          </Button>
+          <Button p={2} onClick={finishArticle}>
             Finalizar
-          </button>
-        </div>
-      </nav>
+          </Button>
+          <Menu />
+        </Flex>
+      </Flex>
+
+      <Flex
+        gap={2}
+        alignItems={'center'}
+        bg={useColorModeValue('blue.300', 'green.400')}
+        p={2}
+        borderRadius={'md'}
+      >
+        <IconButton
+          variant={'ghost'}
+          colorScheme={'blue'}
+          onClick={() =>
+            window.open(article.url, '_blank', 'noopener,noreferrer')
+          }
+          aria-label="Abrir enlace del artículo"
+          title="Abrir enlace del artículo"
+        >
+          <FaLink />
+        </IconButton>
+
+        <Text truncate>{article.titulo}</Text>
+      </Flex>
 
       {showDeleteModal && (
         <ConfirmDeleteArticle article={article} setShow={setShowDeleteModal} />

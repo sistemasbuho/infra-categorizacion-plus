@@ -4,12 +4,12 @@ import {
   deleteArticleCategorization,
 } from '../../../../utils/asyncFunc';
 import { useArticleContext } from '../../../../context/ArticleContext';
-import { Form } from 'react-bootstrap';
 
 import Select from 'react-select';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import ButtonControls from '../../../controls/ButtonControls';
+import { Field, VStack } from '@chakra-ui/react';
 function GeneralForm() {
   // Context
   const { setArticle } = useArticleContext().articleState;
@@ -79,38 +79,48 @@ function GeneralForm() {
 
   return (
     <div>
-      <Form
-        className="mb-3"
-        id="article-form"
-        onSubmit={sendArticleCategorization}
-      >
-        <Form.Group className="mb-3">
-          <Form.Label>
-            <h4>Asignar tags al artículo</h4>
-          </Form.Label>
-          <Select
-            isMulti
-            value={tagGeneral}
-            options={forms_data.tags}
-            getOptionLabel={(e) => e.nombre}
-            getOptionValue={(e) => String(e.id)}
-            onChange={(e: GeneralOption[]) => setTagGeneral(e)}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>
-            <h4>Asignar temas al artículo</h4>
-          </Form.Label>
-          <Select
-            isMulti
-            value={temaGeneral}
-            onChange={(e: GeneralOption[]) => setTemaGeneral(e)}
-            options={forms_data.temas}
-            getOptionLabel={(e) => e.nombre}
-            getOptionValue={(e) => String(e.id)}
-          />
-        </Form.Group>
-      </Form>
+      <form id="article-form" onSubmit={sendArticleCategorization}>
+        <VStack display={'flex'} flexDir={'column'} gap={4}>
+          <Field.Root>
+            <Field.Label>Asignar tags al artículo</Field.Label>
+            <Select
+              isMulti
+              value={tagGeneral}
+              options={forms_data.tags}
+              getOptionLabel={(e) => e.nombre}
+              getOptionValue={(e) => String(e.id)}
+              onChange={(e: GeneralOption[]) => setTagGeneral(e)}
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: '100%',
+                }),
+              }}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>
+              <h4>Asignar temas al artículo</h4>
+            </Field.Label>
+            <Select
+              isMulti
+              value={temaGeneral}
+              onChange={(e: GeneralOption[]) => setTemaGeneral(e)}
+              options={forms_data.temas}
+              getOptionLabel={(e) => e.nombre}
+              getOptionValue={(e) => String(e.id)}
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  width: '100%',
+                  marginBottom: '1rem',
+                }),
+              }}
+            />
+          </Field.Root>
+        </VStack>
+      </form>
 
       <ButtonControls
         form={'article-form'}

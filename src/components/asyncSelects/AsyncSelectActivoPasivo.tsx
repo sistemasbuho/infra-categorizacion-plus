@@ -121,6 +121,10 @@ const AsyncSelectActivoPasivo: React.FC<AsyncSelectActivoPasivoProps> = ({
       maxMenuHeight={maxHeight}
       styles={{
         menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        container: (base) => ({
+          ...base,
+          width: '100%',
+        }),
         control: (base) => ({
           ...base,
         }),

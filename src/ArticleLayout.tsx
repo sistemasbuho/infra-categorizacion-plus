@@ -1,21 +1,23 @@
 import { useArticleContext } from './context/ArticleContext';
 import { useEffect, useRef } from 'react';
+import { CiTextAlignCenter } from 'react-icons/ci';
 import { reportarTiempo } from './utils/asyncFunc';
 import { useParams } from 'react-router';
+import { Accordion, Flex } from '@chakra-ui/react';
+import { FaKey, FaPencilAlt } from 'react-icons/fa';
+import { GrMultimedia } from 'react-icons/gr';
+import { FaFilePdf } from 'react-icons/fa6';
 
 import HeaderBar from './components/HeaderBar';
-import MinContainer from './components/MinContainer';
 import KeywordSearh from './components/KeywordSearh';
 import SummaryArticle from './components/SummaryArticle';
 import Article from './components/Article';
-import styles from './assets/css/app.module.css';
-import Menu from './components/menu/Menu';
 import Loader from './components/Loader';
-import Navbar from './components/Navbar';
 import RenderFile from './components/visualizacion/RenderFile';
 import usePageAndWindowVisibility from './hooks/usePageAndWindowVisibility';
+import AcordeonItem from './components/AcordeonItem';
 
-function ComponentManager() {
+function ArticleLayout() {
   const { image_media_file } =
     useArticleContext().articleState.article.articulo;
 
@@ -56,43 +58,41 @@ function ComponentManager() {
   return (
     <>
       {!isLoading ? (
-        <div className={styles.component_manager}>
-          <Navbar />
-          <section className={`${styles.cont_global}`}>
-            <section className={styles.cont_article_sections}>
-              <div>
-                <HeaderBar />
+        <Flex
+          h={'full'}
+          flexDir={'column'}
+          gap={4}
+          p={8}
+          overflow={'hidden'}
+          overflowY={'auto'}
+        >
+          {/*  keywords */}
+          <HeaderBar />
 
-                <div className="pe-3">
-                  <MinContainer title="Palabras clave" isDeployable>
-                    <KeywordSearh />
-                  </MinContainer>
-                </div>
-              </div>
+          <Accordion.Root collapsible variant={'subtle'} multiple>
+            <AcordeonItem title="Palabras clave" icon={FaKey}>
+              <KeywordSearh />
+            </AcordeonItem>
 
-              <div className={styles.scrolled_section}>
-                <MinContainer title="Resumen" isDeployable>
-                  <SummaryArticle />
-                </MinContainer>
+            {/* Secciones de categorización */}
+            <AcordeonItem title="Resumen" icon={CiTextAlignCenter}>
+              <SummaryArticle />
+            </AcordeonItem>
 
-                <MinContainer
-                  title={`Visualización ${
-                    image_media_file?.length > 0 ? 'PDF' : 'Multimedia'
-                  }`}
-                  isDeployable
-                >
-                  <RenderFile />
-                </MinContainer>
+            <AcordeonItem
+              title={`Visualización ${
+                image_media_file?.length > 0 ? 'PDF' : 'Multimedia'
+              }`}
+              icon={image_media_file?.length > 0 ? FaFilePdf : GrMultimedia}
+            >
+              <RenderFile />
+            </AcordeonItem>
 
-                <MinContainer title="Transcripción" isDeployable defaultOpened>
-                  <Article />
-                </MinContainer>
-              </div>
-            </section>
-
-            <Menu />
-          </section>
-        </div>
+            <AcordeonItem title="Transcripción" icon={FaPencilAlt}>
+              <Article />
+            </AcordeonItem>
+          </Accordion.Root>
+        </Flex>
       ) : (
         <Loader isLoading={isLoading} />
       )}
@@ -100,4 +100,4 @@ function ComponentManager() {
   );
 }
 
-export default ComponentManager;
+export default ArticleLayout;

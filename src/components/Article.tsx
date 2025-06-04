@@ -8,9 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { editArticleText } from '../utils/asyncFunc';
 import { useConfig } from '../context/ConfigContext';
 
-import globalStyles from '../assets/css/general.module.css';
 import styles from '../assets/css/article.module.css';
 import toast from 'react-hot-toast';
+import { Box, Button, Flex, Text, Textarea } from '@chakra-ui/react';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
@@ -145,51 +145,46 @@ function Article(): JSX.Element {
 
   return (
     <>
-      <div className={`${globalStyles.bg_sec}`}>
-        <article className={styles.page}>
-          {allFragments.length === 0 && (
-            <div className={styles.edit_controls}>
-              {fragmentoTextoEditado !== texto && (
-                <button className={styles.save_btn} onClick={guardarEdicion}>
-                  <FontAwesomeIcon icon={faCloudArrowUp} />
-                  Guardar
-                </button>
+      <Box>
+        {allFragments.length === 0 && (
+          <Flex gap={4} my={4}>
+            <Button p={4} onClick={() => setIsEditable((prev) => !prev)}>
+              {isEditable ? (
+                'Cancelar'
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faPencil} />
+                  Editar
+                </>
               )}
+            </Button>
 
-              <button
-                className={styles.edit_btn}
-                onClick={() => setIsEditable((prev) => !prev)}
-              >
-                {isEditable ? (
-                  'Cancelar'
-                ) : (
-                  <>
-                    <FontAwesomeIcon icon={faPencil} />
-                    Editar
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-          {isEditable ? (
-            <textarea
-              ref={textAreaRef}
-              style={{ fontSize }}
-              className={`${styles.page_editable}`}
-              value={fragmentoTextoEditado}
-              onChange={(e) => setFragmentoTextoEditado(e.target.value)}
-            />
-          ) : (
-            <p
-              ref={articuloRef}
-              onMouseUp={manejarSeleccion}
-              style={{ fontSize }}
-            >
-              <span dangerouslySetInnerHTML={{ __html: articuloModificado }} />
-            </p>
-          )}
-        </article>
-      </div>
+            {fragmentoTextoEditado !== texto && (
+              <Button p={4} onClick={guardarEdicion}>
+                <FontAwesomeIcon icon={faCloudArrowUp} />
+                Guardar
+              </Button>
+            )}
+          </Flex>
+        )}
+        {isEditable ? (
+          <Textarea
+            className={styles.page_editable}
+            ref={textAreaRef}
+            style={{ fontSize }}
+            value={fragmentoTextoEditado}
+            onChange={(e) => setFragmentoTextoEditado(e.target.value)}
+          />
+        ) : (
+          <Text
+            ref={articuloRef}
+            onMouseUp={manejarSeleccion}
+            style={{ fontSize }}
+          >
+            <span dangerouslySetInnerHTML={{ __html: articuloModificado }} />
+          </Text>
+        )}
+      </Box>
     </>
   );
 }
