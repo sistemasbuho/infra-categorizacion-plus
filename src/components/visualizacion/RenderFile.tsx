@@ -1,4 +1,3 @@
-import { Box, Flex } from '@chakra-ui/react';
 import { useArticleContext } from '../../context/ArticleContext';
 
 import RenderPDF from './renders/RenderPDF';
@@ -9,14 +8,15 @@ function RenderFile(): React.ReactElement {
     useArticleContext().articleState.article.articulo;
 
   return (
-    <Flex alignItems={'center'} justifyContent={'center'}>
-      <Box w={'breakpoint-md'}>
-        {image_media_file?.length > 0 && (
-          <RenderPDF pdfUrl={image_media_file} />
-        )}
-        {audio_media_file?.length > 0 && <RenderVideo url={audio_media_file} />}
-      </Box>
-    </Flex>
+    <></>
+    // <Flex alignItems={'center'} justifyContent={'center'}>
+    //   <Box w={'breakpoint-md'}>
+    //     {image_media_file?.length > 0 && (
+    //       <RenderPDF pdfUrl={image_media_file} />
+    //     )}
+    //     {audio_media_file?.length > 0 && <RenderVideo url={audio_media_file} />}
+    //   </Box>
+    // </Flex>
   );
 }
 

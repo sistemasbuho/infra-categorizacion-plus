@@ -1,5 +1,4 @@
 // import { useState } from 'react';
-// import { Field } from '@chakra-ui/react';
 
 // import generalStyles from '../assets/css/general.module.css';
 // import Select from 'react-select';

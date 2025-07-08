@@ -2,12 +2,11 @@ import { Autores, GeneralOption, Medios } from '../../../interfaces/generals';
 import { useEffect, useState } from 'react';
 import { useArticleContext } from '../../../context/ArticleContext';
 import { postHeader } from '../../../utils/asyncFunc';
-import { Box, Field, Input } from '@chakra-ui/react';
 
-import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
-import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
-import ButtonControls from '../../controls/ButtonControls';
-import Select from 'react-select';
+// import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';
+// import AsyncSelectAutor from '../../asyncSelects/AsyncSelectAutor';
+// import ButtonControls from '../../controls/ButtonControls';
+// import Select from 'react-select';
 import toast from 'react-hot-toast';
 
 function Header() {
@@ -119,99 +118,100 @@ function Header() {
   }
 
   return (
-    <Box>
-      <Box mb={4}>
-        <form
-          id="header-form"
-          onSubmit={sendHeaderCategorization}
-          style={{ width: '100%' }}
-        >
-          <Field.Root>
-            <Field.Label>
-              Tipo
-              <Field.RequiredIndicator />
-            </Field.Label>
-            <Select
-              options={tipos}
-              getOptionLabel={(e: GeneralOption) => e.nombre}
-              getOptionValue={(e: GeneralOption) => e.id.toString()}
-              value={tipoOption}
-              onChange={(e) => setTipoOption(e as GeneralOption)}
-              styles={{
-                container: (base) => ({
-                  ...base,
-                  width: '100%',
-                }),
-              }}
-            />
-            <Field.HelperText />
-            <Field.ErrorText />
-          </Field.Root>
+    <></>
+    // <Box>
+    //   <Box mb={4}>
+    //     <form
+    //       id="header-form"
+    //       onSubmit={sendHeaderCategorization}
+    //       style={{ width: '100%' }}
+    //     >
+    //       <Field.Root>
+    //         <Field.Label>
+    //           Tipo
+    //           <Field.RequiredIndicator />
+    //         </Field.Label>
+    //         <Select
+    //           options={tipos}
+    //           getOptionLabel={(e: GeneralOption) => e.nombre}
+    //           getOptionValue={(e: GeneralOption) => e.id.toString()}
+    //           value={tipoOption}
+    //           onChange={(e) => setTipoOption(e as GeneralOption)}
+    //           styles={{
+    //             container: (base) => ({
+    //               ...base,
+    //               width: '100%',
+    //             }),
+    //           }}
+    //         />
+    //         <Field.HelperText />
+    //         <Field.ErrorText />
+    //       </Field.Root>
 
-          <Field.Root>
-            <Field.Label>
-              Fecha
-              <Field.RequiredIndicator />
-            </Field.Label>
-            <Input
-              px={2}
-              border={'1px solid hsl(0, 0%, 80%)'}
-              type="datetime-local"
-              value={fechaOption}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setfechaOption(e.target.value)
-              }
-            />
-            <Field.HelperText />
-            <Field.ErrorText />
-          </Field.Root>
+    //       <Field.Root>
+    //         <Field.Label>
+    //           Fecha
+    //           <Field.RequiredIndicator />
+    //         </Field.Label>
+    //         <Input
+    //           px={2}
+    //           border={'1px solid hsl(0, 0%, 80%)'}
+    //           type="datetime-local"
+    //           value={fechaOption}
+    //           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+    //             setfechaOption(e.target.value)
+    //           }
+    //         />
+    //         <Field.HelperText />
+    //         <Field.ErrorText />
+    //       </Field.Root>
 
-          <Field.Root>
-            <Field.Label>
-              Medio
-              <Field.RequiredIndicator />
-            </Field.Label>
-            <AsyncSelectMedio sendResponse={getMedio} value={articulo.medio} />
-            <Field.HelperText />
-            <Field.ErrorText />
-          </Field.Root>
+    //       <Field.Root>
+    //         <Field.Label>
+    //           Medio
+    //           <Field.RequiredIndicator />
+    //         </Field.Label>
+    //         <AsyncSelectMedio sendResponse={getMedio} value={articulo.medio} />
+    //         <Field.HelperText />
+    //         <Field.ErrorText />
+    //       </Field.Root>
 
-          <Field.Root>
-            <Field.Label>
-              Programa
-              <Field.RequiredIndicator />
-            </Field.Label>
-            <Select
-              options={programas}
-              getOptionLabel={(e: GeneralOption) => e.nombre}
-              getOptionValue={(e: GeneralOption) => e.id.toString()}
-              value={programaOption}
-              onChange={(e) => setProgramaOption(e as GeneralOption)}
-              styles={{
-                container: (base) => ({
-                  ...base,
-                  width: '100%',
-                }),
-              }}
-            />
-            <Field.HelperText />
-            <Field.ErrorText />
-          </Field.Root>
+    //       <Field.Root>
+    //         <Field.Label>
+    //           Programa
+    //           <Field.RequiredIndicator />
+    //         </Field.Label>
+    //         <Select
+    //           options={programas}
+    //           getOptionLabel={(e: GeneralOption) => e.nombre}
+    //           getOptionValue={(e: GeneralOption) => e.id.toString()}
+    //           value={programaOption}
+    //           onChange={(e) => setProgramaOption(e as GeneralOption)}
+    //           styles={{
+    //             container: (base) => ({
+    //               ...base,
+    //               width: '100%',
+    //             }),
+    //           }}
+    //         />
+    //         <Field.HelperText />
+    //         <Field.ErrorText />
+    //       </Field.Root>
 
-          <Field.Root>
-            <Field.Label>
-              Autor
-              <Field.RequiredIndicator />
-            </Field.Label>
-            <AsyncSelectAutor sendResponse={getAutor} value={articulo.autor} />
+    //       <Field.Root>
+    //         <Field.Label>
+    //           Autor
+    //           <Field.RequiredIndicator />
+    //         </Field.Label>
+    //         <AsyncSelectAutor sendResponse={getAutor} value={articulo.autor} />
 
-            <Field.HelperText />
-            <Field.ErrorText />
-          </Field.Root>
-        </form>
-      </Box>
-      <ButtonControls form="header-form" />
-    </Box>
+    //         <Field.HelperText />
+    //         <Field.ErrorText />
+    //       </Field.Root>
+    //     </form>
+    //   </Box>
+    //   <ButtonControls form="header-form" />
+    // </Box>
   );
 }
 

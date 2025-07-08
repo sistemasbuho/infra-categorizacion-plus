@@ -1,5 +1,4 @@
 import { finishArticle as finishArticleFunc } from '../utils/asyncFunc';
-import { Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import { useArticleContext } from '../context/ArticleContext';
 import { useColorModeValue } from './ui/color-mode';
 import { useNavigate } from 'react-router';
@@ -44,7 +43,7 @@ function HeaderBar() {
 
   return (
     <>
-      <Flex justifyContent={'space-between'}>
+      {/* <Flex justifyContent={'space-between'}>
         <Flex gap={2} alignItems={'center'} onClick={exit}>
           <FaChevronLeft />
           <Text>Atrás</Text>
@@ -85,7 +84,7 @@ function HeaderBar() {
 
       {showDeleteModal && (
         <ConfirmDeleteArticle article={article} setShow={setShowDeleteModal} />
-      )}
+      )} */}
     </>
   );
 }

@@ -1,4 +1,7 @@
-import { Categorization, editCategorization } from '../interfaces/generals';
+import {
+  Categorization,
+  editCategorization,
+} from '../pendientepormover/interfaces/generals';
 import { GeneralRequest } from './funcs';
 
 /*

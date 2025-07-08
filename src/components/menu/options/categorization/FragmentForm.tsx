@@ -9,7 +9,6 @@ import {
   deleteFragment as delFragment,
   editFragment,
 } from '../../../../utils/asyncFunc';
-import { Box, Field, Separator, Text, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useFragmentContext } from '../../../../context/FragmentsContext';
 import { useArticleContext } from '../../../../context/ArticleContext';
@@ -173,178 +172,179 @@ function FragmentForm() {
   }, [temaOption]);
 
   return (
-    <Box>
-      <Box className={styles.fragments_cont}>
-        <Box className={styles.list}>
-          {allFragments.length > 0 ? (
-            allFragments
-              .sort((a, b) => a.id - b.id)
-              .map((frag, i) => {
-                return (
-                  <a
-                    href={`#${frag.start_index}_${frag.article_fragment.length}`}
-                    key={i}
-                  >
-                    <Box
-                      p={2}
-                      className={`
-                  ${styles.fragment}
-                  ${!frag?.selectionId && frag?.id && styles.fragment_saved} 
-                  ${
-                    currentFragment?.id === frag?.id && styles.fragment_selected
-                  }`}
-                      onClick={() => setCurrentFragment(frag)}
-                    >
-                      <p>{frag.article_fragment}</p>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteCurrentFragment(frag);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faClose} />
-                      </button>
-                    </Box>
-                  </a>
-                );
-              })
-          ) : (
-            <Text className="text-center m-0 py-2">Aún no hay fragmentos</Text>
-          )}
-        </Box>
+    <></>
+    // <Box>
+    //   <Box className={styles.fragments_cont}>
+    //     <Box className={styles.list}>
+    //       {allFragments.length > 0 ? (
+    //         allFragments
+    //           .sort((a, b) => a.id - b.id)
+    //           .map((frag, i) => {
+    //             return (
+    //               <a
+    //                 href={`#${frag.start_index}_${frag.article_fragment.length}`}
+    //                 key={i}
+    //               >
+    //                 <Box
+    //                   p={2}
+    //                   className={`
+    //               ${styles.fragment}
+    //               ${!frag?.selectionId && frag?.id && styles.fragment_saved}
+    //               ${
+    //                 currentFragment?.id === frag?.id && styles.fragment_selected
+    //               }`}
+    //                   onClick={() => setCurrentFragment(frag)}
+    //                 >
+    //                   <p>{frag.article_fragment}</p>
+    //                   <button
+    //                     onClick={(e) => {
+    //                       e.stopPropagation();
+    //                       deleteCurrentFragment(frag);
+    //                     }}
+    //                   >
+    //                     <FontAwesomeIcon icon={faClose} />
+    //                   </button>
+    //                 </Box>
+    //               </a>
+    //             );
+    //           })
+    //       ) : (
+    //         <Text className="text-center m-0 py-2">Aún no hay fragmentos</Text>
+    //       )}
+    //     </Box>
 
-        <Separator my={2} size={'lg'} />
+    //     <Separator my={2} size={'lg'} />
 
-        <form id="categorization-form" onSubmit={sendCategorization}>
-          <VStack display={'flex'} flexDir={'column'} gap={2}>
-            <Field.Root>
-              <Field.Label>
-                Tema
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <Select
-                isDisabled={!currentFragment}
-                isMulti
-                isClearable={false}
-                options={temas}
-                getOptionLabel={(e) => e.nombre}
-                getOptionValue={(e) => String(e.id)}
-                value={temaOption}
-                onChange={(e: GeneralOption[]) => setTemaOption(e)}
-                styles={{
-                  container: (base) => ({
-                    ...base,
-                    width: '100%',
-                  }),
+    //     <form id="categorization-form" onSubmit={sendCategorization}>
+    //       <VStack display={'flex'} flexDir={'column'} gap={2}>
+    //         <Field.Root>
+    //           <Field.Label>
+    //             Tema
+    //             <Field.RequiredIndicator />
+    //           </Field.Label>
+    //           <Select
+    //             isDisabled={!currentFragment}
+    //             isMulti
+    //             isClearable={false}
+    //             options={temas}
+    //             getOptionLabel={(e) => e.nombre}
+    //             getOptionValue={(e) => String(e.id)}
+    //             value={temaOption}
+    //             onChange={(e: GeneralOption[]) => setTemaOption(e)}
+    //             styles={{
+    //               container: (base) => ({
+    //                 ...base,
+    //                 width: '100%',
+    //               }),
 
-                  control: (base) => ({
-                    ...base,
-                    borderColor: isValidTema ? 'hsl( 0, 0%, 80%)' : 'red',
-                  }),
-                }}
-              />
-              <Field.HelperText />
-              <Field.ErrorText />
-            </Field.Root>
+    //               control: (base) => ({
+    //                 ...base,
+    //                 borderColor: isValidTema ? 'hsl( 0, 0%, 80%)' : 'red',
+    //               }),
+    //             }}
+    //           />
+    //           <Field.HelperText />
+    //           <Field.ErrorText />
+    //         </Field.Root>
 
-            <Field.Root>
-              <Field.Label>
-                Tag
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <Select
-                isDisabled={!currentFragment}
-                isMulti
-                isClearable={false}
-                getOptionLabel={(e) => e.nombre}
-                getOptionValue={(e) => String(e.id)}
-                options={tags}
-                value={tagOptions}
-                onChange={(e: GeneralOption[]) => setTagOptions(e)}
-                styles={{
-                  container: (base) => ({
-                    ...base,
-                    width: '100%',
-                  }),
-                }}
-              />
-              <Field.HelperText />
-              <Field.ErrorText />
-            </Field.Root>
+    //         <Field.Root>
+    //           <Field.Label>
+    //             Tag
+    //             <Field.RequiredIndicator />
+    //           </Field.Label>
+    //           <Select
+    //             isDisabled={!currentFragment}
+    //             isMulti
+    //             isClearable={false}
+    //             getOptionLabel={(e) => e.nombre}
+    //             getOptionValue={(e) => String(e.id)}
+    //             options={tags}
+    //             value={tagOptions}
+    //             onChange={(e: GeneralOption[]) => setTagOptions(e)}
+    //             styles={{
+    //               container: (base) => ({
+    //                 ...base,
+    //                 width: '100%',
+    //               }),
+    //             }}
+    //           />
+    //           <Field.HelperText />
+    //           <Field.ErrorText />
+    //         </Field.Root>
 
-            <Field.Root>
-              <Field.Label>
-                Activo
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <AsyncSelectActivoPasivo
-                isDisabled={!currentFragment}
-                isMulti
-                sendResponse={getAsyncActivo}
-                clear={forceUpdate}
-                value={currentFragment?.activo}
-              />
-              <Field.HelperText />
-              <Field.ErrorText />
-            </Field.Root>
+    //         <Field.Root>
+    //           <Field.Label>
+    //             Activo
+    //             <Field.RequiredIndicator />
+    //           </Field.Label>
+    //           <AsyncSelectActivoPasivo
+    //             isDisabled={!currentFragment}
+    //             isMulti
+    //             sendResponse={getAsyncActivo}
+    //             clear={forceUpdate}
+    //             value={currentFragment?.activo}
+    //           />
+    //           <Field.HelperText />
+    //           <Field.ErrorText />
+    //         </Field.Root>
 
-            <Field.Root>
-              <Field.Label>
-                Pasivo
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <AsyncSelectActivoPasivo
-                isDisabled={!currentFragment}
-                isMulti
-                sendResponse={getAsyncPasivo}
-                clear={forceUpdate}
-                value={currentFragment?.pasivo}
-              />
-              <Field.HelperText />
-              <Field.ErrorText />
-            </Field.Root>
+    //         <Field.Root>
+    //           <Field.Label>
+    //             Pasivo
+    //             <Field.RequiredIndicator />
+    //           </Field.Label>
+    //           <AsyncSelectActivoPasivo
+    //             isDisabled={!currentFragment}
+    //             isMulti
+    //             sendResponse={getAsyncPasivo}
+    //             clear={forceUpdate}
+    //             value={currentFragment?.pasivo}
+    //           />
+    //           <Field.HelperText />
+    //           <Field.ErrorText />
+    //         </Field.Root>
 
-            <Field.Root>
-              <Field.Label>
-                Tonalidad
-                <Field.RequiredIndicator />
-              </Field.Label>
-              <Select
-                isDisabled={!currentFragment}
-                options={sentimiento}
-                placeholder={'Buscar'}
-                onChange={(e) => setTonoOption(e)}
-                getOptionLabel={(e) => e.nombre}
-                getOptionValue={(e) => String(e.id)}
-                value={tonoOption}
-                styles={{
-                  container: (base) => ({
-                    ...base,
-                    width: '100%',
-                  }),
-                }}
-              />
-              <Field.HelperText />
-              <Field.ErrorText />
-            </Field.Root>
-          </VStack>
-        </form>
-      </Box>
+    //         <Field.Root>
+    //           <Field.Label>
+    //             Tonalidad
+    //             <Field.RequiredIndicator />
+    //           </Field.Label>
+    //           <Select
+    //             isDisabled={!currentFragment}
+    //             options={sentimiento}
+    //             placeholder={'Buscar'}
+    //             onChange={(e) => setTonoOption(e)}
+    //             getOptionLabel={(e) => e.nombre}
+    //             getOptionValue={(e) => String(e.id)}
+    //             value={tonoOption}
+    //             styles={{
+    //               container: (base) => ({
+    //                 ...base,
+    //                 width: '100%',
+    //               }),
+    //             }}
+    //           />
+    //           <Field.HelperText />
+    //           <Field.ErrorText />
+    //         </Field.Root>
+    //       </VStack>
+    //     </form>
+    //   </Box>
 
-      <Text className={styles.text_warn_color} my={2}>
-        {!currentFragment
-          ? 'Por favor seleccione un fragmento'
-          : !isValidTema
-          ? 'Por favor seleccione un tema'
-          : null}
-      </Text>
+    //   <Text className={styles.text_warn_color} my={2}>
+    //     {!currentFragment
+    //       ? 'Por favor seleccione un fragmento'
+    //       : !isValidTema
+    //       ? 'Por favor seleccione un tema'
+    //       : null}
+    //   </Text>
 
-      <ButtonControls
-        form="categorization-form"
-        accept={{ disabled: !currentFragment || !isValidTema }}
-        reject={{ disabled: !currentFragment, event: clearForm }}
-      />
-    </Box>
+    //   <ButtonControls
+    //     form="categorization-form"
+    //     accept={{ disabled: !currentFragment || !isValidTema }}
+    //     reject={{ disabled: !currentFragment, event: clearForm }}
+    //   />
+    // </Box>
   );
 }
 

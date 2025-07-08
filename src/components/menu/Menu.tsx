@@ -1,8 +1,6 @@
-import { Button, CloseButton, Drawer, Flex, Kbd } from '@chakra-ui/react';
 import { faBook, faGear, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Tabs, Text } from '@chakra-ui/react';
 import { FaBars } from 'react-icons/fa';
 
 import Categorization from './options/categorization/Categorization';
@@ -43,8 +41,7 @@ function Menu() {
 
   return (
     <>
-      {/* Drawer controlado por estado */}
-      <Drawer.Root
+      {/* <Drawer.Root
         size={'sm'}
         closeOnInteractOutside={false}
         open={isOpen}
@@ -110,7 +107,7 @@ function Menu() {
             </Drawer.Body>
           </Drawer.Content>
         </Drawer.Positioner>
-      </Drawer.Root>
+      </Drawer.Root> */}
     </>
   );
 }

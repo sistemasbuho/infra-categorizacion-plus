@@ -10,7 +10,6 @@ import { useConfig } from '../context/ConfigContext';
 
 import styles from '../assets/css/article.module.css';
 import toast from 'react-hot-toast';
-import { Box, Button, Flex, Text, Textarea } from '@chakra-ui/react';
 
 function Article(): JSX.Element {
   const { fontSize } = useConfig();
@@ -145,7 +144,7 @@ function Article(): JSX.Element {
 
   return (
     <>
-      <Box>
+      {/* <Box>
         {allFragments.length === 0 && (
           <Flex gap={4} my={4}>
             <Button p={4} onClick={() => setIsEditable((prev) => !prev)}>
@@ -184,7 +183,7 @@ function Article(): JSX.Element {
             <span dangerouslySetInnerHTML={{ __html: articuloModificado }} />
           </Text>
         )}
-      </Box>
+      </Box> */}
     </>
   );
 }

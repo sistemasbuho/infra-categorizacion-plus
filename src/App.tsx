@@ -1,71 +1,69 @@
-import { decodedTokenInLocalStorage } from './components/Login/isValidToken';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ConfigProvider } from './context/ConfigContext';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { userRoutes } from './routes';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { VStack } from '@chakra-ui/react';
-
-import Login from './components/Login/Login';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { Login } from './pages/Login';
+import useToken from './hooks/useToken';
 import Sidebar from './components/Sidebar';
-import { useColorMode } from './components/ui/color-mode';
+import { routes } from './routes/routes';
+import { ProtectedRoutes } from './routes/ProtectedRoutes';
+import Home from './pages/Home';
 
 function App() {
-  const [showLogin, setshowLogin] = useState<boolean | null>(null);
-  const { setColorMode } = useColorMode();
-
-  useEffect(() => {
-    setColorMode('light');
-    const token = decodedTokenInLocalStorage();
-
-    token ? setshowLogin(false) : setshowLogin(true);
-  }, []);
+  const { token } = useToken();
 
   return (
-    <VStack>
-      <ConfigProvider>
-        <Toaster
-          position="bottom-left"
-          toastOptions={{
-            success: {
-              icon: <FontAwesomeIcon icon={faCircleCheck} fontSize={25} />,
-              style: {
-                padding: '1rem',
-                border: '2px solid var(--border-toast-succes)',
-                color: 'var(--color-toast-succes)',
-                backgroundColor: 'var(--bg-toast-succes)',
-              },
+    <>
+      <Toaster
+        position="bottom-left"
+        toastOptions={{
+          success: {
+            icon: <FontAwesomeIcon icon={faCircleCheck} fontSize={25} />,
+            style: {
+              padding: '1rem',
+              border: '2px solid #00ada1',
+              color: '#fff',
+              backgroundColor: '#00ada1',
             },
-            error: {
-              icon: <FontAwesomeIcon icon={faCircleCheck} fontSize={25} />,
-              style: {
-                padding: '1rem',
-                border: '2px solid var(--border-toast-error)',
-                color: 'var(--color-toast-error)',
-                backgroundColor: 'var(--bg-toast-error)',
-              },
+          },
+          error: {
+            icon: <FontAwesomeIcon icon={faCircleCheck} fontSize={25} />,
+            style: {
+              padding: '1rem',
+              border: '2px solid #ff7588',
+              color: '#fff',
+              backgroundColor: '#ff7588',
             },
-          }}
-        />
+          },
+        }}
+      />
 
-        {showLogin && <Login setShow={setshowLogin} />}
-        <BrowserRouter>
-          <Sidebar>
-            <Routes>
-              {userRoutes.map((route) => (
+      <BrowserRouter>
+        <Routes>
+          {!token ? (
+            <Route path="/login" element={<Login />} />
+          ) : (
+            <Route element={<Sidebar />}>
+              {routes.map((r) => (
                 <Route
-                  key={route.path}
-                  path={route.path}
-                  element={route.element}
+                  key={r.path}
+                  path={r.path}
+                  element={
+                    <ProtectedRoutes roles={r.roles}>
+                      <r.element />
+                    </ProtectedRoutes>
+                  }
                 />
               ))}
-            </Routes>
-          </Sidebar>
-        </BrowserRouter>
-      </ConfigProvider>
-    </VStack>
+            </Route>
+          )}
+          <Route
+            path="/"
+            element={token ? <Home /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

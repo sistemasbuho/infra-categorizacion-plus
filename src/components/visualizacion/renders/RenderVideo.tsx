@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { audioExtensions } from '../../../utils/audioExtensions';
-import { Button, Flex } from '@chakra-ui/react';
 import {
   faPause,
   faPlay,
@@ -73,93 +72,104 @@ function RenderVideo({ url }: Props) {
   );
 
   return (
-    <div ref={contVideoRef}>
-      <div>
-        {isAudioFile ? (
-          <ReactPlayer
-            ref={videoRef}
-            url={url}
-            height={'fit-content'}
-            playbackRate={videoRate}
-            playing={videoPLaying}
-            muted={videoMuted}
-            onPlay={() => setVideoPLaying(true)}
-            onPause={() => setVideoPLaying(false)}
-            onProgress={handleProgress}
-            controls
-          />
-        ) : (
-          <ReactPlayer
-            ref={videoRef}
-            url={url}
-            width={'100%'}
-            height={'100%'}
-            playbackRate={videoRate}
-            playing={videoPLaying}
-            muted={videoMuted}
-            onPlay={() => setVideoPLaying(true)}
-            onPause={() => setVideoPLaying(false)}
-            onProgress={handleProgress}
-            controls
-          />
-        )}
+    <></>
+    // <div ref={contVideoRef}>
+    //   <div>
+    //     {isAudioFile ? (
+    //       <ReactPlayer
+    //         ref={videoRef}
+    //         url={url}
+    //         height={'fit-content'}
+    //         playbackRate={videoRate}
+    //         playing={videoPLaying}
+    //         muted={videoMuted}
+    //         onPlay={() => setVideoPLaying(true)}
+    //         onPause={() => setVideoPLaying(false)}
+    //         onProgress={handleProgress}
+    //         controls
+    //       />
+    //     ) : (
+    //       <ReactPlayer
+    //         ref={videoRef}
+    //         url={url}
+    //         width={'100%'}
+    //         height={'100%'}
+    //         playbackRate={videoRate}
+    //         playing={videoPLaying}
+    //         muted={videoMuted}
+    //         onPlay={() => setVideoPLaying(true)}
+    //         onPause={() => setVideoPLaying(false)}
+    //         onProgress={handleProgress}
+    //         controls
+    //       />
+    //     )}
 
-        <div
-          className={`${
-            !isVisible && videoPLaying !== null && styles.floatControls
-          }`}
-        >
-          <Flex justifyContent={'space-around'} gap={2} my={2}>
-            <Button flex={1} p={2} onClick={() => setVideoRate(1)}>
-              x1
-            </Button>
-            <Button flex={1} p={2} onClick={() => setVideoRate(1.25)}>
-              x1.25
-            </Button>
-            <Button flex={1} p={2} onClick={() => setVideoRate(1.5)}>
-              x1.5
-            </Button>
-            <Button flex={1} p={2} onClick={() => setVideoRate(2)}>
-              x2
-            </Button>
+    //     <div
+    //       className={`${
+    //         !isVisible && videoPLaying !== null && styles.floatControls
+    //       }`}
+    //     >
+    //       <Flex justifyContent={'space-around'} gap={2} my={2}>
+    //         <Button flex={1} p={2} onClick={() => setVideoRate(1)}>
+    //           x1
+    //         </Button>
+    //         <Button flex={1} p={2} onClick={() => setVideoRate(1.25)}>
+    //           x1.25
+    //         </Button>
+    //         <Button flex={1} p={2} onClick={() => setVideoRate(1.5)}>
+    //           x1.5
+    //         </Button>
+    //         <Button flex={1} p={2} onClick={() => setVideoRate(2)}>
+    //           x2
+    //         </Button>
 
-            <Button flex={1}
-              p={2}
-              onClick={handleSeekBackward}
-              title="Retroceder 5 segundos"
-              colorScheme="blue"
-            >
-              <FontAwesomeIcon icon={faBackward} />
-            </Button>
+    //         <Button
+    //           flex={1}
+    //           p={2}
+    //           onClick={handleSeekBackward}
+    //           title="Retroceder 5 segundos"
+    //           colorScheme="blue"
+    //         >
+    //           <FontAwesomeIcon icon={faBackward} />
+    //         </Button>
 
-            <Button flex={1} p={2} onClick={() => setVideoPLaying((prev) => !prev)}>
-              {videoPLaying ? (
-                <FontAwesomeIcon icon={faPause} />
-              ) : (
-                <FontAwesomeIcon icon={faPlay} />
-              )}
-            </Button>
+    //         <Button
+    //           flex={1}
+    //           p={2}
+    //           onClick={() => setVideoPLaying((prev) => !prev)}
+    //         >
+    //           {videoPLaying ? (
+    //             <FontAwesomeIcon icon={faPause} />
+    //           ) : (
+    //             <FontAwesomeIcon icon={faPlay} />
+    //           )}
+    //         </Button>
 
-            <Button flex={1}
-              p={2}
-              onClick={handleSeekForward}
-              title="Avanzar 5 segundos"
-              colorScheme="green"
-            >
-              <FontAwesomeIcon icon={faForward} />
-            </Button>
+    //         <Button
+    //           flex={1}
+    //           p={2}
+    //           onClick={handleSeekForward}
+    //           title="Avanzar 5 segundos"
+    //           colorScheme="green"
+    //         >
+    //           <FontAwesomeIcon icon={faForward} />
+    //         </Button>
 
-            <Button flex={1} p={2} onClick={() => setVideoMuted((prev) => !prev)}>
-              {videoMuted ? (
-                <FontAwesomeIcon icon={faVolumeXmark} />
-              ) : (
-                <FontAwesomeIcon icon={faVolumeHigh} />
-              )}
-            </Button>
-          </Flex>
-        </div>
-      </div>
-    </div>
+    //         <Button
+    //           flex={1}
+    //           p={2}
+    //           onClick={() => setVideoMuted((prev) => !prev)}
+    //         >
+    //           {videoMuted ? (
+    //             <FontAwesomeIcon icon={faVolumeXmark} />
+    //           ) : (
+    //             <FontAwesomeIcon icon={faVolumeHigh} />
+    //           )}
+    //         </Button>
+    //       </Flex>
+    //     </div>
+    //   </div>
+    // </div>
   );
 }
 

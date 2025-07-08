@@ -1,4 +1,3 @@
-import { Button, Field, Flex, Input, VStack } from '@chakra-ui/react';
 import { IoSaveSharp } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
 
@@ -32,12 +31,10 @@ function TagFiltersForm({ defaultValue }: Props) {
 
   return (
     <>
-      <div className="w-full">
+      {/* <div className="w-full">
         <Flex flexDir={'column'} gap={4}>
-          {/* formulario */}
           <form id="edit-tag" onSubmit={onSubmit}>
             <VStack display="flex" flexDir="column" gap={4}>
-              {/* Nombre */}
               <Field.Root invalid={!!errors.nombre}>
                 <Field.Label>Nombre</Field.Label>
                 <Input p={2} {...register('nombre')} />
@@ -45,7 +42,6 @@ function TagFiltersForm({ defaultValue }: Props) {
                 <Field.ErrorText>{errors?.nombre?.message}</Field.ErrorText>
               </Field.Root>
 
-              {/* Proyecto */}
               <Field.Root invalid={!!errors.proyecto_id}>
                 <Field.Label>proyecto</Field.Label>
                 <Input p={2} {...register('proyecto_id')} />
@@ -55,7 +51,6 @@ function TagFiltersForm({ defaultValue }: Props) {
                 </Field.ErrorText>
               </Field.Root>
 
-              {/* Creado por */}
               <Field.Root invalid={!!errors.created_by}>
                 <Field.Label>Creado por</Field.Label>
                 <Input p={2} type="email" {...register('created_by')} />
@@ -63,7 +58,6 @@ function TagFiltersForm({ defaultValue }: Props) {
                 <Field.ErrorText>{errors?.created_by?.message}</Field.ErrorText>
               </Field.Root>
 
-              {/* Modificado por */}
               <Field.Root invalid={!!errors.modified_by}>
                 <Field.Label>Modifcado por</Field.Label>
                 <Input p={2} type="email" {...register('modified_by')} />
@@ -73,7 +67,6 @@ function TagFiltersForm({ defaultValue }: Props) {
                 </Field.ErrorText>
               </Field.Root>
 
-              {/* Creado  */}
               <Field.Root invalid={!!errors.created_at}>
                 <Field.Label>Fecha de creación</Field.Label>
                 <Input p={2} type="date" {...register('created_at')} />
@@ -81,7 +74,6 @@ function TagFiltersForm({ defaultValue }: Props) {
                 <Field.ErrorText>{errors?.created_at?.message}</Field.ErrorText>
               </Field.Root>
 
-              {/* Modificado */}
               <Field.Root invalid={!!errors.modified_at}>
                 <Field.Label>Fecha de modificación</Field.Label>
                 <Input p={2} type="date" {...register('modified_at')} />
@@ -97,7 +89,7 @@ function TagFiltersForm({ defaultValue }: Props) {
             Guardar
           </Button>
         </Flex>
-      </div>
+      </div> */}
     </>
   );
 }

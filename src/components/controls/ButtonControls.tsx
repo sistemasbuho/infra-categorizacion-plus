@@ -1,4 +1,3 @@
-import { Button } from '@chakra-ui/react';
 import optionStyles from '../../assets/css/components/menu/options.module.css';
 
 interface Props {
@@ -17,7 +16,7 @@ interface Props {
 function ButtonControls({ form, accept, reject }: Props) {
   return (
     <>
-      <div className={optionStyles.controls}>
+      {/* <div className={optionStyles.controls}>
         <Button
           className={optionStyles.reject}
           disabled={reject?.disabled || false}
@@ -37,7 +36,7 @@ function ButtonControls({ form, accept, reject }: Props) {
         >
           {accept?.text || 'Guardar'}
         </Button>
-      </div>
+      </div> */}
     </>
   );
 }

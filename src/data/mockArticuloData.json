@@ -1,0 +1,292 @@
+{
+  "articulo": {
+    "id": 1261559,
+    "image_media_file": "https://clarity-buho.s3.amazonaws.com/pdf/http___prensalibrecasanare_com_-_Un_intento_de_sicariato_en_Man__fue_confundido_inicialmente_con_un_accidente_de_tr_nsito_-_02-12-21.pdf",
+    "medio": {
+      "id": 254481,
+      "nombre": "Prensa Libre Casanare (Online)"
+    },
+    "autor": null,
+    "tipo_articulo": null,
+    "programa": null,
+    "tipo_publicacion": {
+      "id": 3,
+      "nombre": "Texto"
+    },
+    "link_clarity": null,
+    "audio_media_file": null,
+    "titulo": "Un intento de sicariato en Maní fue confundido inicialmente con un accidente de tránsito",
+    "texto": "Colombia Casanare Yopal Salud Medio Ambiente Información comercial Judicial Entretenimiento\n\nUn intento de sicariato en Maní fue\nconfundido inicialmente con un accidente\nde transito\n\nLo que inicialmente fue reportado como un accidente de tránsito, en realidad se habría tratado de un\npresunto hecho de sicariato, ocurrido hacia las 6:20 de la mañana de este miércoles primero de diciembre\nen la carrera 8 con calle 12 de Maní.\n\nSegún la Comandante de Bomberos de esa población, Fernanda Arévalo, recibieron el llamado de auxilio que\nreportaba una persona herida tras un siniestro vial. Sin embargo, al prestarle la asistencia pre hospitalaria al\nseñor Miguel Salcedo de 64 años, notaron que presentaba una herida en el cuello por arma (al parecer\ntraumática), más otras lesiones en la cara y el cuerpo, producto de la caída de la motocicleta luego de recibir\nel impacto.\n\nLa víctima refirió que sintió que otra moto le seguía de cerca y luego percibió como si lo hubiera estrellado\npor la parte posterior, sin entregar más detalles sobre los agresores.\n\nFue trasladado inicialmente al centro de salud local, pero debido a que no se le pudo controlar la pérdida de\nsangre, fue remitido de inmediato al Hospital Regional de la Orinoquia, donde se recupera.\n\nLas autoridades no han entregado una versión oficial sobre este nuevo hecho violento ocurrido en Maní.",
+    "url": "http://prensalibrecasanare.com/mani/43497-un-intento-de-sicariato-en-mann-fue-confundido-inicialmente-con-un-accidente-de-trbnsito.html",
+    "fecha": "2021-12-02T00:00:00",
+    "fecha_ingestion": "2022-05-13T13:49:23.976794",
+    "fecha_categorizacion": null,
+    "ubicacion_redes": null,
+    "created_at": "2022-05-13T13:49:23.976855",
+    "updated_at": "2022-05-13T13:49:23.976883",
+    "finished": false,
+    "asignado": true,
+    "state": false,
+    "state_description_delete": null,
+    "state_description_activate": null,
+    "recategorisation": false,
+    "keyword": "0",
+    "estilo_periodistico": null,
+    "resumen": "Un presunto hecho de sicariato fue inicialmente confundido con un accidente de tránsito en Maní. La víctima Miguel Salcedo de 64 años fue trasladada al Hospital Regional de la Orinoquia tras recibir heridas por arma traumática.",
+    "palabras_clave": [
+      "sicariato",
+      "Maní",
+      "accidente de tránsito",
+      "Miguel Salcedo",
+      "Hospital Regional de la Orinoquia"
+    ],
+    "ubicacion": "Colombia",
+    "tiempo_pantalla_segundos": 146,
+    "asignado_a": 390,
+    "fuente": 4,
+    "proyecto": 43,
+    "subido_por": 101
+  },
+  "fragmentos": [],
+  "general": [],
+  "tags": [
+    {
+      "id": 43,
+      "nombre": "Claridad",
+      "tags": [
+        {
+          "id": 263,
+          "nombre": "Liderazgo"
+        },
+        {
+          "id": 983,
+          "nombre": "Delincuencia"
+        },
+        {
+          "id": 1467,
+          "nombre": "Incertidumbre"
+        },
+        {
+          "id": 1654,
+          "nombre": "Clave"
+        },
+        {
+          "id": 1658,
+          "nombre": "Apoya"
+        },
+        {
+          "id": 1666,
+          "nombre": "Cambio"
+        },
+        {
+          "id": 1696,
+          "nombre": "Confiable"
+        },
+        {
+          "id": 1698,
+          "nombre": "Experiencia"
+        },
+        {
+          "id": 1706,
+          "nombre": "Líder"
+        },
+        {
+          "id": 1770,
+          "nombre": "Comprometido"
+        },
+        {
+          "id": 1800,
+          "nombre": "Conocimiento"
+        },
+        {
+          "id": 1803,
+          "nombre": "Diálogo"
+        },
+        {
+          "id": 2003,
+          "nombre": "Honesto"
+        },
+        {
+          "id": 2007,
+          "nombre": "Desconfianza"
+        },
+        {
+          "id": 2019,
+          "nombre": "Capaz"
+        },
+        {
+          "id": 2058,
+          "nombre": "Esperanza"
+        },
+        {
+          "id": 2117,
+          "nombre": "Importante"
+        },
+        {
+          "id": 2133,
+          "nombre": "Centrado"
+        },
+        {
+          "id": 2168,
+          "nombre": "Buen Administrador"
+        },
+        {
+          "id": 2211,
+          "nombre": "Deshonesto"
+        },
+        {
+          "id": 2217,
+          "nombre": "Hipócrita"
+        },
+        {
+          "id": 2242,
+          "nombre": "Corrupto"
+        },
+        {
+          "id": 2277,
+          "nombre": "Crisis"
+        },
+        {
+          "id": 2292,
+          "nombre": "Criterio"
+        },
+        {
+          "id": 2309,
+          "nombre": "Control"
+        },
+        {
+          "id": 2340,
+          "nombre": "Especialista"
+        },
+        {
+          "id": 2355,
+          "nombre": "Guerrilla"
+        },
+        {
+          "id": 2448,
+          "nombre": "Buen líder"
+        },
+        {
+          "id": 2501,
+          "nombre": "Humildad"
+        },
+        {
+          "id": 2525,
+          "nombre": "Carisma"
+        },
+        {
+          "id": 2541,
+          "nombre": "Convincente"
+        }
+      ]
+    }
+  ],
+  "temas": [
+    {
+      "id": 379,
+      "nombre": "Justicia"
+    },
+    {
+      "id": 428,
+      "nombre": "Política"
+    },
+    {
+      "id": 545,
+      "nombre": "Seguridad"
+    },
+    {
+      "id": 637,
+      "nombre": "Economía"
+    },
+    {
+      "id": 669,
+      "nombre": "Inseguridad"
+    },
+    {
+      "id": 684,
+      "nombre": "Homicidio"
+    },
+    {
+      "id": 701,
+      "nombre": "Guerra"
+    },
+    {
+      "id": 694,
+      "nombre": "Conflicto"
+    },
+    {
+      "id": 696,
+      "nombre": "Víctimas"
+    },
+    {
+      "id": 693,
+      "nombre": "Paz"
+    }
+  ],
+  "programa": [
+    {
+      "id": 5,
+      "nombre": "Noticias RCN"
+    },
+    {
+      "id": 12,
+      "nombre": "Noticias Caracol (Colombia)"
+    },
+    {
+      "id": 1,
+      "nombre": "6 AM Hoy por Hoy"
+    },
+    {
+      "id": 6,
+      "nombre": "La Luciérnaga"
+    },
+    {
+      "id": 17,
+      "nombre": "La W con Julio Sánchez Cristo"
+    }
+  ],
+  "tipo": [
+    {
+      "id": 1,
+      "nombre": "Nota"
+    },
+    {
+      "id": 2,
+      "nombre": "Editorial"
+    },
+    {
+      "id": 3,
+      "nombre": "Columna de opinión"
+    },
+    {
+      "id": 4,
+      "nombre": "Entrevista"
+    },
+    {
+      "id": 5,
+      "nombre": "Breve"
+    }
+  ],
+  "proyecto": [
+    {
+      "nombre": "Claridad"
+    }
+  ],
+  "keyword": [
+    {
+      "nombre": "sicariato"
+    },
+    {
+      "nombre": "Maní"
+    },
+    {
+      "nombre": "accidente de tránsito"
+    },
+    {
+      "nombre": "Miguel Salcedo"
+    },
+    {
+      "nombre": "Hospital Regional de la Orinoquia"
+    }
+  ]
+}

@@ -5,11 +5,10 @@ import {
 } from '../../../../utils/asyncFunc';
 import { useArticleContext } from '../../../../context/ArticleContext';
 
-import Select from 'react-select';
+// import Select from 'react-select';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
-import ButtonControls from '../../../controls/ButtonControls';
-import { Field, VStack } from '@chakra-ui/react';
+// import ButtonControls from '../../../controls/ButtonControls';
 function GeneralForm() {
   // Context
   const { setArticle } = useArticleContext().articleState;
@@ -79,7 +78,7 @@ function GeneralForm() {
 
   return (
     <div>
-      <form id="article-form" onSubmit={sendArticleCategorization}>
+      {/* <form id="article-form" onSubmit={sendArticleCategorization}>
         <VStack display={'flex'} flexDir={'column'} gap={4}>
           <Field.Root>
             <Field.Label>Asignar tags al artículo</Field.Label>
@@ -125,7 +124,7 @@ function GeneralForm() {
       <ButtonControls
         form={'article-form'}
         reject={{ text: 'Eliminar', event: deleteArticleCategorizaion }}
-      />
+      /> */}
     </div>
   );
 }
