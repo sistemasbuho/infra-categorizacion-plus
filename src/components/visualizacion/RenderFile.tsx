@@ -1,4 +1,4 @@
-import { useArticleContext } from '../../context/ArticleContext';
+import { useArticleContext } from '../../shared/context/ArticleContext';
 
 import RenderPDF from './renders/RenderPDF';
 import RenderVideo from './renders/RenderVideo';

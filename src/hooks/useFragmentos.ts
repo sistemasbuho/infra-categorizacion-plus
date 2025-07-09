@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import mockArticuloData from '../data/mockArticuloData.json';
 import {
   getFragmentosCategorizacion,
   createFragmento,
   updateFragmento,
   deleteFragmento,
   finalizarArticulo,
-  cambiarEstadoArticulo,
   categorizarArticulo,
   CategorizarArticuloResponse,
   ArticuloAPI,
   FragmentoAPI,
 } from '../services/fragmentoRequest';
+import { changeEstadoArticulo } from '../services/articulosLideresRequest';
 
 interface Fragmento {
   id: string;
@@ -286,23 +285,26 @@ export const useFragmentos = (
   };
 
   // Función para cambiar el estado del artículo
-  const cambiarEstadoArticulo = async (nuevoEstado: boolean) => {
+  const cambiarEstadoArticulo = async (
+    accion: boolean,
+    motivo: string = ''
+  ) => {
     if (!articuloId) return;
 
     try {
-      // Comentado para usar datos mock por ahora
-      // await cambiarEstadoArticulo(articuloId, nuevoEstado);
-
-      // Simulamos el cambio de estado
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Usamos la misma lógica que MisArticulosLideres
+      // accion: true = borrar, false = reactivar
+      await changeEstadoArticulo(articuloId, accion, motivo);
 
       // Actualizamos el estado local
+      // Si accion es true (borrar), el artículo quedará borrado
+      // Si accion es false (reactivar), el artículo quedará activo
       setArticuloData((prev) =>
-        prev ? { ...prev, state: nuevoEstado } : null
+        prev ? { ...prev, state: !accion, borrado: accion } : null
       );
 
       toast.success(
-        `Artículo ${nuevoEstado ? 'activado' : 'desactivado'} exitosamente`
+        `Artículo ${accion ? 'desactivado' : 'activado'} exitosamente`
       );
     } catch (err) {
       console.error('Error al cambiar estado del artículo:', err);

@@ -41,7 +41,8 @@ function Menu() {
 
   return (
     <>
-      {/* <Drawer.Root
+      {/*
+      <Drawer.Root
         size={'sm'}
         closeOnInteractOutside={false}
         open={isOpen}
@@ -93,7 +94,6 @@ function Menu() {
                     </Drawer.CloseTrigger>
                   </Tabs.List>
                 </Flex>
-                {/* content */}
                 <Tabs.Content value="encabezado">
                   <Header />
                 </Tabs.Content>
@@ -107,7 +107,8 @@ function Menu() {
             </Drawer.Body>
           </Drawer.Content>
         </Drawer.Positioner>
-      </Drawer.Root> */}
+      </Drawer.Root>
+      */}
     </>
   );
 }

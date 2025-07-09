@@ -23,9 +23,6 @@ export const ProtectedRoutes = ({ roles, children }) => {
   const session = getVarSsn();
   const userRoles = session?.groups?.map((g) => g.id) || [1, 2];
 
-  console.log({ session });
-  console.log({ userRoles });
-
   const hasPermission = userRoles.some((r) => roles.includes(r));
   return hasPermission ? children : <Navigate to="/login" replace />;
 };

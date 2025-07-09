@@ -4,8 +4,8 @@ import {
   GoogleOAuthProvider,
 } from '@react-oauth/google';
 import { useNavigate } from 'react-router';
-import { decodedToken } from '../components/Login/isValidToken';
-import { setLogin } from '../utils/funcs';
+import { decodedToken } from '../../components/Login/isValidToken';
+import { setLogin } from '../../utils/funcs';
 
 export const Login = () => {
   const navigate = useNavigate();

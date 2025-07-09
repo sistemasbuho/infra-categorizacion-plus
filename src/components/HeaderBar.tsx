@@ -1,5 +1,5 @@
 import { finishArticle as finishArticleFunc } from '../utils/asyncFunc';
-import { useArticleContext } from '../context/ArticleContext';
+import { useArticleContext } from '../shared/context/ArticleContext';
 import { useColorModeValue } from './ui/color-mode';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';

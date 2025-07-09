@@ -10,8 +10,8 @@ import {
   editFragment,
 } from '../../../../utils/asyncFunc';
 import { useEffect, useState } from 'react';
-import { useFragmentContext } from '../../../../context/FragmentsContext';
-import { useArticleContext } from '../../../../context/ArticleContext';
+import { useFragmentContext } from '../../../../shared/context/FragmentsContext';
+import { useArticleContext } from '../../../../shared/context/ArticleContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 

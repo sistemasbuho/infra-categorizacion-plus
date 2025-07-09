@@ -3,7 +3,6 @@ import { FaFilter } from 'react-icons/fa';
 import { Articulo, useArticulosLideres } from '../../hooks/useArticulosLideres';
 import { Button } from '../../components/ui/Button';
 import { Paginacion } from '../../components/ui/Paginacion';
-import { changeEstadoArticulo } from '../../services/articulosLideresRequest';
 import toast from 'react-hot-toast';
 import { PageContainer } from '../../shared/components/Layout/PageContainer';
 import { useModal } from '../../shared/hooks/useModal';
@@ -22,6 +21,7 @@ export const MisArticulosLideres = () => {
     setPageSize,
     filters,
     setFilters,
+    changeEstado,
   } = useArticulosLideres();
 
   const { isOpen: openFiltros, toggleModal: toggleFiltros } = useModal();
@@ -30,23 +30,46 @@ export const MisArticulosLideres = () => {
   const [motivo, setMotivo] = useState('');
 
   const handleFilterChange = (key: string, value: string) => {
-    setFilters({ ...filters, [key]: value });
+    const newFilters = { ...filters };
+
+    // Si el valor está vacío, eliminar el filtro
+    if (!value || value.trim() === '') {
+      delete newFilters[key];
+    } else {
+      newFilters[key] = value;
+    }
+
+    setFilters(newFilters);
   };
 
   const handleClearFilters = () => {
     setFilters({});
-    setPage(1);
   };
 
   const handleDeleteArticle = async () => {
-    if (!selectedArticle || !motivo.trim()) {
+    if (!selectedArticle) {
+      return;
+    }
+
+    const isDeleted = selectedArticle.borrado;
+
+    // Si el artículo no está borrado, necesita un motivo para borrarlo
+    if (!isDeleted && !motivo.trim()) {
       toast.error('Por favor selecciona un motivo');
       return;
     }
 
     try {
-      await changeEstadoArticulo(selectedArticle.articulo_id, true, motivo);
-      toast.success('Artículo marcado como borrado');
+      const accion = !isDeleted;
+      const motivoToSend = isDeleted ? 'Reactivación' : motivo;
+
+      await changeEstado(selectedArticle.articulo_id, accion, motivoToSend);
+
+      const successMessage = isDeleted
+        ? 'Artículo reactivado exitosamente'
+        : 'Artículo marcado como borrado';
+
+      toast.success(successMessage);
       deleteModal.closeModal();
       setSelectedArticle(null);
       setMotivo('');

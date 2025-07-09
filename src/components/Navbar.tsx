@@ -1,4 +1,4 @@
-import { useArticleContext } from '../context/ArticleContext';
+import { useArticleContext } from '../shared/context/ArticleContext';
 
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

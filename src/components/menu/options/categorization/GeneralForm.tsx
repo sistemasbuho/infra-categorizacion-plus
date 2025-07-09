@@ -3,7 +3,7 @@ import {
   postArticleCategorization,
   deleteArticleCategorization,
 } from '../../../../utils/asyncFunc';
-import { useArticleContext } from '../../../../context/ArticleContext';
+import { useArticleContext } from '../../../../shared/context/ArticleContext';
 
 // import Select from 'react-select';
 import toast from 'react-hot-toast';

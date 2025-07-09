@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   createTema,
   deleteTema,
@@ -30,74 +31,100 @@ export type TemaContextType = {
   temasList: TemaResponse[];
   isLoading: boolean;
   totalCount: number;
-  nextPage: string | null;
-  previousPage: string | null;
+  page: number;
+  pageSize: number;
+  searchTermNombre: string;
+  searchTermProyecto: string;
+  setPage: (page: number) => void;
+  setPageSize: (pageSize: number) => void;
+  setSearchTermNombre: (search: string) => void;
+  setSearchTermProyecto: (search: string) => void;
   selectATema: (tema: TemaResponse) => void;
   createATema: (tema: LocalTema) => void;
   updateATema: (tema: TemaResponse) => void;
   deleteATema: (tema: TemaResponse) => void;
-  loadNextPage: () => void;
-  loadPreviousPage: () => void;
+  clearFilters: () => void;
 };
 
 export const useTemas = (): TemaContextType => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page') ?? '1');
+  const pageSize = Number(searchParams.get('page_size') ?? '50');
+  const searchTermNombre = searchParams.get('nombre') ?? '';
+  const searchTermProyecto = searchParams.get('proyecto_id') ?? '';
+
   const [temasList, setTemasList] = useState<TemaResponse[]>([]);
   const [selectedTema, setSelectedTema] = useState<TemaResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [nextPage, setNextPage] = useState<string | null>(null);
-  const [previousPage, setPreviousPage] = useState<string | null>(null);
+
+  const fetchTemas = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await getTemas(
+        page,
+        pageSize,
+        searchTermNombre,
+        searchTermProyecto
+      );
+      setTemasList(response.results);
+      setTotalCount(response.count);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, pageSize, searchTermNombre, searchTermProyecto]);
+
+  useEffect(() => {
+    fetchTemas();
+  }, [fetchTemas]);
+
+  const setPage = (newPage: number) => {
+    searchParams.set('page', String(newPage));
+    setSearchParams(searchParams);
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    searchParams.set('page_size', String(newPageSize));
+    searchParams.set('page', '1'); // Reset to first page when changing page size
+    setSearchParams(searchParams);
+  };
+
+  const setSearchTermNombre = (search: string) => {
+    if (search && search.trim() !== '') {
+      searchParams.set('nombre', search);
+    } else {
+      searchParams.delete('nombre');
+    }
+    searchParams.set('page', '1'); // Reset to first page when searching
+    setSearchParams(searchParams);
+  };
+
+  const setSearchTermProyecto = (search: string) => {
+    if (search && search.trim() !== '') {
+      searchParams.set('proyecto_id', search);
+    } else {
+      searchParams.delete('proyecto_id');
+    }
+    searchParams.set('page', '1'); // Reset to first page when searching
+    setSearchParams(searchParams);
+  };
+
+  const clearFilters = () => {
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('page_size', String(pageSize));
+    setSearchParams(params);
+  };
 
   function selectATema(tema: TemaResponse) {
     setSelectedTema(tema);
-  }
-
-  async function GetAllTemas() {
-    setIsLoading(true);
-    try {
-      const response = await getTemas();
-      setTemasList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function loadNextPage() {
-    if (!nextPage) return;
-    setIsLoading(true);
-    try {
-      const response = await getTemas(nextPage);
-      setTemasList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function loadPreviousPage() {
-    if (!previousPage) return;
-    setIsLoading(true);
-    try {
-      const response = await getTemas(previousPage);
-      setTemasList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
   }
 
   async function createATema(tema: LocalTema) {
     setIsLoading(true);
     try {
       await createTema(tema);
-      await GetAllTemas();
+      await fetchTemas();
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -108,7 +135,7 @@ export const useTemas = (): TemaContextType => {
     setIsLoading(true);
     try {
       await updateTema(tema);
-      await GetAllTemas();
+      await fetchTemas();
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -122,29 +149,30 @@ export const useTemas = (): TemaContextType => {
       if (selectedTema?.id === tema.id) {
         setSelectedTema(null);
       }
-      await GetAllTemas();
+      await fetchTemas();
     } catch (error) {
       setIsLoading(false);
       throw error;
     }
   }
 
-  useEffect(() => {
-    GetAllTemas();
-  }, []);
-
   return {
     temasList,
     selectedTema,
-    selectATema,
     isLoading,
     totalCount,
-    nextPage,
-    previousPage,
+    page,
+    pageSize,
+    searchTermNombre,
+    searchTermProyecto,
+    setPage,
+    setPageSize,
+    setSearchTermNombre,
+    setSearchTermProyecto,
+    selectATema,
     createATema,
     updateATema,
     deleteATema,
-    loadNextPage,
-    loadPreviousPage,
+    clearFilters,
   };
 };

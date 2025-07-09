@@ -1,62 +1,166 @@
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
+import { useTheme } from '../../../../shared/context/ThemeContext';
+import { Link } from 'react-router-dom';
+import { DeleteModal } from '../../../MisArticulosLideres/components/ActionsPanel/DeleteModal';
 
 interface ArticleHeaderProps {
   titulo: string;
-  medio: string;
-  fecha: string;
   url: string;
+  proyecto?: string;
+  isFinished?: boolean;
+  isFinalizingArticle?: boolean;
+  borrado?: boolean;
+  onCambiarEstadoArticulo?: (accion: boolean, motivo: string) => void;
+  onFinalizarCategorizacion?: () => void;
 }
 
 export const ArticleHeader = ({
   titulo,
-  medio,
-  fecha,
   url,
+  proyecto,
+  isFinished,
+  isFinalizingArticle,
+  borrado = false,
+  onCambiarEstadoArticulo,
+  onFinalizarCategorizacion,
 }: ArticleHeaderProps) => {
   const { theme } = useTheme();
-  const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [motivo, setMotivo] = useState('');
+
+  const articleForModal = {
+    titulo,
+    borrado,
+  };
+
+  const handleOpenModal = () => {
+    setIsDeleteModalOpen(true);
+    setMotivo('');
+  };
+
+  const handleCloseModal = () => {
+    setIsDeleteModalOpen(false);
+    setMotivo('');
+  };
+
+  const handleConfirmStateChange = () => {
+    if (onCambiarEstadoArticulo) {
+      const accion = !borrado;
+      onCambiarEstadoArticulo(accion, motivo);
+      setIsDeleteModalOpen(false);
+      setMotivo('');
+    }
+  };
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center gap-4 mb-4">
-        <button
-          onClick={() => navigate('/mis-articulos-lideres')}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors"
+    <>
+      <div
+        style={{
+          backgroundColor: theme === 'dark' ? '#111827' : '#F9FAFB',
+        }}
+      >
+        <div
+          className="flex items-center justify-between p-4 border-b"
           style={{
-            backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
-            borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-            color: theme === 'dark' ? '#ffffff' : '#374151',
+            borderBottomColor: theme === 'dark' ? '#374151' : '#e5e7eb',
           }}
         >
-          <FaChevronLeft />
-          <span>Volver a artículos</span>
-        </button>
+          <Link
+            to={'/mis-articulos-lider'}
+            className="flex items-center gap-2 text-lg font-medium transition-colors hover:opacity-80"
+            style={{ color: theme === 'dark' ? '#ffffff' : '#374151' }}
+          >
+            <FaChevronLeft /> Categorización de Artículo
+          </Link>
+
+          <div className="flex items-center gap-2">
+            {onCambiarEstadoArticulo && (
+              <button
+                onClick={handleOpenModal}
+                className="px-4 py-2 rounded-lg font-medium transition-colors hover:opacity-90"
+                style={{
+                  backgroundColor: borrado
+                    ? theme === 'dark'
+                      ? '#16a34a'
+                      : '#15803D'
+                    : theme === 'dark'
+                    ? '#ef4444'
+                    : '#dc2626',
+                  color: '#ffffff',
+                }}
+              >
+                {borrado ? 'Activar artículo' : 'Eliminar artículo'}
+              </button>
+            )}
+
+            {!isFinished && onFinalizarCategorizacion && (
+              <button
+                onClick={onFinalizarCategorizacion}
+                disabled={isFinalizingArticle}
+                className="px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 hover:opacity-90"
+                style={{
+                  backgroundColor: theme === 'dark' ? '#16a34a' : '#15803D',
+                  color: '#ffffff',
+                }}
+              >
+                {isFinalizingArticle ? 'Finalizando...' : 'Finalizar'}
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-6">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 group cursor-pointer transition-all duration-200 hover:opacity-80"
+            >
+              <div className="p-1 rounded bg-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] transition-colors duration-200">
+                <span className="text-white text-md">🔗</span>
+              </div>
+              <h2
+                className="text-xl font-medium transition-colors duration-200"
+                style={{
+                  color: theme === 'dark' ? '#ffffff' : '#374151',
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.color =
+                    theme === 'dark' ? '#60a5fa' : '#2563EB';
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.color =
+                    theme === 'dark' ? '#ffffff' : '#374151';
+                }}
+              >
+                {titulo}
+              </h2>
+            </a>
+            {proyecto && (
+              <span
+                className="text-sm font-medium px-2 py-1 rounded-md"
+                style={{
+                  backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
+                  color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                }}
+              >
+                {proyecto}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold mb-2">{titulo}</h1>
-        <div className="flex flex-wrap gap-4 text-sm">
-          <span>
-            <strong>Medio:</strong> {medio}
-          </span>
-          <span>
-            <strong>Fecha:</strong>{' '}
-            {new Date(fecha).toLocaleDateString('es-ES')}
-          </span>
-        </div>
-        <div className="mt-2">
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:text-blue-700 text-sm"
-          >
-            {url}
-          </a>
-        </div>
-      </div>
-    </div>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        selectedArticle={articleForModal}
+        motivo={motivo}
+        onClose={handleCloseModal}
+        onMotivoChange={setMotivo}
+        onConfirm={handleConfirmStateChange}
+      />
+    </>
   );
 };

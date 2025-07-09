@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme } from '../../../../shared/context/ThemeContext';
+import { FaPen, FaPencilRuler, FaPenFancy, FaPenNib } from 'react-icons/fa';
 
 interface Fragmento {
   id: string;
@@ -14,6 +15,7 @@ interface ArticleContentProps {
   activeSection: string | null;
   toggleSection: (section: string) => void;
   onTextSelection: (event: React.MouseEvent<HTMLDivElement>) => void;
+  fontSize: number;
 }
 
 export const ArticleContent = ({
@@ -22,6 +24,7 @@ export const ArticleContent = ({
   activeSection,
   toggleSection,
   onTextSelection,
+  fontSize,
 }: ArticleContentProps) => {
   const { theme } = useTheme();
   const articleTextRef = useRef<HTMLDivElement>(null);
@@ -42,7 +45,9 @@ export const ArticleContent = ({
       const highlighted = highlightedText.substring(startIndex, endIndex);
       const after = highlightedText.substring(endIndex);
 
-      highlightedText = `${before}<mark style="background-color: #fef3c7; padding: 2px 4px; border-radius: 3px; cursor: pointer;" title="Categoría: ${
+      highlightedText = `${before}<mark id="fragment-${
+        fragment.id
+      }" style="background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 1px solid #a855f7;" title="Categoría: ${
         fragment.categoria || 'Sin categoría'
       }">${highlighted}</mark>${after}`;
     });
@@ -59,7 +64,7 @@ export const ArticleContent = ({
     >
       <button
         onClick={() => toggleSection('transcription')}
-        className="w-full flex items-center justify-between p-4 text-left transition-colors"
+        className="w-full flex items-center justify-between p-4 text-left transition-colors cursor-pointer"
         style={{
           backgroundColor:
             activeSection === 'transcription'
@@ -97,9 +102,11 @@ export const ArticleContent = ({
           <div
             ref={articleTextRef}
             id="article-content"
-            className="prose max-w-none text-sm leading-relaxed cursor-text"
+            className="prose max-w-none leading-relaxed cursor-text"
             style={{
               color: theme === 'dark' ? '#e5e7eb' : '#374151',
+              fontSize: `${fontSize}px`,
+              lineHeight: '1.6',
             }}
             onMouseUp={onTextSelection}
             dangerouslySetInnerHTML={{

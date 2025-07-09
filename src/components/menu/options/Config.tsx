@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ColorModeButton } from '../../ui/color-mode';
-import { useConfig } from '../../../context/ConfigContext';
+import { useConfig } from '../../../shared/context/ConfigContext';
 import { FaFont } from 'react-icons/fa';
 
 const Config: React.FC = () => {

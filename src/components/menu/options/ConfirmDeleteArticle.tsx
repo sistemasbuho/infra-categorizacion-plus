@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { article, GeneralOption } from '../../../interfaces/generals';
-import { useArticleContext } from '../../../context/ArticleContext';
+import { useArticleContext } from '../../../shared/context/ArticleContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { putArticle } from '../../../utils/asyncFunc';
 import { faClose } from '@fortawesome/free-solid-svg-icons';

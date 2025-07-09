@@ -5,11 +5,18 @@ import { TagResponse, PaginatedResponse } from '../hooks/useTags';
 let config: AxiosRequestConfig = {};
 
 export async function getTags(
-  url?: string
+  page: number = 1,
+  pageSize: number = 50,
+  nombre: string = ''
 ): Promise<PaginatedResponse<TagResponse>> {
   config = {
     method: 'GET',
-    url: url || 'tags/',
+    url: 'tags/',
+    params: {
+      page,
+      page_size: pageSize,
+      ...(nombre && { nombre }),
+    },
   };
   return await categorizationPlusRequest<PaginatedResponse<TagResponse>>(
     config

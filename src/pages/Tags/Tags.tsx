@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   FaFilter,
   FaPlus,
@@ -13,11 +13,10 @@ import { Button } from '../../components/ui/Button';
 import DrawerModal from '../../components/modal/DrawerModal';
 import TagForm from '../../components/forms/TagForm';
 import toast from 'react-hot-toast';
-import { deleteATag } from '../../services/tagRequest';
 import PanelDeFiltros, {
   FiltrosTemas,
 } from '../../components/ui/PanelDeFiltros';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../shared/context/ThemeContext';
 
 export const columns: ColumnDef<TagResponse>[] = [
   {
@@ -87,48 +86,54 @@ export const Tags = () => {
     createATag,
     selectedTag,
     updateATag,
+    deleteTag,
     totalCount,
-    nextPage,
-    previousPage,
-    loadNextPage,
-    loadPreviousPage,
+    page,
+    pageSize,
+    searchTerm,
+    setPage,
+    setPageSize,
+    setSearchTerm,
+    clearFilters,
   } = useTags();
 
   const [activeModal, setActiveModal] = useState<
-    'create' | 'edit' | 'delete' | 'filters' | null
+    'create' | 'edit' | 'delete' | null
   >(null);
 
-  const openModal = (type: 'create' | 'edit' | 'delete' | 'filters') =>
+  const [openFiltros, setOpenFiltros] = useState(false);
+  const [filtros, setFiltros] = useState<FiltrosTemas>({
+    nombre: searchTerm,
+  });
+
+  // Sincronizar filtros con searchTerm del URL
+  useEffect(() => {
+    setFiltros((prev) => ({
+      ...prev,
+      nombre: searchTerm,
+    }));
+  }, [searchTerm]);
+
+  const openModal = (type: 'create' | 'edit' | 'delete') =>
     setActiveModal(type);
   const closeModal = () => setActiveModal(null);
 
-  // Estados de filtros
-  const [openFiltros, setOpenFiltros] = useState(false);
-  const [filtros, setFiltros] = useState<FiltrosTemas>({});
-  const onChangeFiltro = (key: keyof FiltrosTemas, value: string) =>
-    setFiltros((prev) => ({ ...prev, [key]: value }));
-  const onClear = () => setFiltros({});
+  const onChangeFiltro = (key: keyof FiltrosTemas, value: string) => {
+    const newFiltros = { ...filtros, [key]: value };
+    setFiltros(newFiltros);
 
-  const filtered = useMemo(() => {
-    return tagList.filter((t) => {
-      if (
-        filtros.nombre &&
-        !t.nombre.toLowerCase().includes(filtros.nombre.toLowerCase())
-      )
-        return false;
-      if (
-        filtros.created_gte &&
-        new Date(t.created_at) < new Date(filtros.created_gte)
-      )
-        return false;
-      if (
-        filtros.created_lte &&
-        new Date(t.created_at) > new Date(filtros.created_lte + 'T23:59:59')
-      )
-        return false;
-      return true;
-    });
-  }, [tagList, filtros]);
+    // Aplicar filtro de nombre inmediatamente a la API
+    if (key === 'nombre') {
+      setSearchTerm(value);
+    }
+  };
+
+  const onClear = () => {
+    setFiltros({});
+    clearFilters();
+  };
+
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div
@@ -138,7 +143,7 @@ export const Tags = () => {
         color: theme === 'dark' ? '#ffffff' : '#111827',
       }}
     >
-      <div className="flex justify-between w-full mb-10">
+      <div className="flex justify-between w-full mb-6">
         <h1
           className="text-4xl font-bold"
           style={{ color: theme === 'dark' ? '#ffffff' : '#111827' }}
@@ -170,8 +175,21 @@ export const Tags = () => {
         filtros={filtros}
         onChangeFiltro={onChangeFiltro}
         onClear={onClear}
+        showNombre={true}
         showProyecto={false}
+        showFechaCreado={false}
       />
+
+      {/* Results count */}
+      <div className="mb-4">
+        <span
+          className="text-sm"
+          style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+        >
+          {totalCount} tags encontrados
+          {searchTerm && ` para "${searchTerm}"`}
+        </span>
+      </div>
 
       {isLoading ? (
         <Skeleton columns={columns.length} rows={5} />
@@ -179,17 +197,18 @@ export const Tags = () => {
         <>
           <TableBase
             columns={columns}
-            data={filtered}
+            data={tagList}
             selectRow={selectATag}
             openModal={() => openModal('edit')}
             openDeleteOption={() => openModal('delete')}
           />
 
+          {/* Pagination */}
           <div className="flex justify-between items-center mt-6">
             <Button
               variant="outline"
-              onClick={loadPreviousPage}
-              disabled={!previousPage}
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
               className="flex items-center gap-2"
             >
               <FaChevronLeft />
@@ -201,14 +220,31 @@ export const Tags = () => {
                 className="text-sm"
                 style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
               >
-                {tagList.length} de {totalCount} tags
+                Página {page} de {totalPages}
               </span>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="px-2 py-1 rounded border text-sm"
+                style={{
+                  backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
+                  color: theme === 'dark' ? '#ffffff' : '#111827',
+                  border: `1px solid ${
+                    theme === 'dark' ? '#4b5563' : '#d1d5db'
+                  }`,
+                }}
+              >
+                <option value={10}>10 por página</option>
+                <option value={25}>25 por página</option>
+                <option value={50}>50 por página</option>
+                <option value={100}>100 por página</option>
+              </select>
             </div>
 
             <Button
               variant="outline"
-              onClick={loadNextPage}
-              disabled={!nextPage}
+              onClick={() => setPage(page + 1)}
+              disabled={page >= totalPages}
               className="flex items-center gap-2"
             >
               Siguiente
@@ -222,7 +258,9 @@ export const Tags = () => {
             className="text-xl font-semibold"
             style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
           >
-            No se han encontrado tags
+            {searchTerm
+              ? `No se encontraron tags para "${searchTerm}"`
+              : 'No se han encontrado tags'}
           </h2>
         </div>
       )}
@@ -238,8 +276,12 @@ export const Tags = () => {
             try {
               await createATag(data as TagResponse);
               toast.success('Tag creado correctamente');
-            } catch {
-              toast.error('Error al crear el tag');
+            } catch (error: any) {
+              if (error?.response?.status === 400) {
+                toast.error('El nombre del tag ya existe');
+              } else {
+                toast.error('Error al crear el tag');
+              }
             } finally {
               closeModal();
             }
@@ -295,7 +337,7 @@ export const Tags = () => {
               }}
               onClick={async () => {
                 try {
-                  await deleteATag(selectedTag.id);
+                  await deleteTag(selectedTag);
                   toast.success('Tag eliminado correctamente');
                 } catch {
                   toast.error('Error al eliminar el tag');

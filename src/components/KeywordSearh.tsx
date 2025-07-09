@@ -1,4 +1,4 @@
-import { useArticleContext } from '../context/ArticleContext';
+import { useArticleContext } from '../shared/context/ArticleContext';
 
 function KeywordSearch() {
   const { keywords } = useArticleContext().articleState.article;

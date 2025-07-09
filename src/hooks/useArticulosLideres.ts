@@ -94,11 +94,18 @@ export const useArticulosLideres = () => {
   };
 
   const setFilters = (newFilters: Record<string, string>) => {
-    const params = new URLSearchParams({
-      page: '1',
-      page_size: String(pageSize),
-      ...newFilters,
+    // Crear nuevos parámetros solo con page y page_size
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('page_size', String(pageSize));
+
+    // Agregar solo los filtros que tienen valor y no están vacíos
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value && value.toString().trim() !== '') {
+        params.set(key, value);
+      }
     });
+
     setSearchParams(params);
   };
 

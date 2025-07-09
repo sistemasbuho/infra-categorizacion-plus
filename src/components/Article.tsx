@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { faCloudArrowUp, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { isOverlappingFragment } from '../utils/funcs';
-import { useFragmentContext } from '../context/FragmentsContext';
+import { useFragmentContext } from '../shared/context/FragmentsContext';
 import { HighlightSelection } from '../interfaces/generals';
-import { useArticleContext } from '../context/ArticleContext';
+import { useArticleContext } from '../shared/context/ArticleContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { editArticleText } from '../utils/asyncFunc';
-import { useConfig } from '../context/ConfigContext';
+import { useConfig } from '../shared/context/ConfigContext';
 
 import styles from '../assets/css/article.module.css';
 import toast from 'react-hot-toast';

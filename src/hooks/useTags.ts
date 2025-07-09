@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   createTag,
   deleteATag,
@@ -33,75 +34,82 @@ export type TagContextType = {
   tagList: TagResponse[];
   isLoading: boolean;
   totalCount: number;
-  nextPage: string | null;
-  previousPage: string | null;
+  page: number;
+  pageSize: number;
+  searchTerm: string;
+  setPage: (page: number) => void;
+  setPageSize: (pageSize: number) => void;
+  setSearchTerm: (search: string) => void;
   selectATag: (tag: TagResponse) => void;
   createATag: (tag: TagResponse) => void;
   updateATag: (tag: TagResponse) => void;
   deleteTag: (tag: TagResponse) => void;
-  loadNextPage: () => void;
-  loadPreviousPage: () => void;
+  clearFilters: () => void;
 };
 
 export const useTags = (): TagContextType => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page') ?? '1');
+  const pageSize = Number(searchParams.get('page_size') ?? '50');
+  const searchTerm = searchParams.get('nombre') ?? '';
+
   const [tagList, setTagList] = useState<TagResponse[]>([]);
   const [selectedTag, setSelectedTag] = useState<TagResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const [nextPage, setNextPage] = useState<string | null>(null);
-  const [previousPage, setPreviousPage] = useState<string | null>(null);
+
+  const fetchTags = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await getTags(page, pageSize, searchTerm);
+      setTagList(response.results);
+      setTotalCount(response.count);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, pageSize, searchTerm]);
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
+
+  const setPage = (newPage: number) => {
+    searchParams.set('page', String(newPage));
+    setSearchParams(searchParams);
+  };
+
+  const setPageSize = (newPageSize: number) => {
+    searchParams.set('page_size', String(newPageSize));
+    searchParams.set('page', '1'); // Reset to first page when changing page size
+    setSearchParams(searchParams);
+  };
+
+  const setSearchTerm = (search: string) => {
+    if (search && search.trim() !== '') {
+      searchParams.set('nombre', search);
+    } else {
+      searchParams.delete('nombre');
+    }
+    searchParams.set('page', '1'); // Reset to first page when searching
+    setSearchParams(searchParams);
+  };
+
+  const clearFilters = () => {
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('page_size', String(pageSize));
+    setSearchParams(params);
+  };
 
   function selectATag(tag: TagResponse) {
     setSelectedTag(tag);
-  }
-
-  async function GetAllTags() {
-    setIsLoading(true);
-    try {
-      const response = await getTags();
-      setTagList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function loadNextPage() {
-    if (!nextPage) return;
-    setIsLoading(true);
-    try {
-      const response = await getTags(nextPage);
-      setTagList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function loadPreviousPage() {
-    if (!previousPage) return;
-    setIsLoading(true);
-    try {
-      const response = await getTags(previousPage);
-      setTagList(response.results);
-      setTotalCount(response.count);
-      setNextPage(response.next);
-      setPreviousPage(response.previous);
-    } finally {
-      setIsLoading(false);
-    }
   }
 
   async function createATag(tag: TagResponse) {
     setIsLoading(true);
     try {
       await createTag(tag);
-      // Refrescar la lista completa después de crear
-      await GetAllTags();
+      await fetchTags();
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -112,7 +120,7 @@ export const useTags = (): TagContextType => {
     setIsLoading(true);
     try {
       await updateTag(tag);
-      await GetAllTags();
+      await fetchTags();
     } catch (error) {
       setIsLoading(false);
       throw error;
@@ -126,29 +134,28 @@ export const useTags = (): TagContextType => {
       if (selectedTag?.id === tag.id) {
         setSelectedTag(null);
       }
-      await GetAllTags();
+      await fetchTags();
     } catch (error) {
       setIsLoading(false);
       throw error;
     }
   }
 
-  useEffect(() => {
-    GetAllTags();
-  }, []);
-
   return {
     tagList,
     selectedTag,
     isLoading,
     totalCount,
-    nextPage,
-    previousPage,
+    page,
+    pageSize,
+    searchTerm,
+    setPage,
+    setPageSize,
+    setSearchTerm,
     selectATag,
     createATag,
     updateATag,
     deleteTag,
-    loadNextPage,
-    loadPreviousPage,
+    clearFilters,
   };
 };

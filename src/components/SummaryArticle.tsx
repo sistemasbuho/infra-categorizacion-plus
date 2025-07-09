@@ -1,6 +1,6 @@
 import style from '../assets/css/components/sumaryArticle.module.css';
-import { useArticleContext } from '../context/ArticleContext';
-import { useConfig } from '../context/ConfigContext';
+import { useArticleContext } from '../shared/context/ArticleContext';
+import { useConfig } from '../shared/context/ConfigContext';
 
 function SummaryArticle() {
   const { fontSize } = useConfig();

@@ -1,4 +1,4 @@
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../shared/context/ThemeContext';
 
 function Home() {
   const { theme } = useTheme();

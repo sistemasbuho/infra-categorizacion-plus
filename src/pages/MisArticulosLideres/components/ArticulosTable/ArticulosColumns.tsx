@@ -1,5 +1,4 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { FaTimes } from 'react-icons/fa';
 import { Link } from '../../../../components/ui/Link';
 import { Button } from '../../../../components/ui/Button';
 import { Articulo } from '../../../../hooks/useArticulosLideres';
@@ -40,7 +39,7 @@ export const createArticulosColumns = (
         size="sm"
         className="w-full p-2"
       >
-        Pasar a borrado
+        {row.original.borrado ? 'Pasar a activo' : 'Pasar a borrado'}
       </Button>
     ),
   }),

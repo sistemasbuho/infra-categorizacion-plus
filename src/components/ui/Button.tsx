@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, FC, ReactNode } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../shared/context/ThemeContext';
 
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';

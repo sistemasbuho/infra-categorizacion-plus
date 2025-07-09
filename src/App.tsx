@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { Login } from './pages/Login';
 import useToken from './hooks/useToken';
 import Sidebar from './components/Sidebar';
 import { routes } from './routes/routes';
 import { ProtectedRoutes } from './routes/ProtectedRoutes';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
+import { Login } from './pages/Login/Login';
 
 function App() {
   const { token } = useToken();

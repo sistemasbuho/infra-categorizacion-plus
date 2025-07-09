@@ -11,11 +11,20 @@ export interface ProyectoResponse {
 }
 
 export async function getTemas(
-  url?: string
+  page: number = 1,
+  pageSize: number = 50,
+  nombre: string = '',
+  proyecto_id: string = ''
 ): Promise<PaginatedResponse<TemaResponse>> {
   config = {
     method: 'GET',
-    url: url || 'temas/',
+    url: 'temas/',
+    params: {
+      page,
+      page_size: pageSize,
+      ...(nombre && { nombre }),
+      ...(proyecto_id && { proyecto_id }),
+    },
   };
   return await categorizationPlusRequest<PaginatedResponse<TemaResponse>>(
     config

@@ -1,6 +1,6 @@
 import { Autores, GeneralOption, Medios } from '../../../interfaces/generals';
 import { useEffect, useState } from 'react';
-import { useArticleContext } from '../../../context/ArticleContext';
+import { useArticleContext } from '../../../shared/context/ArticleContext';
 import { postHeader } from '../../../utils/asyncFunc';
 
 // import AsyncSelectMedio from '../../asyncSelects/AsyncSelectMedio';

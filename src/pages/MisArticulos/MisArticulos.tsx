@@ -1,4 +1,4 @@
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../shared/context/ThemeContext';
 
 export const MisArticulos = () => {
   const { theme } = useTheme();

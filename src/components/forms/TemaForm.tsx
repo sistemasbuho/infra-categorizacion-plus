@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { TemaResponse } from '../../hooks/useTemas';
 import { useState, useEffect, useRef } from 'react';
 import { searchProyectos } from '../../services/temaRequest';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../shared/context/ThemeContext';
 
 export type LocalTema = {
   nombre: string;
