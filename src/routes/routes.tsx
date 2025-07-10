@@ -1,15 +1,6 @@
 import { IconType } from 'react-icons';
 import {
   FaHome,
-  FaList,
-  FaFileAlt,
-  FaEnvelope,
-  FaUsers,
-  FaHashtag,
-  FaClipboardList,
-  FaChartBar,
-  FaShare,
-  FaUserPlus,
   FaCrown,
   FaTags,
   FaThList,
@@ -21,7 +12,6 @@ import {
   FaUserTie,
   FaNewspaper,
   FaLayerGroup,
-  FaClipboard,
 } from 'react-icons/fa';
 import { MisArticulosLideres } from '../pages/MisArticulosLideres/MisArticulosLideres';
 import { Tags } from '../pages/Tags/Tags';

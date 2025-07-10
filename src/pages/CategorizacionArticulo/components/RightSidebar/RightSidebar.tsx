@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
+import { toast } from 'react-hot-toast';
 import {
   FaCog,
   FaList,
@@ -10,6 +11,11 @@ import {
   FaUserEdit,
   FaTrash,
 } from 'react-icons/fa';
+import AsyncSelectTema from '../../../../components/asyncSelects/AsyncSelectTema';
+import AsyncSelectTag from '../../../../components/asyncSelects/AsyncSelectTag';
+import AsyncSelectTono from '../../../../components/asyncSelects/AsyncSelectTono';
+import AsyncSelectActivoPasivo from '../../../../components/asyncSelects/AsyncSelectActivoPasivo';
+import AsyncSelectTipo from '../../../../components/asyncSelects/AsyncSelectTipo';
 
 interface RightSidebarProps {
   articuloData: any;
@@ -20,6 +26,9 @@ interface RightSidebarProps {
   fragmentos: any[];
   onFragmentClick: (fragmento: any) => void;
   onDeleteFragment: (fragmentoId: string) => void;
+  tags?: any[];
+  temas?: any[];
+  proyectoId?: string;
 }
 
 export const RightSidebar = ({
@@ -31,9 +40,149 @@ export const RightSidebar = ({
   fragmentos,
   onFragmentClick,
   onDeleteFragment,
+  tags,
+  temas,
+  proyectoId,
 }: RightSidebarProps) => {
   const { theme } = useTheme();
   const [categorizationView, setCategorizationView] = useState('fragmentos');
+
+  // Estados para almacenar las selecciones de categorización
+  const [selectedTema, setSelectedTema] = useState<any[]>([]);
+  const [selectedTag, setSelectedTag] = useState<any[]>([]);
+  const [selectedActivo, setSelectedActivo] = useState<any[]>([]);
+  const [selectedPasivo, setSelectedPasivo] = useState<any[]>([]);
+  const [selectedTono, setSelectedTono] = useState<any[]>([]);
+
+  // Estados para categorización general
+  const [selectedTemaGeneral, setSelectedTemaGeneral] = useState<any[]>([]);
+  const [selectedTagGeneral, setSelectedTagGeneral] = useState<any[]>([]);
+  const [selectedTipo, setSelectedTipo] = useState<any[]>([]);
+
+  // Funciones callback para manejar las respuestas de los AsyncSelect
+  const handleTemaResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTema(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handleTagResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTag(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handleActivoResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedActivo(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handlePasivoResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedPasivo(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handleTonoResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTono(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  // Funciones callback para categorización general
+  const handleTemaGeneralResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTemaGeneral(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handleTagGeneralResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTagGeneral(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  const handleTipoResponse = (response: any, input: string) => {
+    if (response) {
+      setSelectedTipo(Array.isArray(response) ? response : [response]);
+    }
+  };
+
+  // Funciones de guardado
+  const handleSaveFragmentCategorization = async () => {
+    try {
+      // Validar que se haya seleccionado al menos un tema
+      if (selectedTema.length === 0) {
+        toast.error('Por favor seleccione al menos un tema');
+        return;
+      }
+
+      // TODO: Implementar la llamada a la API para guardar la categorización por fragmento
+      console.log('Guardando categorización por fragmento:', {
+        tema: selectedTema,
+        tag: selectedTag,
+        activo: selectedActivo,
+        pasivo: selectedPasivo,
+        tono: selectedTono,
+        tipo: selectedTipo,
+      });
+
+      toast.success('Categorización por fragmento guardada exitosamente');
+
+      // Limpiar selecciones después de guardar
+      setSelectedTema([]);
+      setSelectedTag([]);
+      setSelectedActivo([]);
+      setSelectedPasivo([]);
+      setSelectedTono([]);
+      setSelectedTipo([]);
+    } catch (error) {
+      console.error('Error al guardar categorización por fragmento:', error);
+      toast.error('Error al guardar la categorización por fragmento');
+    }
+  };
+
+  const handleSaveGeneralCategorization = async () => {
+    try {
+      // Validar que se haya seleccionado al menos un tema
+      if (selectedTemaGeneral.length === 0) {
+        toast.error('Por favor seleccione al menos un tema');
+        return;
+      }
+
+      // TODO: Implementar la llamada a la API para guardar la categorización general
+      console.log('Guardando categorización general:', {
+        tema: selectedTemaGeneral,
+        tag: selectedTagGeneral,
+      });
+
+      toast.success('Categorización general guardada exitosamente');
+
+      // Limpiar selecciones después de guardar
+      setSelectedTemaGeneral([]);
+      setSelectedTagGeneral([]);
+    } catch (error) {
+      console.error('Error al guardar categorización general:', error);
+      toast.error('Error al guardar la categorización general');
+    }
+  };
+
+  const handleCancelFragmentCategorization = () => {
+    setSelectedTema([]);
+    setSelectedTag([]);
+    setSelectedActivo([]);
+    setSelectedPasivo([]);
+    setSelectedTono([]);
+    setSelectedTipo([]);
+    toast.success('Categorización por fragmento cancelada');
+  };
+
+  const handleCancelGeneralCategorization = () => {
+    setSelectedTemaGeneral([]);
+    setSelectedTagGeneral([]);
+    toast.success('Categorización general cancelada');
+  };
 
   const tabs = [
     { id: 'info', icon: FaList, label: 'Información' },
@@ -125,16 +274,12 @@ export const RightSidebar = ({
                   <FaList className="w-4 h-4 text-blue-500" />
                   Tipo
                 </label>
-                <select
-                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  style={{
-                    backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-                    borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                    color: theme === 'dark' ? '#ffffff' : '#374151',
-                  }}
-                >
-                  <option>Select...</option>
-                </select>
+                <AsyncSelectTipo
+                  sendResponse={handleTipoResponse}
+                  placeholder="Seleccionar tipo"
+                  isMulti={false}
+                  name="tipo"
+                />
               </div>
 
               <div className="group">
@@ -486,17 +631,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-green-500" />
                       Tema
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                      style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
-                      }}
-                    >
-                      <option>Select...</option>
-                    </select>
+                    <AsyncSelectTema
+                      projectId={proyectoId ? parseInt(proyectoId) : 1}
+                      sendResponse={handleTemaResponse}
+                      placeholder="Seleccionar tema"
+                      isMulti={true}
+                      name="tema"
+                    />
                   </div>
 
                   <div className="group">
@@ -509,17 +650,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                      style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
-                      }}
-                    >
-                      <option>Select...</option>
-                    </select>
+                    <AsyncSelectTag
+                      projectId={proyectoId ? parseInt(proyectoId) : 1}
+                      sendResponse={handleTagResponse}
+                      placeholder="Seleccionar tag"
+                      isMulti={true}
+                      name="tag"
+                    />
                   </div>
 
                   <div className="group">
@@ -532,17 +669,14 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-blue-500" />
                       Activo
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                      style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
-                      }}
-                    >
-                      <option>Buscar</option>
-                    </select>
+                    <AsyncSelectActivoPasivo
+                      sendResponse={handleActivoResponse}
+                      placeholder="Seleccionar activo"
+                      isMulti={true}
+                      name="activo"
+                      isDisabled={false}
+                      value={selectedActivo}
+                    />
                   </div>
 
                   <div className="group">
@@ -555,17 +689,14 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-orange-500" />
                       Pasivo
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                      style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
-                      }}
-                    >
-                      <option>Buscar</option>
-                    </select>
+                    <AsyncSelectActivoPasivo
+                      sendResponse={handlePasivoResponse}
+                      placeholder="Seleccionar pasivo"
+                      isMulti={true}
+                      name="pasivo"
+                      isDisabled={false}
+                      value={selectedPasivo}
+                    />
                   </div>
 
                   <div className="group">
@@ -578,17 +709,12 @@ export const RightSidebar = ({
                       <FaCog className="w-4 h-4 text-indigo-500" />
                       Tonalidad
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                      style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
-                      }}
-                    >
-                      <option>Neutral</option>
-                    </select>
+                    <AsyncSelectTono
+                      sendResponse={handleTonoResponse}
+                      placeholder="Seleccionar tonalidad"
+                      isMulti={false}
+                      name="tonalidad"
+                    />
                   </div>
                 </div>
 
@@ -619,6 +745,7 @@ export const RightSidebar = ({
 
                 <div className="flex gap-3 mt-6">
                   <button
+                    onClick={handleCancelFragmentCategorization}
                     className="flex-1 py-3 px-4 border rounded-lg text-sm font-medium transition-all duration-200"
                     style={{
                       backgroundColor:
@@ -641,7 +768,10 @@ export const RightSidebar = ({
                   >
                     Cancelar
                   </button>
-                  <button className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg">
+                  <button
+                    onClick={handleSaveFragmentCategorization}
+                    className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg"
+                  >
                     Guardar
                   </button>
                 </div>
@@ -650,12 +780,21 @@ export const RightSidebar = ({
 
             {categorizationView === 'general' && (
               <div className="space-y-6">
-                {/* <div
+                <div
                   className="rounded-lg p-4"
                   style={{
                     backgroundColor: theme === 'dark' ? '#374151' : '#f9fafb',
                   }}
                 >
+                  <h4
+                    className="font-semibold mb-3 flex items-center gap-2"
+                    style={{
+                      color: theme === 'dark' ? '#d1d5db' : '#374151',
+                    }}
+                  >
+                    <FaCog className="w-4 h-4 text-blue-500" />
+                    Categoría General
+                  </h4>
                   <div className="group">
                     <label
                       className="flex items-center gap-2 text-sm font-semibold mb-2"
@@ -663,25 +802,40 @@ export const RightSidebar = ({
                         color: theme === 'dark' ? '#d1d5db' : '#374151',
                       }}
                     >
-                      <FaCog className="w-4 h-4 text-blue-500" />
-                      Categoría General
+                      <FaList className="w-4 h-4 text-blue-500" />
+                      Tema
                     </label>
-                    <select
-                      className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
+                    <AsyncSelectTema
+                      projectId={proyectoId ? parseInt(proyectoId) : 1}
+                      sendResponse={handleTemaGeneralResponse}
+                      placeholder="Seleccionar tema"
+                      isMulti={true}
+                      name="temaGeneral"
+                    />
+                  </div>
+                  <div className="group">
+                    <label
+                      className="flex items-center gap-2 text-sm font-semibold mb-2"
                       style={{
-                        backgroundColor:
-                          theme === 'dark' ? '#374151' : '#ffffff',
-                        borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                        color: theme === 'dark' ? '#ffffff' : '#374151',
+                        color: theme === 'dark' ? '#d1d5db' : '#374151',
                       }}
                     >
-                      <option>Select...</option>
-                    </select>
+                      <FaList className="w-4 h-4 text-purple-500" />
+                      Tag
+                    </label>
+                    <AsyncSelectTag
+                      projectId={proyectoId ? parseInt(proyectoId) : 1}
+                      sendResponse={handleTagGeneralResponse}
+                      placeholder="Seleccionar tag"
+                      isMulti={true}
+                      name="tagGeneral"
+                    />
                   </div>
                 </div>
 
                 <div className="flex gap-3">
                   <button
+                    onClick={handleCancelGeneralCategorization}
                     className="flex-1 py-3 px-4 border rounded-lg text-sm font-medium transition-all duration-200"
                     style={{
                       backgroundColor:
@@ -704,10 +858,13 @@ export const RightSidebar = ({
                   >
                     Cancelar
                   </button>
-                  <button className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg">
+                  <button
+                    onClick={handleSaveGeneralCategorization}
+                    className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg"
+                  >
                     Guardar
                   </button>
-                </div> */}
+                </div>
               </div>
             )}
           </div>

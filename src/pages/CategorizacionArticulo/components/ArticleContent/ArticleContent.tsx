@@ -47,9 +47,9 @@ export const ArticleContent = ({
 
       highlightedText = `${before}<mark id="fragment-${
         fragment.id
-      }" style="background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 1px solid #a855f7;" title="Categoría: ${
+      }" style="background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 2px solid #a855f7; user-select: none;" title="Fragmento categorizado - Categoría: ${
         fragment.categoria || 'Sin categoría'
-      }">${highlighted}</mark>${after}`;
+      }&#10;Clic para ver detalles&#10;Esta porción ya está fragmentada y no se puede seleccionar nuevamente">${highlighted}</mark>${after}`;
     });
 
     return highlightedText;

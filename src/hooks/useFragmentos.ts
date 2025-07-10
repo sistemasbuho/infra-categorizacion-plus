@@ -12,6 +12,7 @@ import {
   FragmentoAPI,
 } from '../services/fragmentoRequest';
 import { changeEstadoArticulo } from '../services/articulosLideresRequest';
+import { isOverlappingFragment } from '../utils/funcs';
 
 interface Fragmento {
   id: string;
@@ -164,11 +165,45 @@ export const useFragmentos = (
 
       setArticuloData(transformedArticulo);
       setFragmentos(transformedFragmentos);
-      setTags([]); // Por ahora vacío, se puede llenar después
-      setTemas([]); // Por ahora vacío, se puede llenar después
-      setPrograma([]);
-      setTipo([]);
-      setKeywords([]);
+
+      // Ahora necesitamos cargar los datos de tags y temas usando una segunda llamada
+      // porque la API categorizarArticulo no devuelve estos datos
+      try {
+        const categorizationData = await getFragmentosCategorizacion(
+          articuloId
+        );
+
+        if (categorizationData && categorizationData.tags) {
+          setTags(categorizationData.tags);
+        }
+
+        if (categorizationData && categorizationData.temas) {
+          setTemas(categorizationData.temas);
+        }
+
+        if (categorizationData && categorizationData.programa) {
+          setPrograma(categorizationData.programa);
+        }
+
+        if (categorizationData && categorizationData.tipo) {
+          setTipo(categorizationData.tipo);
+        }
+
+        if (categorizationData && categorizationData.keyword) {
+          setKeywords(categorizationData.keyword);
+        }
+      } catch (categorizationError) {
+        console.warn(
+          'Error al cargar datos de categorización:',
+          categorizationError
+        );
+        // No lanzamos error aquí porque los datos principales del artículo se cargaron correctamente
+        setTags([]);
+        setTemas([]);
+        setPrograma([]);
+        setTipo([]);
+        setKeywords([]);
+      }
     } catch (err) {
       console.error('Error al cargar datos del artículo:', err);
       setError('Error al cargar los datos del artículo');
@@ -187,6 +222,27 @@ export const useFragmentos = (
   ) => {
     try {
       setIsCreatingFragment(true);
+
+      // Validar que no se superponga con fragmentos existentes
+      const fragmentosParaValidacion = fragmentos.map((frag) => ({
+        id: parseInt(frag.id) || Date.now(),
+        start_index: frag.posicion_inicio,
+        article_fragment: frag.texto,
+        end_index: frag.posicion_fin,
+      }));
+
+      if (
+        isOverlappingFragment({
+          startIndex: fragmentoData.posicion_inicio,
+          length: fragmentoData.texto.length,
+          allFragments: fragmentosParaValidacion,
+        })
+      ) {
+        toast.error(
+          'No se puede crear un fragmento que se superponga con uno existente'
+        );
+        return;
+      }
 
       // Comentado para usar datos mock por ahora
       // const response = await createFragmento(fragmentoData);

@@ -1,8 +1,6 @@
-import {
-  Categorization,
-  editCategorization,
-} from '../pendientepormover/interfaces/generals';
+import { Categorization, editCategorization } from '../shared/types/generals';
 import { GeneralRequest } from './funcs';
+import { categorizationPlusRequest } from '../services/axiosRequest';
 
 /*
 ============================================================
@@ -121,4 +119,12 @@ export async function reportarTiempo(id: number, body) {
 
 export async function editArticleText(id: number, body: { texto: string }) {
   return await GeneralRequest(`editar_texto/${id}`, 'PUT', body);
+}
+
+export async function getTipoPublicacionCategorization(query: string) {
+  return await categorizationPlusRequest({
+    method: 'GET',
+    url: 'tipo-publicacion/buscar/',
+    params: { nombre: query },
+  });
 }

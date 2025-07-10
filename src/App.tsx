@@ -5,7 +5,7 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import useToken from './hooks/useToken';
 import Sidebar from './components/Sidebar';
 import { routes } from './routes/routes';
-import { ProtectedRoutes } from './routes/ProtectedRoutes';
+import { ProtectedRoutes } from './auth/ProtectedRoutes';
 import Home from './pages/Home/Home';
 import { Login } from './pages/Login/Login';
 
@@ -40,10 +40,10 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          {!token ? (
-            <Route path="/login" element={<Login />} />
-          ) : (
+          {token ? (
+            // Usuario autenticado: mostrar todas las rutas protegidas
             <Route element={<Sidebar />}>
+              <Route path="/" element={<Home />} />
               {routes.map((r) => (
                 <Route
                   key={r.path}
@@ -56,11 +56,13 @@ function App() {
                 />
               ))}
             </Route>
+          ) : (
+            // Usuario no autenticado: solo login
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </>
           )}
-          <Route
-            path="/"
-            element={token ? <Home /> : <Navigate to="/login" />}
-          />
         </Routes>
       </BrowserRouter>
     </>

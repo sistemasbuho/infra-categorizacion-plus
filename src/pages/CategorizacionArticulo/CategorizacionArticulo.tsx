@@ -7,6 +7,8 @@ import { ArticleHeader } from './components/ArticleHeader/ArticleHeader';
 import { ArticleInfo } from './components/ArticleInfo/ArticleInfo';
 import { ArticleContent } from './components/ArticleContent/ArticleContent';
 import { RightSidebar } from './components/RightSidebar/RightSidebar';
+import { isOverlappingFragment } from '../../utils/funcs';
+import { toast } from 'react-hot-toast';
 
 export const CategorizacionArticulo = () => {
   const { theme } = useTheme();
@@ -16,6 +18,8 @@ export const CategorizacionArticulo = () => {
   const {
     articuloData,
     fragmentos,
+    tags,
+    temas,
     isLoading,
     error,
     isFinalizingArticle,
@@ -109,6 +113,28 @@ export const CategorizacionArticulo = () => {
       const startIndex = preCaretRange.toString().length;
       const endIndex = startIndex + selectedText.length;
 
+      // Validar que no se superponga con fragmentos existentes
+      const fragmentosParaValidacion = fragmentos.map((frag) => ({
+        id: parseInt(frag.id) || Date.now(), // Convertir string id a number
+        start_index: frag.posicion_inicio,
+        article_fragment: frag.texto,
+        end_index: frag.posicion_fin,
+      }));
+
+      if (
+        isOverlappingFragment({
+          startIndex,
+          length: selectedText.length,
+          allFragments: fragmentosParaValidacion,
+        })
+      ) {
+        toast.error(
+          'No se puede crear un fragmento que se superponga con uno existente'
+        );
+        selection.removeAllRanges();
+        return;
+      }
+
       // Create fragment automatically
       const newFragmentData = {
         texto: selectedText,
@@ -188,6 +214,9 @@ export const CategorizacionArticulo = () => {
           fragmentos={fragmentos}
           onFragmentClick={handleFragmentClick}
           onDeleteFragment={deleteExistingFragmento}
+          tags={tags}
+          temas={temas}
+          proyectoId={proyectoId}
         />
       </div>
     </div>

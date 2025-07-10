@@ -4,25 +4,32 @@ import {
   CredentialResponse,
 } from '@react-oauth/google';
 import { Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { decodedToken } from './isValidToken';
+import { setLogin } from '../../utils/funcs';
+import { useAuth } from '../../auth/AuthContext';
 
 interface Props {
   setShow: Dispatch<SetStateAction<boolean>>;
 }
 
 function GoogleLoginButton({ setShow }: Props) {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+
   const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
-    const decoded = decodedToken(credentialResponse.credential);
+    const jwt = credentialResponse.credential!;
+    const decoded = decodedToken(jwt);
 
-    localStorage.setItem(
-      'token',
-      JSON.stringify(credentialResponse.credential)
-    );
+    const session = { access: jwt, ...decoded };
 
-    decoded?.email &&
-      localStorage.setItem('user_email', JSON.stringify(decoded?.email));
+    setLogin(session);
+
+    setUser(session);
 
     setShow(false);
+
+    navigate('/');
   };
 
   const handleLoginFailure = () => {
@@ -30,12 +37,14 @@ function GoogleLoginButton({ setShow }: Props) {
   };
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider
+      clientId={(import.meta as any).env.VITE_GOOGLE_CLIENT_ID}
+    >
       <GoogleLogin
         onSuccess={handleLoginSuccess}
         onError={handleLoginFailure}
-        auto_select={true}
-        useOneTap={true}
+        auto_select={false}
+        useOneTap={false}
       />
     </GoogleOAuthProvider>
   );

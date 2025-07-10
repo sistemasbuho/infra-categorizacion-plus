@@ -3,7 +3,7 @@ import Base64 from 'crypto-js/enc-base64';
 import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import axios from 'axios';
-import { OverlappingProps } from '../pendientepormover/interfaces/generals';
+import { OverlappingProps } from '../shared/types/generals';
 
 const DATA_SESSION = 'userDatas';
 
@@ -45,7 +45,7 @@ export async function reqtsApiForm(
   try {
     const resp = await axios({
       method,
-      url: `${import.meta.env.VITE_API_URL}/${urlApi}/`,
+      url: `${(import.meta as any).env.VITE_API_URL}/${urlApi}/`,
       headers,
       timeout: 30000,
       data: params,
@@ -105,6 +105,9 @@ export function setLogin(dt: any): void {
   if (dt.cliente?.id) {
     localStorage.setItem('cliente', String(dt.cliente.id));
   }
+
+  // Dispara evento personalizado para notificar cambios
+  window.dispatchEvent(new CustomEvent('tokenChanged'));
 }
 
 export function getVarSsn(): any | null {
@@ -124,5 +127,12 @@ export function cleanVarSsn(): void {
   localStorage.removeItem('userData');
   localStorage.removeItem('email');
   localStorage.removeItem('isChecked');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user_email');
+  localStorage.removeItem('user');
+
+  // Dispara evento personalizado para notificar cambios
+  window.dispatchEvent(new CustomEvent('tokenChanged'));
+
   window.location.reload();
 }
