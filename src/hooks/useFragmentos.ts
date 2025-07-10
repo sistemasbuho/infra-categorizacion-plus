@@ -12,7 +12,7 @@ import {
   FragmentoAPI,
 } from '../services/fragmentoRequest';
 import { changeEstadoArticulo } from '../services/articulosLideresRequest';
-import { isOverlappingFragment } from '../utils/funcs';
+import { isOverlappingFragment } from '../shared/utils/funcs';
 
 interface Fragmento {
   id: string;
@@ -118,92 +118,61 @@ export const useFragmentos = (
       setIsLoading(true);
       setError(null);
 
-      // Usamos la nueva función categorizarArticulo
-      const response = await categorizarArticulo(articuloId, proyectoId);
-      const data: CategorizarArticuloResponse = response;
+      // Usamos una sola llamada para obtener todos los datos
+      const response = await getFragmentosCategorizacion(articuloId);
+
+      if (!response || !response.articulo) {
+        throw new Error('No se pudo obtener la información del artículo');
+      }
 
       // Transformamos los datos para que coincidan con la interfaz
       const transformedArticulo: ArticuloData = {
-        id: data.articulo.id,
-        titulo: data.articulo.titulo,
-        texto: data.articulo.contenido,
-        url: data.articulo.url,
-        fecha: data.articulo.fecha_publicacion,
-        finished: data.articulo.categorizado,
-        state: !data.articulo.borrado, // Si está borrado, state es false
-        resumen: data.articulo.resumen,
-        palabras_clave: [], // No viene en la API, podemos dejarlo vacío
-        medio: {
-          id: 1, // Valor por defecto
-          nombre: data.articulo.medio,
-        },
-        autor: data.articulo.autor,
-        borrado: data.articulo.borrado,
-        categorizado: data.articulo.categorizado,
-        proyecto: data.articulo.proyecto,
-        tipo_publicacion: data.articulo.tipo_publicacion,
+        id: response.articulo.id.toString(),
+        titulo: response.articulo.titulo,
+        texto: response.articulo.contenido, // Cambiar de texto a contenido
+        url: response.articulo.url,
+        fecha: response.articulo.fecha_publicacion, // Cambiar de fecha a fecha_publicacion
+        finished: response.articulo.categorizado, // Cambiar de finished a categorizado
+        state: !response.articulo.borrado, // Cambiar de state a !borrado
+        resumen: response.articulo.resumen,
+        palabras_clave:
+          response.variables_categorizacion?.map((k) => k.nombre) || [],
+        medio: { id: 1, nombre: response.articulo.medio }, // Cambiar estructura
+        autor: response.articulo.autor || null,
+        borrado: response.articulo.borrado,
+        categorizado: response.articulo.categorizado,
+        proyecto: response.articulo.proyecto || '',
+        tipo_publicacion: response.articulo.tipo_publicacion || null,
       };
 
       // Transformamos los fragmentos
-      const transformedFragmentos: Fragmento[] = data.fragmentos.map(
-        (frag: FragmentoAPI) => ({
-          id: frag.id,
-          texto: frag.texto,
-          posicion_inicio: parseInt(frag.indice_inicial),
-          posicion_fin: parseInt(frag.indice_final),
-          categoria: frag.tema?.length > 0 ? frag.tema[0] : 'General',
+      const transformedFragmentos: Fragmento[] =
+        response.fragmentos?.map((frag) => ({
+          id: frag.id || `temp-${Date.now()}`,
+          texto: frag.texto, // Cambiar de fragment_text a texto
+          posicion_inicio: parseInt(frag.indice_inicial), // Cambiar de start_index a indice_inicial
+          posicion_fin: parseInt(frag.indice_final), // Cambiar de end_index a indice_final
+          categoria: frag.tema?.length > 0 ? frag.tema[0] : 'General', // tema es array
           subcategoria: undefined,
-          tags: frag.tag || [],
-          autor: data.articulo.autor,
-          medio: data.articulo.medio,
+          tags: frag.tag || [], // Cambiar de tags a tag
+          autor: response.articulo.autor || 'Desconocido',
+          medio: response.articulo.medio || 'Desconocido', // medio es string
           tono: frag.tono || 'Neutro',
-          sentimiento: 'Neutro', // No viene en la API
-          fecha_creacion: frag.created_at,
-          fecha_modificacion: frag.modified_at || frag.created_at,
-        })
-      );
+          sentimiento: 'Neutro',
+          fecha_creacion: frag.created_at || new Date().toISOString(),
+          fecha_modificacion:
+            frag.modified_at || frag.created_at || new Date().toISOString(),
+        })) || [];
 
       setArticuloData(transformedArticulo);
       setFragmentos(transformedFragmentos);
 
-      // Ahora necesitamos cargar los datos de tags y temas usando una segunda llamada
-      // porque la API categorizarArticulo no devuelve estos datos
-      try {
-        const categorizationData = await getFragmentosCategorizacion(
-          articuloId
-        );
-
-        if (categorizationData && categorizationData.tags) {
-          setTags(categorizationData.tags);
-        }
-
-        if (categorizationData && categorizationData.temas) {
-          setTemas(categorizationData.temas);
-        }
-
-        if (categorizationData && categorizationData.programa) {
-          setPrograma(categorizationData.programa);
-        }
-
-        if (categorizationData && categorizationData.tipo) {
-          setTipo(categorizationData.tipo);
-        }
-
-        if (categorizationData && categorizationData.keyword) {
-          setKeywords(categorizationData.keyword);
-        }
-      } catch (categorizationError) {
-        console.warn(
-          'Error al cargar datos de categorización:',
-          categorizationError
-        );
-        // No lanzamos error aquí porque los datos principales del artículo se cargaron correctamente
-        setTags([]);
-        setTemas([]);
-        setPrograma([]);
-        setTipo([]);
-        setKeywords([]);
-      }
+      // Establecemos los datos de categorización
+      setTags(response.tags || []);
+      setTemas(response.temas || []);
+      setPrograma(response.programa || []);
+      setTipo(response.tipo || []);
+      setKeywords(response.variables_categorizacion || []); // Cambiar de keyword a variables_categorizacion
     } catch (err) {
       console.error('Error al cargar datos del artículo:', err);
       setError('Error al cargar los datos del artículo');

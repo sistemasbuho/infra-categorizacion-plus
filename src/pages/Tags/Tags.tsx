@@ -6,7 +6,6 @@ import {
   FaChevronRight,
 } from 'react-icons/fa';
 import { TagResponse, useTags } from '../../hooks/useTags';
-import TableBase from '../../utils/table/TableBase';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Button } from '../../components/ui/Button';
@@ -17,7 +16,7 @@ import PanelDeFiltros, {
   FiltrosTemas,
 } from '../../components/ui/PanelDeFiltros';
 import { useTheme } from '../../shared/context/ThemeContext';
-
+import TableBase from '../../components/ui/TableBase';
 export const columns: ColumnDef<TagResponse>[] = [
   {
     accessorKey: 'id',
@@ -35,16 +34,23 @@ export const columns: ColumnDef<TagResponse>[] = [
     cell: (info) => {
       const value = info.getValue() as string;
       if (!value) return '—';
-      return new Date(value).toLocaleString('es-CO', {
-        timeZone: 'America/Bogota',
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
+      try {
+        const date = new Date(value);
+        return isNaN(date.getTime())
+          ? '—'
+          : date.toLocaleString('es-CO', {
+              timeZone: 'America/Bogota',
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: true,
+            });
+      } catch (error) {
+        return '—';
+      }
     },
   },
   {
@@ -53,16 +59,23 @@ export const columns: ColumnDef<TagResponse>[] = [
     cell: (info) => {
       const value = info.getValue() as string;
       if (!value) return '—';
-      return new Date(value).toLocaleString('es-CO', {
-        timeZone: 'America/Bogota',
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
+      try {
+        const date = new Date(value);
+        return isNaN(date.getTime())
+          ? '—'
+          : date.toLocaleString('es-CO', {
+              timeZone: 'America/Bogota',
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: true,
+            });
+      } catch (error) {
+        return '—';
+      }
     },
   },
   {

@@ -2,8 +2,8 @@ import React from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
 import { Articulo } from '../../../../hooks/useArticulosLideres';
 import { createArticulosColumns } from './ArticulosColumns';
-import TableBase from '../../../../utils/table/TableBase';
 import { Skeleton } from '../../../../components/ui/Skeleton';
+import TableBase from '../../../../components/ui/TableBase';
 
 interface ArticulosTableProps {
   articulos: Articulo[];

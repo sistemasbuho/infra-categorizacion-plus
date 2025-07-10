@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getVarSsn } from '../utils/funcs';
+import { getVarSsn } from '../shared/utils/funcs';
 
 export default function useToken() {
   const readToken = (): string | null => {

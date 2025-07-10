@@ -62,44 +62,43 @@ export interface CategorizarArticuloResponse {
 
 export interface ArticuloCategorizacion {
   articulo: {
-    id: number;
+    id: string;
     titulo: string;
-    texto: string;
+    contenido: string; // Cambiar de texto a contenido
     resumen: string;
     url: string;
-    autor: any;
-    medio: {
-      id: number;
-      nombre: string;
-    };
-    tipo_articulo: any;
-    fecha: string;
-    programa: any;
-    image_media_file?: string;
-    audio_media_file?: string;
-    state: boolean;
-    finished: boolean;
+    autor: string;
+    medio: string; // Cambiar de objeto a string
+    tipo_publicacion: string | null;
+    fecha_publicacion: string; // Cambiar de fecha a fecha_publicacion
+    asignado_a: string | null;
+    borrado: boolean;
+    categorizado: boolean;
+    fecha_categorizacion: string | null;
+    motivo_borrado: string | null;
+    proyecto: string | null;
   };
-  fragmentos: FragmentoCategorizacion[];
-  general: any[];
-  keyword: Array<{ nombre: string }>;
-  programa: Array<{ id: number; nombre: string }>;
-  proyecto: Array<{ nombre: string }>;
-  tags: Array<{
+  fragmentos: FragmentoAPI[]; // Cambiar a FragmentoAPI
+  total_fragmentos: number;
+  variables_categorizacion: any[];
+  general?: any[];
+  keyword?: Array<{ nombre: string }>;
+  programa?: Array<{ id: number; nombre: string }>;
+  tags?: Array<{
     id: number;
     nombre: string;
     tags: Array<{ id: number; nombre: string }>;
   }>;
-  temas: Array<{ id: number; nombre: string }>;
-  tipo: Array<{ id: number; nombre: string }>;
-  siguiente_articulo: Array<{ id: number }>;
+  temas?: Array<{ id: number; nombre: string }>;
+  tipo?: Array<{ id: number; nombre: string }>;
+  siguiente_articulo?: Array<{ id: number }>;
 }
 
 export async function getFragmentosCategorizacion(articulo_id: string) {
   config = {
     method: 'GET',
     url: 'fragmentos/categorizacion-articulo/',
-    data: { articulo_id: '1261559' },
+    params: { articulo_id },
   };
   return await categorizationPlusRequest<ArticuloCategorizacion>(config);
 }

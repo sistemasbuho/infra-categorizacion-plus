@@ -47,7 +47,15 @@ export const createArticulosColumns = (
     header: 'Fecha',
     cell: (i) => {
       const value = i.getValue();
-      return value ? new Date(value).toLocaleString('es-CO') : 'Sin datos';
+      if (!value) return 'Sin datos';
+      try {
+        const date = new Date(value);
+        return isNaN(date.getTime())
+          ? 'Sin datos'
+          : date.toLocaleString('es-CO');
+      } catch (error) {
+        return 'Sin datos';
+      }
     },
   }),
   columnHelper.display({

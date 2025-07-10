@@ -30,6 +30,8 @@ export const ArticleContent = ({
   const articleTextRef = useRef<HTMLDivElement>(null);
 
   const getHighlightedText = (text: string) => {
+    // Validar que text sea válido
+    if (!text || typeof text !== 'string') return '';
     if (!fragmentos || fragmentos.length === 0) return text;
 
     const fragments = [...fragmentos].sort(
@@ -38,21 +40,34 @@ export const ArticleContent = ({
     let highlightedText = text;
 
     fragments.forEach((fragment) => {
+      // Validar que highlightedText sea válido
+      if (!highlightedText || typeof highlightedText !== 'string') return;
+
       const startIndex = fragment.posicion_inicio || 0;
       const endIndex = fragment.posicion_fin || startIndex;
+
+      // Validar que los índices sean válidos
+      if (
+        startIndex < 0 ||
+        endIndex < 0 ||
+        startIndex >= highlightedText.length ||
+        endIndex > highlightedText.length
+      ) {
+        return;
+      }
 
       const before = highlightedText.substring(0, startIndex);
       const highlighted = highlightedText.substring(startIndex, endIndex);
       const after = highlightedText.substring(endIndex);
 
       highlightedText = `${before}<mark id="fragment-${
-        fragment.id
+        fragment.id || 'unknown'
       }" style="background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 2px solid #a855f7; user-select: none;" title="Fragmento categorizado - Categoría: ${
         fragment.categoria || 'Sin categoría'
       }&#10;Clic para ver detalles&#10;Esta porción ya está fragmentada y no se puede seleccionar nuevamente">${highlighted}</mark>${after}`;
     });
 
-    return highlightedText;
+    return highlightedText || '';
   };
 
   return (

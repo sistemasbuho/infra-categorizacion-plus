@@ -11,11 +11,11 @@ import {
   FaUserEdit,
   FaTrash,
 } from 'react-icons/fa';
-import AsyncSelectTema from '../../../../components/asyncSelects/AsyncSelectTema';
-import AsyncSelectTag from '../../../../components/asyncSelects/AsyncSelectTag';
-import AsyncSelectTono from '../../../../components/asyncSelects/AsyncSelectTono';
-import AsyncSelectActivoPasivo from '../../../../components/asyncSelects/AsyncSelectActivoPasivo';
-import AsyncSelectTipo from '../../../../components/asyncSelects/AsyncSelectTipo';
+// import AsyncSelectTema from '../../../../components/asyncSelects/AsyncSelectTema';
+// import AsyncSelectTag from '../../../../components/asyncSelects/AsyncSelectTag';
+// import AsyncSelectTono from '../../../../components/asyncSelects/AsyncSelectTono';
+// import AsyncSelectActivoPasivo from '../../../../components/asyncSelects/AsyncSelectActivoPasivo';
+// import AsyncSelectTipo from '../../../../components/asyncSelects/AsyncSelectTipo';
 
 interface RightSidebarProps {
   articuloData: any;
@@ -274,12 +274,12 @@ export const RightSidebar = ({
                   <FaList className="w-4 h-4 text-blue-500" />
                   Tipo
                 </label>
-                <AsyncSelectTipo
+                {/* <AsyncSelectTipo
                   sendResponse={handleTipoResponse}
                   placeholder="Seleccionar tipo"
                   isMulti={false}
                   name="tipo"
-                />
+                /> */}
               </div>
 
               <div className="group">
@@ -293,9 +293,16 @@ export const RightSidebar = ({
                 <input
                   type="datetime-local"
                   className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  defaultValue={new Date(articuloData.fecha)
-                    .toISOString()
-                    .slice(0, 16)}
+                  defaultValue={(() => {
+                    try {
+                      const date = new Date(articuloData.fecha);
+                      return isNaN(date.getTime())
+                        ? ''
+                        : date.toISOString().slice(0, 16);
+                    } catch (error) {
+                      return '';
+                    }
+                  })()}
                   style={{
                     backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
                     borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
@@ -631,13 +638,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-green-500" />
                       Tema
                     </label>
-                    <AsyncSelectTema
+                    {/* <AsyncSelectTema
                       projectId={proyectoId ? parseInt(proyectoId) : 1}
                       sendResponse={handleTemaResponse}
                       placeholder="Seleccionar tema"
                       isMulti={true}
                       name="tema"
-                    />
+                    /> */}
                   </div>
 
                   <div className="group">
@@ -650,13 +657,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
                     </label>
-                    <AsyncSelectTag
+                    {/* <AsyncSelectTag
                       projectId={proyectoId ? parseInt(proyectoId) : 1}
                       sendResponse={handleTagResponse}
                       placeholder="Seleccionar tag"
                       isMulti={true}
                       name="tag"
-                    />
+                    /> */}
                   </div>
 
                   <div className="group">
@@ -669,14 +676,14 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-blue-500" />
                       Activo
                     </label>
-                    <AsyncSelectActivoPasivo
+                    {/* <AsyncSelectActivoPasivo
                       sendResponse={handleActivoResponse}
                       placeholder="Seleccionar activo"
                       isMulti={true}
                       name="activo"
                       isDisabled={false}
                       value={selectedActivo}
-                    />
+                    /> */}
                   </div>
 
                   <div className="group">
@@ -689,14 +696,14 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-orange-500" />
                       Pasivo
                     </label>
-                    <AsyncSelectActivoPasivo
+                    {/* <AsyncSelectActivoPasivo
                       sendResponse={handlePasivoResponse}
                       placeholder="Seleccionar pasivo"
                       isMulti={true}
                       name="pasivo"
                       isDisabled={false}
                       value={selectedPasivo}
-                    />
+                    /> */}
                   </div>
 
                   <div className="group">
@@ -709,12 +716,12 @@ export const RightSidebar = ({
                       <FaCog className="w-4 h-4 text-indigo-500" />
                       Tonalidad
                     </label>
-                    <AsyncSelectTono
+                    {/* <AsyncSelectTono
                       sendResponse={handleTonoResponse}
                       placeholder="Seleccionar tonalidad"
                       isMulti={false}
                       name="tonalidad"
-                    />
+                    /> */}
                   </div>
                 </div>
 
@@ -805,13 +812,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-blue-500" />
                       Tema
                     </label>
-                    <AsyncSelectTema
+                    {/* <AsyncSelectTema
                       projectId={proyectoId ? parseInt(proyectoId) : 1}
                       sendResponse={handleTemaGeneralResponse}
                       placeholder="Seleccionar tema"
                       isMulti={true}
                       name="temaGeneral"
-                    />
+                    /> */}
                   </div>
                   <div className="group">
                     <label
@@ -823,13 +830,13 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
                     </label>
-                    <AsyncSelectTag
+                    {/* <AsyncSelectTag
                       projectId={proyectoId ? parseInt(proyectoId) : 1}
                       sendResponse={handleTagGeneralResponse}
                       placeholder="Seleccionar tag"
                       isMulti={true}
                       name="tagGeneral"
-                    />
+                    /> */}
                   </div>
                 </div>
 

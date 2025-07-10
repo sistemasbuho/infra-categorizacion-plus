@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../shared/context/ThemeContext';
 import { useFragmentos } from '../../hooks/useFragmentos';
@@ -7,8 +7,8 @@ import { ArticleHeader } from './components/ArticleHeader/ArticleHeader';
 import { ArticleInfo } from './components/ArticleInfo/ArticleInfo';
 import { ArticleContent } from './components/ArticleContent/ArticleContent';
 import { RightSidebar } from './components/RightSidebar/RightSidebar';
-import { isOverlappingFragment } from '../../utils/funcs';
 import { toast } from 'react-hot-toast';
+import { isOverlappingFragment } from '../../shared/utils/funcs';
 
 export const CategorizacionArticulo = () => {
   const { theme } = useTheme();
