@@ -6,16 +6,16 @@ import {
   FaList,
   FaUser,
   FaCalendarAlt,
-  FaNewspaper,
   FaTv,
-  FaUserEdit,
   FaTrash,
 } from 'react-icons/fa';
-// import AsyncSelectTema from '../../../../components/asyncSelects/AsyncSelectTema';
-// import AsyncSelectTag from '../../../../components/asyncSelects/AsyncSelectTag';
-// import AsyncSelectTono from '../../../../components/asyncSelects/AsyncSelectTono';
-// import AsyncSelectActivoPasivo from '../../../../components/asyncSelects/AsyncSelectActivoPasivo';
-// import AsyncSelectTipo from '../../../../components/asyncSelects/AsyncSelectTipo';
+import {
+  updateArticuloHeader,
+  buscarTiposPublicacion,
+  buscarMedios,
+  buscarAutores,
+} from '../../../../services/fragmentoRequest';
+import { AsyncReactSelect } from '../../../../components/forms/AsyncReactSelect';
 
 interface RightSidebarProps {
   articuloData: any;
@@ -28,7 +28,9 @@ interface RightSidebarProps {
   onDeleteFragment: (fragmentoId: string) => void;
   tags?: any[];
   temas?: any[];
+  tipo?: any[];
   proyectoId?: string;
+  onRefreshData?: () => void;
 }
 
 export const RightSidebar = ({
@@ -40,85 +42,151 @@ export const RightSidebar = ({
   fragmentos,
   onFragmentClick,
   onDeleteFragment,
-  tags,
-  temas,
-  proyectoId,
+  onRefreshData,
 }: RightSidebarProps) => {
   const { theme } = useTheme();
   const [categorizationView, setCategorizationView] = useState('fragmentos');
 
-  // Estados para almacenar las selecciones de categorización
   const [selectedTema, setSelectedTema] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<any[]>([]);
   const [selectedActivo, setSelectedActivo] = useState<any[]>([]);
   const [selectedPasivo, setSelectedPasivo] = useState<any[]>([]);
   const [selectedTono, setSelectedTono] = useState<any[]>([]);
 
-  // Estados para categorización general
   const [selectedTemaGeneral, setSelectedTemaGeneral] = useState<any[]>([]);
   const [selectedTagGeneral, setSelectedTagGeneral] = useState<any[]>([]);
   const [selectedTipo, setSelectedTipo] = useState<any[]>([]);
 
-  // Funciones callback para manejar las respuestas de los AsyncSelect
-  const handleTemaResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTema(Array.isArray(response) ? response : [response]);
+  const [selectedTipoPublicacion, setSelectedTipoPublicacion] = useState<any>(
+    () => {
+      return articuloData.tipo_publicacion
+        ? {
+            nombre: articuloData.tipo_publicacion,
+            id: articuloData.tipo_publicacion,
+          }
+        : null;
+    }
+  );
+
+  const [selectedMedio, setSelectedMedio] = useState<any>(() => {
+    return articuloData.medio?.nombre
+      ? {
+          nombre: articuloData.medio.nombre,
+          uuid: articuloData.medio.id || articuloData.medio.nombre,
+        }
+      : null;
+  });
+
+  const [selectedAutor, setSelectedAutor] = useState<any>(() => {
+    return articuloData.autor
+      ? {
+          nombre: articuloData.autor,
+          uuid: articuloData.autor,
+        }
+      : null;
+  });
+
+  const [fechaArticulo, setFechaArticulo] = useState<string>(() => {
+    try {
+      const date = new Date(articuloData.fecha);
+      return isNaN(date.getTime()) ? '' : date.toISOString().slice(0, 16);
+    } catch (error) {
+      return '';
+    }
+  });
+
+  const handleFechaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nuevaFecha = event.target.value;
+    setFechaArticulo(nuevaFecha);
+  };
+
+  const handleSaveHeaderInfo = async () => {
+    try {
+      const headerData: {
+        fecha_publicacion?: string;
+        medio?: string;
+        autor?: string;
+        tipo_publicacion?: string;
+        programa?: string;
+      } = {};
+
+      if (fechaArticulo) {
+        const fechaISO = new Date(fechaArticulo).toISOString();
+        headerData.fecha_publicacion = fechaISO;
+      }
+
+      if (selectedTipoPublicacion) {
+        headerData.tipo_publicacion = selectedTipoPublicacion.nombre;
+      }
+
+      if (selectedMedio) {
+        headerData.medio = selectedMedio.nombre;
+      }
+
+      if (selectedAutor) {
+        headerData.autor = selectedAutor.nombre;
+      }
+
+      await updateArticuloHeader(articuloData.id, headerData);
+
+      toast.success('Información del encabezado guardada exitosamente');
+
+      if (onRefreshData) {
+        onRefreshData();
+      }
+    } catch (error) {
+      console.error('Error al guardar la información del encabezado:', error);
+      toast.error('Error al guardar la información del encabezado');
     }
   };
 
-  const handleTagResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTag(Array.isArray(response) ? response : [response]);
+  const handleCancelHeaderInfo = () => {
+    try {
+      const date = new Date(articuloData.fecha);
+      setFechaArticulo(
+        isNaN(date.getTime()) ? '' : date.toISOString().slice(0, 16)
+      );
+    } catch (error) {
+      setFechaArticulo('');
     }
+
+    setSelectedTipoPublicacion(
+      articuloData.tipo_publicacion
+        ? {
+            nombre: articuloData.tipo_publicacion,
+            id: articuloData.tipo_publicacion,
+          }
+        : null
+    );
+
+    setSelectedMedio(
+      articuloData.medio?.nombre
+        ? {
+            nombre: articuloData.medio.nombre,
+            uuid: articuloData.medio.id || articuloData.medio.nombre,
+          }
+        : null
+    );
+
+    setSelectedAutor(
+      articuloData.autor
+        ? {
+            nombre: articuloData.autor,
+            uuid: articuloData.autor,
+          }
+        : null
+    );
+
+    toast.success('Cambios cancelados');
   };
 
-  const handleActivoResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedActivo(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  const handlePasivoResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedPasivo(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  const handleTonoResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTono(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  // Funciones callback para categorización general
-  const handleTemaGeneralResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTemaGeneral(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  const handleTagGeneralResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTagGeneral(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  const handleTipoResponse = (response: any, input: string) => {
-    if (response) {
-      setSelectedTipo(Array.isArray(response) ? response : [response]);
-    }
-  };
-
-  // Funciones de guardado
   const handleSaveFragmentCategorization = async () => {
     try {
-      // Validar que se haya seleccionado al menos un tema
       if (selectedTema.length === 0) {
         toast.error('Por favor seleccione al menos un tema');
         return;
       }
 
-      // TODO: Implementar la llamada a la API para guardar la categorización por fragmento
       console.log('Guardando categorización por fragmento:', {
         tema: selectedTema,
         tag: selectedTag,
@@ -130,7 +198,6 @@ export const RightSidebar = ({
 
       toast.success('Categorización por fragmento guardada exitosamente');
 
-      // Limpiar selecciones después de guardar
       setSelectedTema([]);
       setSelectedTag([]);
       setSelectedActivo([]);
@@ -145,13 +212,11 @@ export const RightSidebar = ({
 
   const handleSaveGeneralCategorization = async () => {
     try {
-      // Validar que se haya seleccionado al menos un tema
       if (selectedTemaGeneral.length === 0) {
         toast.error('Por favor seleccione al menos un tema');
         return;
       }
 
-      // TODO: Implementar la llamada a la API para guardar la categorización general
       console.log('Guardando categorización general:', {
         tema: selectedTemaGeneral,
         tag: selectedTagGeneral,
@@ -159,7 +224,6 @@ export const RightSidebar = ({
 
       toast.success('Categorización general guardada exitosamente');
 
-      // Limpiar selecciones después de guardar
       setSelectedTemaGeneral([]);
       setSelectedTagGeneral([]);
     } catch (error) {
@@ -206,7 +270,6 @@ export const RightSidebar = ({
         borderColor: theme === 'dark' ? '#374151' : '#e5e7eb',
       }}
     >
-      {/* Tab Navigation */}
       <div
         className="flex border-b bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 flex-shrink-0"
         style={{ borderColor: theme === 'dark' ? '#374151' : '#e5e7eb' }}
@@ -239,9 +302,7 @@ export const RightSidebar = ({
         ))}
       </div>
 
-      {/* Tab Content */}
       <div className="flex-1 p-6 overflow-y-auto">
-        {/* Información del artículo */}
         {activeTab === 'info' && (
           <div className="space-y-6">
             <div
@@ -267,19 +328,15 @@ export const RightSidebar = ({
 
             <div className="space-y-5">
               <div className="group">
-                <label
-                  className="flex items-center gap-2 text-sm font-semibold mb-2"
-                  style={{ color: theme === 'dark' ? '#d1d5db' : '#374151' }}
-                >
-                  <FaList className="w-4 h-4 text-blue-500" />
-                  Tipo
-                </label>
-                {/* <AsyncSelectTipo
-                  sendResponse={handleTipoResponse}
-                  placeholder="Seleccionar tipo"
-                  isMulti={false}
-                  name="tipo"
-                /> */}
+                <AsyncReactSelect
+                  label="Tipo"
+                  placeholder="Tipo de Publicación"
+                  value={selectedTipoPublicacion}
+                  onChange={setSelectedTipoPublicacion}
+                  searchFunction={buscarTiposPublicacion}
+                  optionLabelKey="nombre"
+                  optionValueKey="id"
+                />
               </div>
 
               <div className="group">
@@ -293,16 +350,8 @@ export const RightSidebar = ({
                 <input
                   type="datetime-local"
                   className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  defaultValue={(() => {
-                    try {
-                      const date = new Date(articuloData.fecha);
-                      return isNaN(date.getTime())
-                        ? ''
-                        : date.toISOString().slice(0, 16);
-                    } catch (error) {
-                      return '';
-                    }
-                  })()}
+                  value={fechaArticulo}
+                  onChange={handleFechaChange}
                   style={{
                     backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
                     borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
@@ -312,23 +361,15 @@ export const RightSidebar = ({
               </div>
 
               <div className="group">
-                <label
-                  className="flex items-center gap-2 text-sm font-semibold mb-2"
-                  style={{ color: theme === 'dark' ? '#d1d5db' : '#374151' }}
-                >
-                  <FaNewspaper className="w-4 h-4 text-purple-500" />
-                  Medio
-                </label>
-                <select
-                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  style={{
-                    backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-                    borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                    color: theme === 'dark' ? '#ffffff' : '#374151',
-                  }}
-                >
-                  <option>{articuloData.medio.nombre}</option>
-                </select>
+                <AsyncReactSelect
+                  label="Medio"
+                  placeholder="Buscar medio..."
+                  value={selectedMedio}
+                  onChange={setSelectedMedio}
+                  searchFunction={buscarMedios}
+                  optionLabelKey="nombre"
+                  optionValueKey="uuid"
+                />
               </div>
 
               <div className="group">
@@ -352,28 +393,21 @@ export const RightSidebar = ({
               </div>
 
               <div className="group">
-                <label
-                  className="flex items-center gap-2 text-sm font-semibold mb-2"
-                  style={{ color: theme === 'dark' ? '#d1d5db' : '#374151' }}
-                >
-                  <FaUserEdit className="w-4 h-4 text-indigo-500" />
-                  Autor
-                </label>
-                <select
-                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  style={{
-                    backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-                    borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                    color: theme === 'dark' ? '#ffffff' : '#374151',
-                  }}
-                >
-                  <option>Buscar</option>
-                </select>
+                <AsyncReactSelect
+                  label="Autor"
+                  placeholder="Buscar autor..."
+                  value={selectedAutor}
+                  onChange={setSelectedAutor}
+                  searchFunction={buscarAutores}
+                  optionLabelKey="nombre"
+                  optionValueKey="uuid"
+                />
               </div>
             </div>
 
             <div className="flex gap-3 mt-8">
               <button
+                onClick={handleCancelHeaderInfo}
                 className="flex-1 py-3 px-4 border rounded-lg text-sm font-medium transition-all duration-200"
                 style={{
                   backgroundColor: theme === 'dark' ? 'transparent' : '#ffffff',
@@ -395,14 +429,16 @@ export const RightSidebar = ({
               >
                 Cancelar
               </button>
-              <button className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg">
+              <button
+                onClick={handleSaveHeaderInfo}
+                className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg"
+              >
                 Guardar
               </button>
             </div>
           </div>
         )}
 
-        {/* Categorización */}
         {activeTab === 'categorization' && (
           <div className="space-y-6">
             <div
@@ -426,7 +462,6 @@ export const RightSidebar = ({
               </p>
             </div>
 
-            {/* Pestañas de categorización */}
             <div
               className="flex border-b rounded-lg p-1"
               style={{
@@ -638,13 +673,6 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-green-500" />
                       Tema
                     </label>
-                    {/* <AsyncSelectTema
-                      projectId={proyectoId ? parseInt(proyectoId) : 1}
-                      sendResponse={handleTemaResponse}
-                      placeholder="Seleccionar tema"
-                      isMulti={true}
-                      name="tema"
-                    /> */}
                   </div>
 
                   <div className="group">
@@ -657,13 +685,6 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
                     </label>
-                    {/* <AsyncSelectTag
-                      projectId={proyectoId ? parseInt(proyectoId) : 1}
-                      sendResponse={handleTagResponse}
-                      placeholder="Seleccionar tag"
-                      isMulti={true}
-                      name="tag"
-                    /> */}
                   </div>
 
                   <div className="group">
@@ -676,14 +697,6 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-blue-500" />
                       Activo
                     </label>
-                    {/* <AsyncSelectActivoPasivo
-                      sendResponse={handleActivoResponse}
-                      placeholder="Seleccionar activo"
-                      isMulti={true}
-                      name="activo"
-                      isDisabled={false}
-                      value={selectedActivo}
-                    /> */}
                   </div>
 
                   <div className="group">
@@ -696,14 +709,6 @@ export const RightSidebar = ({
                       <FaUser className="w-4 h-4 text-orange-500" />
                       Pasivo
                     </label>
-                    {/* <AsyncSelectActivoPasivo
-                      sendResponse={handlePasivoResponse}
-                      placeholder="Seleccionar pasivo"
-                      isMulti={true}
-                      name="pasivo"
-                      isDisabled={false}
-                      value={selectedPasivo}
-                    /> */}
                   </div>
 
                   <div className="group">
@@ -716,12 +721,6 @@ export const RightSidebar = ({
                       <FaCog className="w-4 h-4 text-indigo-500" />
                       Tonalidad
                     </label>
-                    {/* <AsyncSelectTono
-                      sendResponse={handleTonoResponse}
-                      placeholder="Seleccionar tonalidad"
-                      isMulti={false}
-                      name="tonalidad"
-                    /> */}
                   </div>
                 </div>
 
@@ -812,13 +811,6 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-blue-500" />
                       Tema
                     </label>
-                    {/* <AsyncSelectTema
-                      projectId={proyectoId ? parseInt(proyectoId) : 1}
-                      sendResponse={handleTemaGeneralResponse}
-                      placeholder="Seleccionar tema"
-                      isMulti={true}
-                      name="temaGeneral"
-                    /> */}
                   </div>
                   <div className="group">
                     <label
@@ -830,13 +822,6 @@ export const RightSidebar = ({
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
                     </label>
-                    {/* <AsyncSelectTag
-                      projectId={proyectoId ? parseInt(proyectoId) : 1}
-                      sendResponse={handleTagGeneralResponse}
-                      placeholder="Seleccionar tag"
-                      isMulti={true}
-                      name="tagGeneral"
-                    /> */}
                   </div>
                 </div>
 
@@ -877,7 +862,6 @@ export const RightSidebar = ({
           </div>
         )}
 
-        {/* Configuración */}
         {activeTab === 'settings' && (
           <div className="space-y-6">
             <div

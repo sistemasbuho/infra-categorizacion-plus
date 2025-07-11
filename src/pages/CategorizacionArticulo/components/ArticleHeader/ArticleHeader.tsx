@@ -140,10 +140,10 @@ export const ArticleHeader = ({
             </a>
             {proyecto && (
               <span
-                className="text-sm font-medium px-2 py-1 rounded-md"
+                className="text-md font-medium px-2 py-1 rounded-md"
                 style={{
                   backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
-                  color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                  color: theme === 'dark' ? '#9ca3af' : '#111827',
                 }}
               >
                 {proyecto}

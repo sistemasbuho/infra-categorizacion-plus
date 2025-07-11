@@ -19,7 +19,7 @@ export const createArticulosColumns = (
       const proyectoId = row.original.proyectos?.[0]?.proyecto?.id || 'default';
       return (
         <Link
-          href={`/categorizacion-articulo/${row.original.articulo_id}/${proyectoId}`}
+          href={`/categorizacion-articulo/articulo_id/${row.original.articulo_id}/proyecto_id/${proyectoId}`}
           variant="primary"
           size="sm"
           className="w-full h-9 p-0"

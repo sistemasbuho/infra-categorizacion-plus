@@ -16,7 +16,6 @@ export interface FragmentoCategorizacion {
   updated_at?: string;
 }
 
-// Nuevo tipo para fragmentos que devuelve la API
 export interface FragmentoAPI {
   id: string;
   articulo_id: string;
@@ -34,7 +33,6 @@ export interface FragmentoAPI {
   width: number | null;
 }
 
-// Nuevo tipo para el artículo que devuelve la API
 export interface ArticuloAPI {
   id: string;
   asignado_a: string | null;
@@ -53,7 +51,6 @@ export interface ArticuloAPI {
   url: string;
 }
 
-// Nuevo tipo para la respuesta completa de categorizarArticulo
 export interface CategorizarArticuloResponse {
   articulo: ArticuloAPI;
   fragmentos: FragmentoAPI[];
@@ -64,13 +61,13 @@ export interface ArticuloCategorizacion {
   articulo: {
     id: string;
     titulo: string;
-    contenido: string; // Cambiar de texto a contenido
+    contenido: string;
     resumen: string;
     url: string;
     autor: string;
-    medio: string; // Cambiar de objeto a string
+    medio: string;
     tipo_publicacion: string | null;
-    fecha_publicacion: string; // Cambiar de fecha a fecha_publicacion
+    fecha_publicacion: string;
     asignado_a: string | null;
     borrado: boolean;
     categorizado: boolean;
@@ -78,7 +75,7 @@ export interface ArticuloCategorizacion {
     motivo_borrado: string | null;
     proyecto: string | null;
   };
-  fragmentos: FragmentoAPI[]; // Cambiar a FragmentoAPI
+  fragmentos: FragmentoAPI[];
   total_fragmentos: number;
   variables_categorizacion: any[];
   general?: any[];
@@ -94,11 +91,14 @@ export interface ArticuloCategorizacion {
   siguiente_articulo?: Array<{ id: number }>;
 }
 
-export async function getFragmentosCategorizacion(articulo_id: string) {
+export async function getFragmentosCategorizacion(
+  articulo_id: string,
+  proyecto_id: string
+) {
   config = {
     method: 'GET',
     url: 'fragmentos/categorizacion-articulo/',
-    params: { articulo_id },
+    params: { articulo_id, proyecto_id },
   };
   return await categorizationPlusRequest<ArticuloCategorizacion>(config);
 }
@@ -162,4 +162,62 @@ export async function categorizarArticulo(
     params: { articulo_id, proyecto_id },
   };
   return await categorizationPlusRequest<CategorizarArticuloResponse>(config);
+}
+
+export async function updateArticuloHeader(
+  articulo_id: string,
+  headerData: {
+    fecha_publicacion?: string;
+    medio?: string;
+    autor?: string;
+    tipo_publicacion?: string;
+    programa?: string;
+  }
+) {
+  config = {
+    method: 'PATCH',
+    url: 'fragmentos/categorizacion-articulo/',
+    params: { articulo_id },
+    data: headerData,
+  };
+  return await categorizationPlusRequest<ArticuloAPI>(config);
+}
+
+export async function buscarTiposPublicacion(nombre: string) {
+  config = {
+    method: 'GET',
+    url: 'tipo-publicacion/buscar/',
+    params: { nombre },
+  };
+  return await categorizationPlusRequest<Array<{ id: string; nombre: string }>>(
+    config
+  );
+}
+
+export async function buscarMedios(nombre: string) {
+  config = {
+    method: 'GET',
+    url: 'medio/',
+    params: { nombre },
+  };
+  const response = await categorizationPlusRequest<{
+    count: number;
+    results: Array<{ uuid: string; nombre: string; genero: string | null }>;
+  }>(config);
+
+  return response.results || [];
+}
+
+export async function buscarAutores(nombre: string) {
+  config = {
+    method: 'GET',
+    url: 'actores/',
+    params: { nombre },
+  };
+  const response = await categorizationPlusRequest<{
+    count: number;
+    results: Array<{ uuid: string; nombre: string; genero: string }>;
+  }>(config);
+
+  return response.results || [];
 }

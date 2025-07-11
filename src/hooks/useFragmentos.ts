@@ -110,7 +110,6 @@ export const useFragmentos = (
   const [isCreatingFragment, setIsCreatingFragment] = useState(false);
   const [isFinalizingArticle, setIsFinalizingArticle] = useState(false);
 
-  // Función para cargar datos del artículo
   const fetchArticuloData = async () => {
     if (!articuloId || !proyectoId) return;
 
@@ -118,26 +117,27 @@ export const useFragmentos = (
       setIsLoading(true);
       setError(null);
 
-      // Usamos una sola llamada para obtener todos los datos
-      const response = await getFragmentosCategorizacion(articuloId);
+      const response = await getFragmentosCategorizacion(
+        articuloId,
+        proyectoId
+      );
 
       if (!response || !response.articulo) {
         throw new Error('No se pudo obtener la información del artículo');
       }
 
-      // Transformamos los datos para que coincidan con la interfaz
       const transformedArticulo: ArticuloData = {
         id: response.articulo.id.toString(),
         titulo: response.articulo.titulo,
-        texto: response.articulo.contenido, // Cambiar de texto a contenido
+        texto: response.articulo.contenido,
         url: response.articulo.url,
-        fecha: response.articulo.fecha_publicacion, // Cambiar de fecha a fecha_publicacion
-        finished: response.articulo.categorizado, // Cambiar de finished a categorizado
-        state: !response.articulo.borrado, // Cambiar de state a !borrado
+        fecha: response.articulo.fecha_publicacion,
+        finished: response.articulo.categorizado,
+        state: !response.articulo.borrado,
         resumen: response.articulo.resumen,
         palabras_clave:
           response.variables_categorizacion?.map((k) => k.nombre) || [],
-        medio: { id: 1, nombre: response.articulo.medio }, // Cambiar estructura
+        medio: { id: 1, nombre: response.articulo.medio },
         autor: response.articulo.autor || null,
         borrado: response.articulo.borrado,
         categorizado: response.articulo.categorizado,
@@ -145,18 +145,17 @@ export const useFragmentos = (
         tipo_publicacion: response.articulo.tipo_publicacion || null,
       };
 
-      // Transformamos los fragmentos
       const transformedFragmentos: Fragmento[] =
         response.fragmentos?.map((frag) => ({
           id: frag.id || `temp-${Date.now()}`,
-          texto: frag.texto, // Cambiar de fragment_text a texto
-          posicion_inicio: parseInt(frag.indice_inicial), // Cambiar de start_index a indice_inicial
-          posicion_fin: parseInt(frag.indice_final), // Cambiar de end_index a indice_final
-          categoria: frag.tema?.length > 0 ? frag.tema[0] : 'General', // tema es array
+          texto: frag.texto,
+          posicion_inicio: parseInt(frag.indice_inicial),
+          posicion_fin: parseInt(frag.indice_final),
+          categoria: frag.tema?.length > 0 ? frag.tema[0] : 'General',
           subcategoria: undefined,
-          tags: frag.tag || [], // Cambiar de tags a tag
+          tags: frag.tag || [],
           autor: response.articulo.autor || 'Desconocido',
-          medio: response.articulo.medio || 'Desconocido', // medio es string
+          medio: response.articulo.medio || 'Desconocido',
           tono: frag.tono || 'Neutro',
           sentimiento: 'Neutro',
           fecha_creacion: frag.created_at || new Date().toISOString(),
@@ -167,12 +166,11 @@ export const useFragmentos = (
       setArticuloData(transformedArticulo);
       setFragmentos(transformedFragmentos);
 
-      // Establecemos los datos de categorización
       setTags(response.tags || []);
       setTemas(response.temas || []);
       setPrograma(response.programa || []);
       setTipo(response.tipo || []);
-      setKeywords(response.variables_categorizacion || []); // Cambiar de keyword a variables_categorizacion
+      setKeywords(response.variables_categorizacion || []);
     } catch (err) {
       console.error('Error al cargar datos del artículo:', err);
       setError('Error al cargar los datos del artículo');
@@ -182,7 +180,6 @@ export const useFragmentos = (
     }
   };
 
-  // Función para crear un nuevo fragmento
   const createNewFragmento = async (
     fragmentoData: Omit<
       Fragmento,
@@ -192,7 +189,6 @@ export const useFragmentos = (
     try {
       setIsCreatingFragment(true);
 
-      // Validar que no se superponga con fragmentos existentes
       const fragmentosParaValidacion = fragmentos.map((frag) => ({
         id: parseInt(frag.id) || Date.now(),
         start_index: frag.posicion_inicio,
@@ -213,10 +209,6 @@ export const useFragmentos = (
         return;
       }
 
-      // Comentado para usar datos mock por ahora
-      // const response = await createFragmento(fragmentoData);
-
-      // Simulamos la creación del fragmento
       const newFragmento: Fragmento = {
         ...fragmentoData,
         id: `frag-${Date.now()}`,
@@ -224,12 +216,10 @@ export const useFragmentos = (
         fecha_modificacion: new Date().toISOString(),
       };
 
-      // Actualizamos el estado local
       setFragmentos((prev) => [...prev, newFragmento]);
 
       toast.success('Fragmento creado exitosamente');
 
-      // Limpiar selección
       setSelectedText('');
       setSelectedRange(null);
     } catch (err) {
@@ -240,16 +230,11 @@ export const useFragmentos = (
     }
   };
 
-  // Función para actualizar un fragmento existente
   const updateExistingFragmento = async (
     fragmentoId: string,
     fragmentoData: Partial<Fragmento>
   ) => {
     try {
-      // Comentado para usar datos mock por ahora
-      // const response = await updateFragmento(fragmentoId, fragmentoData);
-
-      // Simulamos la actualización del fragmento
       const updatedFragmento = {
         ...fragmentoData,
         fecha_modificacion: new Date().toISOString(),
@@ -268,13 +253,8 @@ export const useFragmentos = (
     }
   };
 
-  // Función para eliminar un fragmento
   const deleteExistingFragmento = async (fragmentoId: string) => {
     try {
-      // Comentado para usar datos mock por ahora
-      // await deleteFragmento(fragmentoId);
-
-      // Simulamos la eliminación del fragmento
       setFragmentos((prev) => prev.filter((frag) => frag.id !== fragmentoId));
 
       toast.success('Fragmento eliminado exitosamente');
@@ -284,20 +264,14 @@ export const useFragmentos = (
     }
   };
 
-  // Función para finalizar la categorización del artículo
   const finalizarCategorizacion = async () => {
     if (!articuloId) return;
 
     try {
       setIsFinalizingArticle(true);
 
-      // Comentado para usar datos mock por ahora
-      // await finalizarArticulo(articuloId);
-
-      // Simulamos la finalización
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Actualizamos el estado local
       setArticuloData((prev) => (prev ? { ...prev, finished: true } : null));
 
       toast.success('Artículo finalizado exitosamente');
@@ -309,7 +283,6 @@ export const useFragmentos = (
     }
   };
 
-  // Función para cambiar el estado del artículo
   const cambiarEstadoArticulo = async (
     accion: boolean,
     motivo: string = ''
@@ -317,13 +290,8 @@ export const useFragmentos = (
     if (!articuloId) return;
 
     try {
-      // Usamos la misma lógica que MisArticulosLideres
-      // accion: true = borrar, false = reactivar
       await changeEstadoArticulo(articuloId, accion, motivo);
 
-      // Actualizamos el estado local
-      // Si accion es true (borrar), el artículo quedará borrado
-      // Si accion es false (reactivar), el artículo quedará activo
       setArticuloData((prev) =>
         prev ? { ...prev, state: !accion, borrado: accion } : null
       );
@@ -337,14 +305,12 @@ export const useFragmentos = (
     }
   };
 
-  // Función para manejar selección de texto
   const handleTextSelection = () => {
     const selection = window.getSelection();
     if (selection && selection.toString().trim()) {
       const selectedText = selection.toString().trim();
       const range = selection.getRangeAt(0);
 
-      // Calcular posiciones relativas al contenido completo
       const container = document.getElementById('article-content');
       if (container) {
         const containerRange = document.createRange();
@@ -359,7 +325,6 @@ export const useFragmentos = (
     }
   };
 
-  // Cargar datos al montar el componente
   useEffect(() => {
     fetchArticuloData();
   }, [articuloId]);
@@ -369,21 +334,21 @@ export const useFragmentos = (
     fragmentos,
     tags,
     temas,
+    tipo, // Add tipo array
     programa,
-    tipo,
     keywords,
-    isLoading,
-    error,
     selectedText,
     selectedRange,
+    isLoading,
+    error,
     isCreatingFragment,
     isFinalizingArticle,
+    fetchArticuloData,
     createNewFragmento,
     updateExistingFragmento,
     deleteExistingFragmento,
     finalizarCategorizacion,
     cambiarEstadoArticulo,
     handleTextSelection,
-    refetchData: fetchArticuloData,
   };
 };

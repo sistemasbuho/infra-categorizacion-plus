@@ -20,6 +20,7 @@ export const CategorizacionArticulo = () => {
     fragmentos,
     tags,
     temas,
+    tipo,
     isLoading,
     error,
     isFinalizingArticle,
@@ -27,6 +28,7 @@ export const CategorizacionArticulo = () => {
     cambiarEstadoArticulo,
     createNewFragmento,
     deleteExistingFragmento,
+    fetchArticuloData,
   } = useFragmentos(id || '', proyectoId || '');
 
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -41,17 +43,14 @@ export const CategorizacionArticulo = () => {
     tags: '',
   });
 
-  // Function to handle fragment click and scroll to fragment
   const handleFragmentClick = (fragmento: any) => {
     const fragmentElement = document.getElementById(`fragment-${fragmento.id}`);
     if (fragmentElement) {
-      // Scroll to the fragment with smooth animation
       fragmentElement.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
 
-      // Add a temporary highlight effect
       fragmentElement.style.boxShadow = '0 0 10px #a855f7';
       setTimeout(() => {
         fragmentElement.style.boxShadow = 'none';
@@ -113,9 +112,8 @@ export const CategorizacionArticulo = () => {
       const startIndex = preCaretRange.toString().length;
       const endIndex = startIndex + selectedText.length;
 
-      // Validar que no se superponga con fragmentos existentes
       const fragmentosParaValidacion = fragmentos.map((frag) => ({
-        id: parseInt(frag.id) || Date.now(), // Convertir string id a number
+        id: parseInt(frag.id) || Date.now(),
         start_index: frag.posicion_inicio,
         article_fragment: frag.texto,
         end_index: frag.posicion_fin,
@@ -135,7 +133,6 @@ export const CategorizacionArticulo = () => {
         return;
       }
 
-      // Create fragment automatically
       const newFragmentData = {
         texto: selectedText,
         posicion_inicio: startIndex,
@@ -149,10 +146,8 @@ export const CategorizacionArticulo = () => {
         sentimiento: 'Neutro',
       };
 
-      // Use createNewFragmento from the hook
       createNewFragmento(newFragmentData);
 
-      // Clear selection
       selection.removeAllRanges();
     }
   };
@@ -179,7 +174,6 @@ export const CategorizacionArticulo = () => {
       />
 
       <div className="flex flex-1 min-h-0">
-        {/* Contenido principal */}
         <div className="flex-1 overflow-y-auto">
           <div className="space-y-4 px-6 py-4">
             <ArticleInfo
@@ -192,7 +186,6 @@ export const CategorizacionArticulo = () => {
               toggleSection={toggleSection}
             />
 
-            {/* Transcripción */}
             <ArticleContent
               texto={articuloData.texto}
               fragmentos={fragmentos}
@@ -204,7 +197,6 @@ export const CategorizacionArticulo = () => {
           </div>
         </div>
 
-        {/* Sidebar derecho */}
         <RightSidebar
           articuloData={articuloData}
           activeTab={sidebarActiveTab}
@@ -216,7 +208,9 @@ export const CategorizacionArticulo = () => {
           onDeleteFragment={deleteExistingFragmento}
           tags={tags}
           temas={temas}
+          tipo={tipo}
           proyectoId={proyectoId}
+          onRefreshData={fetchArticuloData}
         />
       </div>
     </div>

@@ -28,7 +28,7 @@ export type RouteElement = {
   label: string;
   roles: number[];
   showInSidebar?: boolean;
-  section?: string; // Nueva propiedad para agrupar por secciones
+  section?: string;
 };
 
 export type MenuSection = {
@@ -38,7 +38,6 @@ export type MenuSection = {
 };
 
 export const routes: RouteElement[] = [
-  // Ruta principal - no se muestra en sidebar
   {
     path: '/',
     element: Home,
@@ -47,7 +46,6 @@ export const routes: RouteElement[] = [
     roles: [1, 2],
     showInSidebar: false,
   },
-  // ARTICULOS
   {
     path: '/mis-articulos',
     element: MisArticulos,
@@ -88,10 +86,9 @@ export const routes: RouteElement[] = [
     roles: [1, 2],
     section: 'articulos',
   },
-  // SOCIAL
   {
     path: '/matriz',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaTable,
     label: 'Matriz',
     roles: [1, 2],
@@ -99,7 +96,7 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/lista-publicaciones-lider',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaBullhorn,
     label: 'Lista publicaciones lid...',
     roles: [1, 2],
@@ -107,7 +104,7 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/lista-publicaciones',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaThList,
     label: 'Lista Publicaciones',
     roles: [1, 2],
@@ -115,16 +112,15 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/asignar-publicaciones',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaShareAlt,
     label: 'Asignar Publicaciones',
     roles: [1, 2],
     section: 'social',
   },
-  // CALIDAD
   {
     path: '/calidad-articulos',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaCheckCircle,
     label: 'Articulos',
     roles: [1, 2],
@@ -132,15 +128,14 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/indicadores',
-    element: Home, // Placeholder
+    element: Home,
     icon: FaTachometerAlt,
     label: 'Indicadores',
     roles: [1, 2],
     section: 'calidad',
   },
-  // Ruta especial - no se muestra en sidebar
   {
-    path: '/categorizacion-articulo/:id/:proyectoId',
+    path: '/categorizacion-articulo/articulo_id/:id/proyecto_id/:proyectoId',
     element: CategorizacionArticulo,
     icon: IoChatboxOutline,
     label: 'Categorización de Artículo',
