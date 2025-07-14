@@ -53,12 +53,12 @@ interface ArticuloData {
 }
 
 interface Tag {
-  id: number;
+  id: string;
   nombre: string;
 }
 
 interface Tema {
-  id: number;
+  id: string;
   nombre: string;
 }
 
@@ -73,6 +73,21 @@ interface Tipo {
 }
 
 interface Keyword {
+  nombre: string;
+}
+
+interface Tono {
+  id: string;
+  nombre: string;
+}
+
+interface Activo {
+  id: string;
+  nombre: string;
+}
+
+interface Pasivo {
+  id: string;
   nombre: string;
 }
 
@@ -101,6 +116,9 @@ export const useFragmentos = (
   const [programa, setPrograma] = useState<Programa[]>([]);
   const [tipo, setTipo] = useState<Tipo[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [tonos, setTonos] = useState<Tono[]>([]);
+  const [activos, setActivos] = useState<Activo[]>([]);
+  const [pasivos, setPasivos] = useState<Pasivo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedText, setSelectedText] = useState<string>('');
@@ -128,7 +146,7 @@ export const useFragmentos = (
       }
 
       const transformedArticulo: ArticuloData = {
-        id: response.articulo.id.toString(),
+        id: response.articulo.articulo_id.toString(),
         titulo: response.articulo.titulo,
         texto: response.articulo.contenido,
         url: response.articulo.url,
@@ -136,8 +154,7 @@ export const useFragmentos = (
         finished: response.articulo.categorizado,
         state: !response.articulo.borrado,
         resumen: response.articulo.resumen,
-        palabras_clave:
-          response.variables_categorizacion?.map((k) => k.nombre) || [],
+        palabras_clave: response.articulo.keywords || [],
         medio: { id: 1, nombre: response.articulo.medio },
         autor: response.articulo.autor || null,
         borrado: response.articulo.borrado,
@@ -153,7 +170,7 @@ export const useFragmentos = (
           texto: frag.texto,
           posicion_inicio: parseInt(frag.indice_inicial),
           posicion_fin: parseInt(frag.indice_final),
-          categoria: frag.tema?.length > 0 ? frag.tema[0] : 'General',
+          categoria: frag.temas?.length > 0 ? frag.temas[0] : 'General',
           subcategoria: undefined,
           tags: frag.tag || [],
           autor: response.articulo.autor || 'Desconocido',
@@ -168,8 +185,13 @@ export const useFragmentos = (
       setArticuloData(transformedArticulo);
       setFragmentos(transformedFragmentos);
 
-      setTags(response.tags || []);
-      setTemas(response.temas || []);
+      const variablesCategorizacion = response.variables_categorizacion?.[0];
+
+      setTags(variablesCategorizacion?.tags || []);
+      setTemas(variablesCategorizacion?.temas || []);
+      setTonos(variablesCategorizacion?.tonos || []);
+      setActivos(variablesCategorizacion?.activos || []);
+      setPasivos(variablesCategorizacion?.pasivos || []);
       setPrograma(response.programa || []);
       setTipo(response.tipo || []);
       setKeywords(response.variables_categorizacion || []);
@@ -336,7 +358,10 @@ export const useFragmentos = (
     fragmentos,
     tags,
     temas,
-    tipo, // Add tipo array
+    tonos,
+    activos,
+    pasivos,
+    tipo,
     programa,
     keywords,
     selectedText,

@@ -27,10 +27,12 @@ export interface FragmentoAPI {
   indice_final: string;
   indice_inicial: string;
   tag: any[];
-  tema: any[];
+  temas: any[];
   texto: string;
   tono: string | null;
   width: number | null;
+  activo?: any[];
+  pasivo?: any[];
 }
 
 export interface ArticuloAPI {
@@ -59,7 +61,7 @@ export interface CategorizarArticuloResponse {
 
 export interface ArticuloCategorizacion {
   articulo: {
-    id: string;
+    articulo_id: string;
     titulo: string;
     contenido: string;
     resumen: string;
@@ -74,6 +76,7 @@ export interface ArticuloCategorizacion {
     fecha_categorizacion: string | null;
     motivo_borrado: string | null;
     proyecto: string | null;
+    keywords: string[];
   };
   fragmentos: FragmentoAPI[];
   total_fragmentos: number;
@@ -220,6 +223,19 @@ export async function buscarAutores(nombre: string) {
   }>(config);
 
   return response.results || [];
+}
+
+export async function buscarProgramas(nombre: string) {
+  config = {
+    method: 'GET',
+    url: 'programa-articulo/',
+    params: { nombre },
+  };
+  const response = await categorizationPlusRequest<
+    Array<{ id: string; nombre: string }>
+  >(config);
+
+  return response || [];
 }
 
 export async function updateCategorizacionGeneral(

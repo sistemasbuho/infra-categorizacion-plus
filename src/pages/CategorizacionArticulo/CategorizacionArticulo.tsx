@@ -20,6 +20,9 @@ export const CategorizacionArticulo = () => {
     fragmentos,
     tags,
     temas,
+    tonos,
+    activos,
+    pasivos,
     tipo,
     isLoading,
     error,
@@ -208,6 +211,9 @@ export const CategorizacionArticulo = () => {
           onDeleteFragment={deleteExistingFragmento}
           tags={tags}
           temas={temas}
+          tonos={tonos}
+          activos={activos}
+          pasivos={pasivos}
           tipo={tipo}
           proyectoId={proyectoId}
           onRefreshData={fetchArticuloData}

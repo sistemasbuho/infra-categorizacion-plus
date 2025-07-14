@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
 import { toast } from 'react-hot-toast';
-import {
-  FaCog,
-  FaList,
-  FaUser,
-  FaCalendarAlt,
-  FaTv,
-  FaTrash,
-} from 'react-icons/fa';
+import { FaCog, FaList, FaUser, FaCalendarAlt, FaTrash } from 'react-icons/fa';
 import {
   updateArticuloHeader,
   buscarTiposPublicacion,
   buscarMedios,
   buscarAutores,
+  buscarProgramas,
   updateCategorizacionGeneral,
 } from '../../../../services/fragmentoRequest';
 import { AsyncReactSelect } from '../../../../components/forms/AsyncReactSelect';
@@ -30,6 +24,9 @@ interface RightSidebarProps {
   onDeleteFragment: (fragmentoId: string) => void;
   tags?: any[];
   temas?: any[];
+  tonos?: any[];
+  activos?: any[];
+  pasivos?: any[];
   tipo?: any[];
   proyectoId?: string;
   onRefreshData?: () => void;
@@ -44,6 +41,11 @@ export const RightSidebar = ({
   fragmentos,
   onFragmentClick,
   onDeleteFragment,
+  tags,
+  temas,
+  tonos,
+  activos,
+  pasivos,
   onRefreshData,
 }: RightSidebarProps) => {
   const { theme } = useTheme();
@@ -88,6 +90,8 @@ export const RightSidebar = ({
       : null;
   });
 
+  const [selectedPrograma, setSelectedPrograma] = useState<any>(null);
+
   const [fechaArticulo, setFechaArticulo] = useState<string>(() => {
     try {
       const date = new Date(articuloData.fecha);
@@ -127,6 +131,10 @@ export const RightSidebar = ({
 
       if (selectedAutor) {
         headerData.autor = selectedAutor.nombre;
+      }
+
+      if (selectedPrograma) {
+        headerData.programa = selectedPrograma.nombre;
       }
 
       await updateArticuloHeader(articuloData.id, headerData);
@@ -178,6 +186,8 @@ export const RightSidebar = ({
           }
         : null
     );
+
+    setSelectedPrograma(null);
 
     toast.success('Cambios cancelados');
   };
@@ -386,23 +396,15 @@ export const RightSidebar = ({
               </div>
 
               <div className="group">
-                <label
-                  className="flex items-center gap-2 text-sm font-semibold mb-2"
-                  style={{ color: theme === 'dark' ? '#d1d5db' : '#374151' }}
-                >
-                  <FaTv className="w-4 h-4 text-orange-500" />
-                  Programa
-                </label>
-                <select
-                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
-                  style={{
-                    backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
-                    borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                    color: theme === 'dark' ? '#ffffff' : '#374151',
-                  }}
-                >
-                  <option>Select...</option>
-                </select>
+                <AsyncReactSelect
+                  label="Programa"
+                  placeholder="Buscar programa..."
+                  value={selectedPrograma}
+                  onChange={setSelectedPrograma}
+                  searchFunction={buscarProgramas}
+                  optionLabelKey="nombre"
+                  optionValueKey="id"
+                />
               </div>
 
               <div className="group">
@@ -685,7 +687,80 @@ export const RightSidebar = ({
                     >
                       <FaList className="w-4 h-4 text-green-500" />
                       Tema
+                      <span
+                        className="ml-2 text-xs px-2 py-1 rounded-full"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }}
+                      >
+                        {temas?.length || 0} opciones
+                      </span>
                     </label>
+                    <Select
+                      isMulti
+                      placeholder="Seleccionar tema..."
+                      value={selectedTema}
+                      onChange={(selectedOptions) =>
+                        setSelectedTema(Array.from(selectedOptions || []))
+                      }
+                      options={
+                        temas?.map((tema: any) => ({
+                          id: tema.id,
+                          nombre: tema.nombre,
+                          value: tema.id,
+                          label: tema.nombre,
+                        })) || []
+                      }
+                      isSearchable={false}
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                          borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? '#3b82f6'
+                            : state.isFocused
+                            ? theme === 'dark'
+                              ? '#4b5563'
+                              : '#f3f4f6'
+                            : theme === 'dark'
+                            ? '#374151'
+                            : '#ffffff',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                      }}
+                    />
                   </div>
 
                   <div className="group">
@@ -697,7 +772,80 @@ export const RightSidebar = ({
                     >
                       <FaList className="w-4 h-4 text-purple-500" />
                       Tag
+                      <span
+                        className="ml-2 text-xs px-2 py-1 rounded-full"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }}
+                      >
+                        {tags?.length || 0} opciones
+                      </span>
                     </label>
+                    <Select
+                      isMulti
+                      placeholder="Seleccionar tag..."
+                      value={selectedTag}
+                      onChange={(selectedOptions) =>
+                        setSelectedTag(Array.from(selectedOptions || []))
+                      }
+                      options={
+                        tags?.map((tag: any) => ({
+                          id: tag.id,
+                          nombre: tag.nombre,
+                          value: tag.id,
+                          label: tag.nombre,
+                        })) || []
+                      }
+                      isSearchable={false}
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                          borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? '#3b82f6'
+                            : state.isFocused
+                            ? theme === 'dark'
+                              ? '#4b5563'
+                              : '#f3f4f6'
+                            : theme === 'dark'
+                            ? '#374151'
+                            : '#ffffff',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                      }}
+                    />
                   </div>
 
                   <div className="group">
@@ -709,7 +857,80 @@ export const RightSidebar = ({
                     >
                       <FaUser className="w-4 h-4 text-blue-500" />
                       Activo
+                      <span
+                        className="ml-2 text-xs px-2 py-1 rounded-full"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }}
+                      >
+                        {activos?.length || 0} opciones
+                      </span>
                     </label>
+                    <Select
+                      isMulti
+                      placeholder="Seleccionar activo..."
+                      value={selectedActivo}
+                      onChange={(selectedOptions) =>
+                        setSelectedActivo(Array.from(selectedOptions || []))
+                      }
+                      options={
+                        activos?.map((activo: any) => ({
+                          id: activo.id,
+                          nombre: activo.nombre,
+                          value: activo.id,
+                          label: activo.nombre,
+                        })) || []
+                      }
+                      isSearchable={false}
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                          borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? '#3b82f6'
+                            : state.isFocused
+                            ? theme === 'dark'
+                              ? '#4b5563'
+                              : '#f3f4f6'
+                            : theme === 'dark'
+                            ? '#374151'
+                            : '#ffffff',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                      }}
+                    />
                   </div>
 
                   <div className="group">
@@ -721,7 +942,80 @@ export const RightSidebar = ({
                     >
                       <FaUser className="w-4 h-4 text-orange-500" />
                       Pasivo
+                      <span
+                        className="ml-2 text-xs px-2 py-1 rounded-full"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }}
+                      >
+                        {pasivos?.length || 0} opciones
+                      </span>
                     </label>
+                    <Select
+                      isMulti
+                      placeholder="Seleccionar pasivo..."
+                      value={selectedPasivo}
+                      onChange={(selectedOptions) =>
+                        setSelectedPasivo(Array.from(selectedOptions || []))
+                      }
+                      options={
+                        pasivos?.map((pasivo: any) => ({
+                          id: pasivo.id,
+                          nombre: pasivo.nombre,
+                          value: pasivo.id,
+                          label: pasivo.nombre,
+                        })) || []
+                      }
+                      isSearchable={false}
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                          borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? '#3b82f6'
+                            : state.isFocused
+                            ? theme === 'dark'
+                              ? '#4b5563'
+                              : '#f3f4f6'
+                            : theme === 'dark'
+                            ? '#374151'
+                            : '#ffffff',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                      }}
+                    />
                   </div>
 
                   <div className="group">
@@ -733,32 +1027,95 @@ export const RightSidebar = ({
                     >
                       <FaCog className="w-4 h-4 text-indigo-500" />
                       Tonalidad
+                      <span
+                        className="ml-2 text-xs px-2 py-1 rounded-full"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark' ? '#1f2937' : '#e5e7eb',
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }}
+                      >
+                        {tonos?.length || 0} opciones
+                      </span>
                     </label>
+                    <Select
+                      placeholder="Seleccionar tonalidad..."
+                      value={selectedTono[0] || null}
+                      onChange={(selectedOption) =>
+                        setSelectedTono(selectedOption ? [selectedOption] : [])
+                      }
+                      options={
+                        tonos?.map((tono: any) => ({
+                          id: tono.id,
+                          nombre: tono.nombre,
+                          value: tono.id,
+                          label: tono.nombre,
+                        })) || []
+                      }
+                      isSearchable={false}
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                          borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor:
+                            theme === 'dark' ? '#374151' : '#ffffff',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? '#3b82f6'
+                            : state.isFocused
+                            ? theme === 'dark'
+                              ? '#4b5563'
+                              : '#f3f4f6'
+                            : theme === 'dark'
+                            ? '#374151'
+                            : '#ffffff',
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                        placeholder: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                        }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: theme === 'dark' ? '#ffffff' : '#374151',
+                        }),
+                      }}
+                    />
                   </div>
                 </div>
 
                 <div
                   className="border rounded-lg p-4 text-center"
                   style={{
-                    backgroundColor: theme === 'dark' ? '#78350f' : '#fef3c7',
-                    borderColor: theme === 'dark' ? '#92400e' : '#f59e0b',
+                    backgroundColor: theme === 'dark' ? '#1e40af' : '#dbeafe',
+                    borderColor: theme === 'dark' ? '#3b82f6' : '#60a5fa',
                   }}
                 >
                   <p
                     className="text-sm font-medium"
                     style={{
-                      color: theme === 'dark' ? '#fde68a' : '#92400e',
+                      color: theme === 'dark' ? '#93c5fd' : '#1e40af',
                     }}
                   >
-                    Por favor seleccione un fragmento
+                    Categorización por fragmentos
                   </p>
                   <p
                     className="text-xs mt-1"
                     style={{
-                      color: theme === 'dark' ? '#f59e0b' : '#d97706',
+                      color: theme === 'dark' ? '#60a5fa' : '#3b82f6',
                     }}
                   >
-                    Selecciona texto del artículo para continuar
+                    Selecciona las categorías para aplicar al texto seleccionado
                   </p>
                 </div>
 
