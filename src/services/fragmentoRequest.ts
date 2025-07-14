@@ -221,3 +221,18 @@ export async function buscarAutores(nombre: string) {
 
   return response.results || [];
 }
+
+export async function updateCategorizacionGeneral(
+  articulo_id: string,
+  data: {
+    tema_general?: string[];
+    tag_general?: string[];
+  }
+) {
+  config = {
+    method: 'PATCH',
+    url: `encabezado-articulo/${articulo_id}/actualizar-tags/`,
+    data,
+  };
+  return await categorizationPlusRequest<any>(config);
+}

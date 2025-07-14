@@ -49,6 +49,7 @@ interface ArticuloData {
   categorizado: boolean;
   proyecto: string;
   tipo_publicacion: string | null;
+  variables_categorizacion?: any[];
 }
 
 interface Tag {
@@ -143,6 +144,7 @@ export const useFragmentos = (
         categorizado: response.articulo.categorizado,
         proyecto: response.articulo.proyecto || '',
         tipo_publicacion: response.articulo.tipo_publicacion || null,
+        variables_categorizacion: response.variables_categorizacion || [],
       };
 
       const transformedFragmentos: Fragmento[] =
