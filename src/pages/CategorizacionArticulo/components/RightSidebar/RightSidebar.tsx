@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
 import { toast } from 'react-hot-toast';
 import { FaCog, FaList, FaUser, FaCalendarAlt, FaTrash } from 'react-icons/fa';
@@ -13,8 +13,53 @@ import {
 import { AsyncReactSelect } from '../../../../shared/components/ui/AsyncReactSelect';
 import Select from 'react-select';
 
+export interface TagGeneral {
+  id: string;
+  nombre: string;
+}
+
+export interface TemaGeneral {
+  id: string;
+  nombre: string;
+}
+
+export interface CategorizacionGeneral {
+  tags_generales: TagGeneral[];
+  temas_generales: TemaGeneral[];
+}
+
+interface SelectOption {
+  id: string;
+  nombre: string;
+  value: string;
+  label: string;
+}
+
+interface ArticuloData {
+  id: string;
+  titulo: string;
+  texto: string;
+  url: string;
+  fecha: string;
+  finished: boolean;
+  state: boolean;
+  resumen: string;
+  palabras_clave: string[];
+  medio: {
+    id: number;
+    nombre: string;
+  };
+  autor: string | null;
+  borrado: boolean;
+  categorizado: boolean;
+  proyecto: string;
+  tipo_publicacion: string | null;
+  variables_categorizacion?: any[];
+  categorizacion_general?: CategorizacionGeneral;
+}
+
 interface RightSidebarProps {
-  articuloData: any;
+  articuloData: ArticuloData;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   transcriptionFontSize: number;
@@ -69,8 +114,12 @@ export const RightSidebar = ({
   const [selectedPasivo, setSelectedPasivo] = useState<any[]>([]);
   const [selectedTono, setSelectedTono] = useState<any[]>([]);
 
-  const [selectedTemaGeneral, setSelectedTemaGeneral] = useState<any[]>([]);
-  const [selectedTagGeneral, setSelectedTagGeneral] = useState<any[]>([]);
+  const [selectedTemaGeneral, setSelectedTemaGeneral] = useState<
+    SelectOption[]
+  >([]);
+  const [selectedTagGeneral, setSelectedTagGeneral] = useState<SelectOption[]>(
+    []
+  );
 
   const [selectedTipoPublicacion, setSelectedTipoPublicacion] = useState<any>(
     () => {
@@ -117,6 +166,37 @@ export const RightSidebar = ({
     const nuevaFecha = event.target.value;
     setFechaArticulo(nuevaFecha);
   };
+
+  useEffect(() => {
+    if (articuloData?.categorizacion_general) {
+      const { tags_generales, temas_generales } =
+        articuloData.categorizacion_general;
+
+      if (temas_generales && Array.isArray(temas_generales)) {
+        const temasFormateados: SelectOption[] = temas_generales.map(
+          (tema: TemaGeneral) => ({
+            id: tema.id,
+            nombre: tema.nombre,
+            value: tema.id,
+            label: tema.nombre,
+          })
+        );
+        setSelectedTemaGeneral(temasFormateados);
+      }
+
+      if (tags_generales && Array.isArray(tags_generales)) {
+        const tagsFormateados: SelectOption[] = tags_generales.map(
+          (tag: TagGeneral) => ({
+            id: tag.id,
+            nombre: tag.nombre,
+            value: tag.id,
+            label: tag.nombre,
+          })
+        );
+        setSelectedTagGeneral(tagsFormateados);
+      }
+    }
+  }, [articuloData?.categorizacion_general]);
 
   const handleSaveHeaderInfo = async () => {
     try {
@@ -434,39 +514,6 @@ export const RightSidebar = ({
     }
   };
 
-  const handleSaveGeneralCategorization = async () => {
-    try {
-      if (selectedTemaGeneral.length === 0) {
-        toast.error('Por favor seleccione al menos un tema');
-        return;
-      }
-
-      const data: {
-        tema_general?: string[];
-        tag_general?: string[];
-      } = {};
-
-      if (selectedTemaGeneral.length > 0) {
-        data.tema_general = selectedTemaGeneral.map((tema) => tema.id);
-      }
-
-      if (selectedTagGeneral.length > 0) {
-        data.tag_general = selectedTagGeneral.map((tag) => tag.id);
-      }
-
-      await updateCategorizacionGeneral(articuloData.id, data);
-
-      toast.success('Categorización general guardada exitosamente');
-
-      if (onRefreshData) {
-        onRefreshData();
-      }
-    } catch (error) {
-      console.error('Error al guardar categorización general:', error);
-      toast.error('Error al guardar la categorización general');
-    }
-  };
-
   const handleCancelFragmentCategorization = () => {
     if (
       selectedFragmento &&
@@ -487,10 +534,63 @@ export const RightSidebar = ({
     toast.success('Categorización por fragmento cancelada');
   };
 
-  const handleCancelGeneralCategorization = () => {
-    setSelectedTemaGeneral([]);
-    setSelectedTagGeneral([]);
-    toast.success('Categorización general cancelada');
+  const handleDeleteGeneralCategorization = async () => {
+    try {
+      const data: {
+        tema_general?: string[];
+        tag_general?: string[];
+      } = {
+        tema_general: [],
+        tag_general: [],
+      };
+
+      await updateCategorizacionGeneral(articuloData.id, data);
+
+      setSelectedTemaGeneral([]);
+      setSelectedTagGeneral([]);
+
+      toast.success('Categorización general eliminada exitosamente');
+
+      if (onRefreshData) {
+        onRefreshData();
+      }
+    } catch (error) {
+      console.error('Error al eliminar categorización general:', error);
+      toast.error('Error al eliminar la categorización general');
+    }
+  };
+
+  const handleTemaGeneralChange = (selectedOptions: SelectOption[]) => {
+    setSelectedTemaGeneral(Array.from(selectedOptions || []));
+  };
+
+  const handleTagGeneralChange = (selectedOptions: SelectOption[]) => {
+    setSelectedTagGeneral(Array.from(selectedOptions || []));
+  };
+
+  const handleSaveGeneralCategorization = async () => {
+    try {
+      interface SaveCategorizacionData {
+        tema_general: string[];
+        tag_general: string[];
+      }
+
+      const data: SaveCategorizacionData = {
+        tema_general: selectedTemaGeneral.map((tema: SelectOption) => tema.id),
+        tag_general: selectedTagGeneral.map((tag: SelectOption) => tag.id),
+      };
+
+      await updateCategorizacionGeneral(articuloData.id, data);
+
+      toast.success('Categorización general guardada exitosamente');
+
+      if (onRefreshData) {
+        onRefreshData();
+      }
+    } catch (error) {
+      console.error('Error al guardar categorización general:', error);
+      toast.error('Error al guardar la categorización general');
+    }
   };
 
   const tabs = [
@@ -1565,11 +1665,7 @@ export const RightSidebar = ({
                       isMulti
                       placeholder="Asignar temas al artículo"
                       value={selectedTemaGeneral}
-                      onChange={(selectedOptions) =>
-                        setSelectedTemaGeneral(
-                          Array.from(selectedOptions || [])
-                        )
-                      }
+                      onChange={handleTemaGeneralChange}
                       options={
                         articuloData?.variables_categorizacion?.[0]?.temas?.map(
                           (tema: any) => ({
@@ -1656,9 +1752,7 @@ export const RightSidebar = ({
                       isMulti
                       placeholder="Asignar tags al artículo"
                       value={selectedTagGeneral}
-                      onChange={(selectedOptions) =>
-                        setSelectedTagGeneral(Array.from(selectedOptions || []))
-                      }
+                      onChange={handleTagGeneralChange}
                       options={
                         articuloData?.variables_categorizacion?.[0]?.tags?.map(
                           (tag: any) => ({
@@ -1720,31 +1814,19 @@ export const RightSidebar = ({
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <button
-                    onClick={handleCancelGeneralCategorization}
-                    className="flex-1 py-3 px-4 border rounded-lg text-sm font-medium transition-all duration-200"
-                    style={{
-                      backgroundColor:
-                        theme === 'dark' ? 'transparent' : '#ffffff',
-                      borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
-                      color: theme === 'dark' ? '#d1d5db' : '#374151',
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor =
-                        theme === 'dark' ? '#374151' : '#f9fafb';
-                      (e.target as HTMLElement).style.borderColor =
-                        theme === 'dark' ? '#6b7280' : '#9ca3af';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor =
-                        theme === 'dark' ? 'transparent' : '#ffffff';
-                      (e.target as HTMLElement).style.borderColor =
-                        theme === 'dark' ? '#4b5563' : '#d1d5db';
-                    }}
+                    onClick={handleDeleteGeneralCategorization}
+                    className="py-3 px-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-red-600 hover:to-red-700 transform hover:scale-105 hover:shadow-lg flex items-center gap-2 flex-1 justify-center"
+                    disabled={
+                      selectedTemaGeneral.length === 0 &&
+                      selectedTagGeneral.length === 0
+                    }
                   >
-                    Cancelar
+                    <FaTrash className="w-4 h-4" />
+                    Eliminar
                   </button>
+
                   <button
                     onClick={handleSaveGeneralCategorization}
                     className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg"

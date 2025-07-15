@@ -61,6 +61,21 @@ export interface CategorizarArticuloResponse {
   total_fragmentos: number;
 }
 
+interface TagGeneral {
+  id: string;
+  nombre: string;
+}
+
+interface TemaGeneral {
+  id: string;
+  nombre: string;
+}
+
+interface CategorizacionGeneral {
+  tags_generales: TagGeneral[];
+  temas_generales: TemaGeneral[];
+}
+
 export interface ArticuloCategorizacion {
   articulo: {
     articulo_id: string;
@@ -94,6 +109,7 @@ export interface ArticuloCategorizacion {
   temas?: Array<{ id: number; nombre: string }>;
   tipo?: Array<{ id: number; nombre: string }>;
   siguiente_articulo?: Array<{ id: number }>;
+  categorizacion_general?: CategorizacionGeneral;
 }
 
 export async function getFragmentosCategorizacion(
@@ -269,6 +285,14 @@ export async function updateCategorizacionGeneral(
     method: 'PATCH',
     url: `encabezado-articulo/${articulo_id}/actualizar-tags/`,
     data,
+  };
+  return await categorizationPlusRequest<any>(config);
+}
+
+export async function deleteCategorizacionGeneral(articulo_id: string) {
+  config = {
+    method: 'DELETE',
+    url: `encabezado-articulo/${articulo_id}/eliminar-tags-temas-general/`,
   };
   return await categorizationPlusRequest<any>(config);
 }

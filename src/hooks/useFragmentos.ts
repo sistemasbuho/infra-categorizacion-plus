@@ -30,6 +30,21 @@ interface Fragmento {
   tonoOriginal?: any;
 }
 
+interface TagGeneral {
+  id: string;
+  nombre: string;
+}
+
+interface TemaGeneral {
+  id: string;
+  nombre: string;
+}
+
+interface CategorizacionGeneral {
+  tags_generales: TagGeneral[];
+  temas_generales: TemaGeneral[];
+}
+
 interface ArticuloData {
   id: string;
   titulo: string;
@@ -50,6 +65,7 @@ interface ArticuloData {
   proyecto: string;
   tipo_publicacion: string | null;
   variables_categorizacion?: any[];
+  categorizacion_general?: CategorizacionGeneral;
 }
 
 interface Tag {
@@ -158,6 +174,7 @@ export const useFragmentos = (
         proyecto: response.articulo.proyecto || '',
         tipo_publicacion: response.articulo.tipo_publicacion || null,
         variables_categorizacion: response.variables_categorizacion || [],
+        categorizacion_general: response.categorizacion_general || null,
       };
 
       const transformedFragmentos: Fragmento[] =
