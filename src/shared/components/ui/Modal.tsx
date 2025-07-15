@@ -1,7 +1,7 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { useTheme } from '../../context/ThemeContext';
 import { Button } from './Button';
-import { useTheme } from '../../shared/context/ThemeContext';
 
 interface ModalProps {
   isOpen: boolean;

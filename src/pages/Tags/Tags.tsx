@@ -7,16 +7,16 @@ import {
 } from 'react-icons/fa';
 import { TagResponse, useTags } from '../../hooks/useTags';
 import { ColumnDef } from '@tanstack/react-table';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Button } from '../../components/ui/Button';
-import DrawerModal from '../../components/modal/DrawerModal';
-import TagForm from '../../components/forms/TagForm';
+import { Skeleton } from '../../shared/components/ui/Skeleton';
+import { Button } from '../../shared/components/ui/Button';
+import DrawerModal from '../../shared/components/ui/DrawerModal';
+import TagForm from './components/TagForm';
 import toast from 'react-hot-toast';
 import PanelDeFiltros, {
   FiltrosTemas,
-} from '../../components/ui/PanelDeFiltros';
+} from '../../shared/components/ui/PanelDeFiltros';
 import { useTheme } from '../../shared/context/ThemeContext';
-import TableBase from '../../components/ui/TableBase';
+import TableBase from '../../shared/components/ui/TableBase';
 export const columns: ColumnDef<TagResponse>[] = [
   {
     accessorKey: 'id',

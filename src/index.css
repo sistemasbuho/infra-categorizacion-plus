@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 
-/* Estilos adicionales para asegurar que el tema funcione */
 html {
   height: 100%;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -21,7 +20,6 @@ body {
   height: 100%;
 }
 
-/* Asegurar que los colores de Tailwind se apliquen correctamente */
 .dark {
   color-scheme: dark;
 }
@@ -30,8 +28,6 @@ body {
   color-scheme: light;
 }
 
-/* Estilos personalizados para scrollbars */
-/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db #f9fafb;
@@ -41,7 +37,6 @@ body {
   scrollbar-color: #4b5563 #1f2937;
 }
 
-/* Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -61,7 +56,6 @@ body {
   background: #9ca3af;
 }
 
-/* Dark mode scrollbars */
 .dark ::-webkit-scrollbar-track {
   background: #1f2937;
 }

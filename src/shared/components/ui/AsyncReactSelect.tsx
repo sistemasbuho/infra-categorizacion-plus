@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AsyncSelect from 'react-select/async';
-import { useTheme } from '../../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface AsyncReactSelectProps {
   placeholder?: string;

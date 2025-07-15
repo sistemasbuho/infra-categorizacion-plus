@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
-import { Modal } from '../../../../components/ui/Modal';
+import { Modal } from '../../../../shared/components/ui/Modal';
 
 interface ArticleForModal {
   titulo: string;

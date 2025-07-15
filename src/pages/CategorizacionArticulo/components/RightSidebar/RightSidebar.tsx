@@ -10,7 +10,7 @@ import {
   buscarProgramas,
   updateCategorizacionGeneral,
 } from '../../../../services/fragmentoRequest';
-import { AsyncReactSelect } from '../../../../components/forms/AsyncReactSelect';
+import { AsyncReactSelect } from '../../../../shared/components/ui/AsyncReactSelect';
 import Select from 'react-select';
 
 interface RightSidebarProps {

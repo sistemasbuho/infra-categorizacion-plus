@@ -1,4 +1,4 @@
-import { useTheme } from '../../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface TableSkeletonProps {
   columns: number;

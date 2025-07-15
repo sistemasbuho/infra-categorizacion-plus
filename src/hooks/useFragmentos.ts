@@ -91,20 +91,6 @@ interface Pasivo {
   nombre: string;
 }
 
-interface ArticuloCompleto {
-  articulo: ArticuloData;
-  fragmentos: Fragmento[];
-  tags: Array<{
-    id: number;
-    nombre: string;
-    tags: Tag[];
-  }>;
-  temas: Tema[];
-  programa: Programa[];
-  tipo: Tipo[];
-  keyword: Keyword[];
-}
-
 export const useFragmentos = (
   articuloId: string | undefined,
   proyectoId: string | undefined
@@ -360,7 +346,8 @@ export const useFragmentos = (
         const end = start + selectedText.length;
 
         const allFragments = [...fragmentos, ...temporalFragments];
-        const existingFragments = allFragments.map((fragment) => ({
+        const existingFragments = allFragments.map((fragment, index) => ({
+          id: index,
           start_index: fragment.posicion_inicio,
           article_fragment: fragment.texto,
         }));

@@ -1,9 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router';
-import { routes, menuSections } from '../routes/routes';
+import { menuSections } from '../../../routes/routes';
 import { FaBars, FaMoon, FaSun } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
-import { useTheme } from '../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Sidebar() {
   const { theme, toggle } = useTheme();
@@ -60,7 +60,6 @@ export default function Sidebar() {
           borderRight: `1px solid ${theme === 'dark' ? '#4b5563' : '#d1d5db'}`,
         }}
       >
-        {/* Botón hamburguesa con altura fija */}
         <div className="flex-shrink-0" style={{ height: '64px' }}>
           <button
             className="w-full h-full flex items-center justify-center focus:outline-none transition-colors"
@@ -95,10 +94,8 @@ export default function Sidebar() {
           >
             {menuSections.map((section) => (
               <div key={section.id} className={open ? 'mb-6' : 'mb-2'}>
-                {/* Título de la sección */}
                 {section.title && (
                   <div className="relative">
-                    {/* Título cuando está abierto */}
                     <div
                       className={`px-4 py-2 mx-2 text-sm font-bold uppercase transition-all duration-300 ${
                         open ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -111,7 +108,6 @@ export default function Sidebar() {
                       {section.title}
                     </div>
 
-                    {/* Indicador cuando está cerrado */}
                     <div
                       className={`flex items-center justify-center w-full transition-all duration-300 ${
                         open
@@ -128,7 +124,6 @@ export default function Sidebar() {
                   </div>
                 )}
 
-                {/* Rutas de la sección */}
                 <div className={open ? 'space-y-1' : 'space-y-2'}>
                   {section.routes
                     .filter((link) => link.showInSidebar !== false)
@@ -170,7 +165,6 @@ export default function Sidebar() {
                                   theme === 'dark' ? '#4b5563' : '#e5e7eb';
                                 e.currentTarget.style.color =
                                   theme === 'dark' ? '#ffffff' : '#111827';
-                                // Buscar específicamente el contenedor del icono
                                 const iconContainer =
                                   e.currentTarget.querySelector(
                                     '.icon-container'
@@ -241,7 +235,6 @@ export default function Sidebar() {
             ))}
           </nav>
 
-          {/* Botón de cambio de tema con altura fija igual al botón hamburguesa */}
           <div className="flex-shrink-0" style={{ height: '64px' }}>
             <button
               className="w-full h-full flex items-center justify-center transition-colors cursor-pointer focus:outline-none"

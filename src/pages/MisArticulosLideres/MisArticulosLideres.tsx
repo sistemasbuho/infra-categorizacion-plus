@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { Articulo, useArticulosLideres } from '../../hooks/useArticulosLideres';
-import { Button } from '../../components/ui/Button';
-import { Paginacion } from '../../components/ui/Paginacion';
+import { Button } from '../../shared/components/ui/Button';
+import { Paginacion } from '../../shared/components/ui/Paginacion';
 import toast from 'react-hot-toast';
 import { PageContainer } from '../../shared/components/Layout/PageContainer';
 import { useModal } from '../../shared/hooks/useModal';

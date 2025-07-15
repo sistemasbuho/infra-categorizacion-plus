@@ -3,7 +3,7 @@ import Base64 from 'crypto-js/enc-base64';
 import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import axios from 'axios';
-import { OverlappingProps } from '../shared/types/generals';
+import { OverlappingProps } from '../types/generals';
 
 const DATA_SESSION = 'userDatas';
 

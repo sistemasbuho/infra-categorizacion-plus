@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import useToken from './hooks/useToken';
-import Sidebar from './components/Sidebar';
+import Sidebar from './shared/components/ui/Sidebar';
 import { routes } from './routes/routes';
 import { ProtectedRoutes } from './auth/ProtectedRoutes';
 import Home from './pages/Home/Home';
@@ -41,7 +41,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           {token ? (
-            // Usuario autenticado: mostrar todas las rutas protegidas
             <Route element={<Sidebar />}>
               <Route path="/" element={<Home />} />
               {routes.map((r) => (
@@ -57,7 +56,6 @@ function App() {
               ))}
             </Route>
           ) : (
-            // Usuario no autenticado: solo login
             <>
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<Navigate to="/login" />} />

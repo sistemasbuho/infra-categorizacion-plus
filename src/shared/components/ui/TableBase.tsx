@@ -5,7 +5,7 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table';
 import { FaPen, FaTrash } from 'react-icons/fa';
-import { useTheme } from '../../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface GenericTableProps<T extends { id: string | number }> {
   data: T[];

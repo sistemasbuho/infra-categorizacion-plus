@@ -7,17 +7,16 @@ import {
 } from 'react-icons/fa';
 import { TemaResponse, useTemas } from '../../hooks/useTemas';
 import { ColumnDef } from '@tanstack/react-table';
-import { Skeleton } from '../../components/ui/Skeleton';
-import DrawerModal from '../../components/modal/DrawerModal';
-import TemaForm, { LocalTema } from '../../components/forms/TemaForm';
-import { Button } from '../../components/ui/Button';
+import { Skeleton } from '../../shared/components/ui/Skeleton';
+import DrawerModal from '../../shared/components/ui/DrawerModal';
+import TemaForm, { LocalTema } from './components/TemaForm';
 import PanelDeFiltros, {
   FiltrosTemas,
-} from '../../components/ui/PanelDeFiltros';
+} from '../../shared/components/ui/PanelDeFiltros';
 import toast from 'react-hot-toast';
 import { useTheme } from '../../shared/context/ThemeContext';
-import TableBase from '../../components/ui/TableBase';
-
+import TableBase from '../../shared/components/ui/TableBase';
+import { Button } from '../../shared/components/ui/Button';
 export const columns: ColumnDef<TemaResponse>[] = [
   {
     accessorKey: 'id',

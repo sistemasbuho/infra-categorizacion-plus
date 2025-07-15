@@ -6,7 +6,7 @@ import {
   getTemas,
   updateTema,
 } from '../services/temaRequest';
-import { LocalTema } from '../components/forms/TemaForm';
+import { LocalTema } from '../pages/Temas/components/TemaForm';
 
 export type TemaResponse = {
   id: string;

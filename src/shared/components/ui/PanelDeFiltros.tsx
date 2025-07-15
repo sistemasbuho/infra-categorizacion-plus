@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '../../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export type FiltrosTemas = {
   nombre?: string;
@@ -14,7 +14,6 @@ type PanelDeFiltrosProps = {
   onChangeFiltro: (key: keyof FiltrosTemas, value: string) => void;
   onClear: () => void;
   onApply?: () => void;
-  // flags opcionales para mostrar/ocultar campos
   showNombre?: boolean;
   showProyecto?: boolean;
   showFechaCreado?: boolean;

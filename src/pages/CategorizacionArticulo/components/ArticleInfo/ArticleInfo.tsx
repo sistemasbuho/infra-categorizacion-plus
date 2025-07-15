@@ -1,5 +1,5 @@
 import { useTheme } from '../../../../shared/context/ThemeContext';
-import { FaKey, FaFilePdf, FaFileAudio } from 'react-icons/fa';
+import { FaKey, FaFileAudio } from 'react-icons/fa';
 import { CiTextAlignCenter } from 'react-icons/ci';
 
 interface ArticleInfoProps {
@@ -15,33 +15,10 @@ interface ArticleInfoProps {
 export const ArticleInfo = ({
   resumen,
   palabras_clave,
-  finished,
-  state,
-  categorizado,
   activeSection,
   toggleSection,
 }: ArticleInfoProps) => {
   const { theme } = useTheme();
-
-  const getStatusColor = (status: boolean) => {
-    return status
-      ? theme === 'dark'
-        ? '#22c55e'
-        : '#16a34a'
-      : theme === 'dark'
-      ? '#ef4444'
-      : '#dc2626';
-  };
-
-  const getStatusBgColor = (status: boolean) => {
-    return status
-      ? theme === 'dark'
-        ? '#166534'
-        : '#dcfce7'
-      : theme === 'dark'
-      ? '#7f1d1d'
-      : '#fef2f2';
-  };
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../shared/context/ThemeContext';
 import { useFragmentos } from '../../hooks/useFragmentos';
-import Loader from '../../components/ui/Loader';
+import Loader from '../../shared/components/ui/Loader';
 import { ArticleHeader } from './components/ArticleHeader/ArticleHeader';
 import { ArticleInfo } from './components/ArticleInfo/ArticleInfo';
 import { ArticleContent } from './components/ArticleContent/ArticleContent';
@@ -100,9 +100,7 @@ export const CategorizacionArticulo = () => {
     setActiveSection(activeSection === section ? null : section);
   };
 
-  const handleTextSelectionLocal = (
-    event: React.MouseEvent<HTMLDivElement>
-  ) => {
+  const handleTextSelectionLocal = () => {
     handleTextSelection();
     const selection = window.getSelection();
 

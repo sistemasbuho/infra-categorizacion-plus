@@ -1,6 +1,6 @@
 // components/modal/DrawerModal.tsx
 import React, { ReactNode } from 'react';
-import { useTheme } from '../../shared/context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 type Props = {
   children: ReactNode;

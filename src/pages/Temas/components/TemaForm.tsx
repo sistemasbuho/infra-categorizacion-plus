@@ -1,9 +1,9 @@
 import { IoSaveSharp, IoCheckmarkCircle, IoClose } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
-import { TemaResponse } from '../../hooks/useTemas';
+import { TemaResponse } from '../../../hooks/useTemas';
 import { useState, useEffect, useRef } from 'react';
-import { searchProyectos } from '../../services/temaRequest';
-import { useTheme } from '../../shared/context/ThemeContext';
+import { searchProyectos } from '../../../services/temaRequest';
+import { useTheme } from '../../../shared/context/ThemeContext';
 
 export type LocalTema = {
   nombre: string;
@@ -45,7 +45,6 @@ const TemaForm: React.FC<Props> = ({ defaultValue, confirmEvent, formId }) => {
   const [options, setOptions] = useState<Proyecto[]>([]);
   const [openList, setOpenList] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [inputValue, setInputValue] = useState('');
   const [selectedProject, setSelectedProject] = useState<Proyecto | null>(null);
 
   useEffect(() => {
@@ -80,7 +79,6 @@ const TemaForm: React.FC<Props> = ({ defaultValue, confirmEvent, formId }) => {
             );
             if (found) {
               setSelectedProject(found);
-              setInputValue(found.nombre);
               return;
             }
           }
@@ -92,7 +90,6 @@ const TemaForm: React.FC<Props> = ({ defaultValue, confirmEvent, formId }) => {
           );
           if (found) {
             setSelectedProject(found);
-            setInputValue(found.nombre);
           }
         } catch (error) {
           console.log('No se pudo cargar el nombre del proyecto');
@@ -172,7 +169,6 @@ const TemaForm: React.FC<Props> = ({ defaultValue, confirmEvent, formId }) => {
           onChange={(e) => {
             setSearch(e.target.value);
             setSelectedProject(null);
-            setInputValue('');
             setValue('proyecto_id', '');
             setOpenList(true);
           }}
@@ -264,7 +260,6 @@ const TemaForm: React.FC<Props> = ({ defaultValue, confirmEvent, formId }) => {
                 onClick={() => {
                   setValue('proyecto_id', p.id);
                   setSelectedProject(p);
-                  setInputValue(p.nombre);
                   setSearch('');
                   setOpenList(false);
                 }}
