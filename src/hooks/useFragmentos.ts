@@ -5,11 +5,6 @@ import {
   createFragmento,
   updateFragmento,
   deleteFragmento,
-  finalizarArticulo,
-  categorizarArticulo,
-  CategorizarArticuloResponse,
-  ArticuloAPI,
-  FragmentoAPI,
 } from '../services/fragmentoRequest';
 import { changeEstadoArticulo } from '../services/articulosLideresRequest';
 import { isOverlappingFragment } from '../shared/utils/funcs';
@@ -28,6 +23,11 @@ interface Fragmento {
   sentimiento: string;
   fecha_creacion: string;
   fecha_modificacion: string;
+  temas?: any[];
+  tag?: any[];
+  activo?: any[];
+  pasivo?: any[];
+  tonoOriginal?: any;
 }
 
 interface ArticuloData {
@@ -126,6 +126,16 @@ export const useFragmentos = (
     start: number;
     end: number;
   } | null>(null);
+  const [temporalFragments, setTemporalFragments] = useState<
+    Array<{
+      id: string;
+      texto: string;
+      posicion_inicio: number;
+      posicion_fin: number;
+      categoria: string;
+      isTemporary: boolean;
+    }>
+  >([]);
   const [isCreatingFragment, setIsCreatingFragment] = useState(false);
   const [isFinalizingArticle, setIsFinalizingArticle] = useState(false);
 
@@ -170,16 +180,28 @@ export const useFragmentos = (
           texto: frag.texto,
           posicion_inicio: parseInt(frag.indice_inicial),
           posicion_fin: parseInt(frag.indice_final),
-          categoria: frag.temas?.length > 0 ? frag.temas[0] : 'General',
+          categoria:
+            frag.temas?.length > 0
+              ? typeof frag.temas[0] === 'object'
+                ? frag.temas[0].id
+                : frag.temas[0]
+              : 'General',
           subcategoria: undefined,
-          tags: frag.tag || [],
+          tags: (frag.tag || []).map((tag: any) =>
+            typeof tag === 'object' ? tag.id : tag
+          ),
           autor: response.articulo.autor || 'Desconocido',
           medio: response.articulo.medio || 'Desconocido',
-          tono: frag.tono || 'Neutro',
+          tono: (frag.tono as any)?.nombre || frag.tono || 'Neutro',
           sentimiento: 'Neutro',
           fecha_creacion: frag.created_at || new Date().toISOString(),
           fecha_modificacion:
             frag.modified_at || frag.created_at || new Date().toISOString(),
+          temas: frag.temas || [],
+          tag: frag.tag || [],
+          activo: frag.activo_data || frag.activo || [],
+          pasivo: frag.pasivo_data || frag.pasivo || [],
+          tonoOriginal: frag.tono,
         })) || [];
 
       setArticuloData(transformedArticulo);
@@ -204,45 +226,31 @@ export const useFragmentos = (
     }
   };
 
-  const createNewFragmento = async (
-    fragmentoData: Omit<
-      Fragmento,
-      'id' | 'fecha_creacion' | 'fecha_modificacion'
-    >
-  ) => {
+  const createNewFragmento = async (fragmentoData: {
+    texto: string;
+    indice_inicial: string;
+    indice_final: string;
+    tema_ids: string[];
+    tono_id: string;
+    tag_ids: string[];
+    pasivo: string[];
+    activo: string[];
+  }) => {
+    if (!articuloId) return;
+
     try {
       setIsCreatingFragment(true);
 
-      const fragmentosParaValidacion = fragmentos.map((frag) => ({
-        id: parseInt(frag.id) || Date.now(),
-        start_index: frag.posicion_inicio,
-        article_fragment: frag.texto,
-        end_index: frag.posicion_fin,
-      }));
-
-      if (
-        isOverlappingFragment({
-          startIndex: fragmentoData.posicion_inicio,
-          length: fragmentoData.texto.length,
-          allFragments: fragmentosParaValidacion,
-        })
-      ) {
-        toast.error(
-          'No se puede crear un fragmento que se superponga con uno existente'
-        );
-        return;
-      }
-
-      const newFragmento: Fragmento = {
+      const dataToSend = {
         ...fragmentoData,
-        id: `frag-${Date.now()}`,
-        fecha_creacion: new Date().toISOString(),
-        fecha_modificacion: new Date().toISOString(),
+        articulo_id: articuloId,
       };
 
-      setFragmentos((prev) => [...prev, newFragmento]);
+      await createFragmento(dataToSend);
 
       toast.success('Fragmento creado exitosamente');
+
+      await fetchArticuloData();
 
       setSelectedText('');
       setSelectedRange(null);
@@ -256,21 +264,21 @@ export const useFragmentos = (
 
   const updateExistingFragmento = async (
     fragmentoId: string,
-    fragmentoData: Partial<Fragmento>
+    fragmentoData: {
+      texto: string;
+      tema_ids: string[];
+      tag_ids: string[];
+      tono_id: string;
+      activo: string[];
+      pasivo: string[];
+    }
   ) => {
     try {
-      const updatedFragmento = {
-        ...fragmentoData,
-        fecha_modificacion: new Date().toISOString(),
-      };
-
-      setFragmentos((prev) =>
-        prev.map((frag) =>
-          frag.id === fragmentoId ? { ...frag, ...updatedFragmento } : frag
-        )
-      );
+      await updateFragmento(fragmentoId, fragmentoData);
 
       toast.success('Fragmento actualizado exitosamente');
+
+      await fetchArticuloData();
     } catch (err) {
       console.error('Error al actualizar fragmento:', err);
       toast.error('Error al actualizar el fragmento');
@@ -279,9 +287,12 @@ export const useFragmentos = (
 
   const deleteExistingFragmento = async (fragmentoId: string) => {
     try {
-      setFragmentos((prev) => prev.filter((frag) => frag.id !== fragmentoId));
+      await deleteFragmento(fragmentoId);
 
       toast.success('Fragmento eliminado exitosamente');
+
+      // Recargar datos
+      await fetchArticuloData();
     } catch (err) {
       console.error('Error al eliminar fragmento:', err);
       toast.error('Error al eliminar el fragmento');
@@ -337,14 +348,60 @@ export const useFragmentos = (
 
       const container = document.getElementById('article-content');
       if (container) {
-        const containerRange = document.createRange();
-        containerRange.selectNodeContents(container);
-        containerRange.setEnd(range.startContainer, range.startOffset);
-        const start = containerRange.toString().length;
+        const containerText =
+          container.textContent || container.innerText || '';
+
+        const beforeRange = document.createRange();
+        beforeRange.selectNodeContents(container);
+        beforeRange.setEnd(range.startContainer, range.startOffset);
+
+        const beforeText = beforeRange.toString();
+        const start = beforeText.length;
         const end = start + selectedText.length;
+
+        const allFragments = [...fragmentos, ...temporalFragments];
+        const existingFragments = allFragments.map((fragment) => ({
+          start_index: fragment.posicion_inicio,
+          article_fragment: fragment.texto,
+        }));
+
+        const hasOverlap = isOverlappingFragment({
+          startIndex: start,
+          length: selectedText.length,
+          allFragments: existingFragments,
+        });
+
+        if (hasOverlap) {
+          toast.error('La selección se superpone con un fragmento existente');
+          selection.removeAllRanges();
+          return;
+        }
+
+        if (start < 0 || end > containerText.length || start >= end) {
+          toast.error('Selección inválida. Intenta seleccionar nuevamente.');
+          selection.removeAllRanges();
+          return;
+        }
+
+        const temporalFragment = {
+          id: `temporal-${Date.now()}`,
+          texto: selectedText,
+          posicion_inicio: start,
+          posicion_fin: end,
+          categoria: 'temporal',
+          isTemporary: true,
+        };
+
+        setTemporalFragments((prev) => [...prev, temporalFragment]);
 
         setSelectedText(selectedText);
         setSelectedRange({ start, end });
+
+        selection.removeAllRanges();
+
+        toast.success(
+          'Fragmento temporal creado. Haz clic en él para categorizarlo.'
+        );
       }
     }
   };
@@ -353,9 +410,20 @@ export const useFragmentos = (
     fetchArticuloData();
   }, [articuloId]);
 
+  const removeTemporalFragment = (temporalId: string) => {
+    setTemporalFragments((prev) =>
+      prev.filter((frag) => frag.id !== temporalId)
+    );
+  };
+
+  const clearTemporalFragments = () => {
+    setTemporalFragments([]);
+  };
+
   return {
     articuloData,
     fragmentos,
+    temporalFragments,
     tags,
     temas,
     tonos,
@@ -377,5 +445,7 @@ export const useFragmentos = (
     finalizarCategorizacion,
     cambiarEstadoArticulo,
     handleTextSelection,
+    removeTemporalFragment,
+    clearTemporalFragments,
   };
 };

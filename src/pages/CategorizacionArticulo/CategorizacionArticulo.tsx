@@ -18,33 +18,32 @@ export const CategorizacionArticulo = () => {
   const {
     articuloData,
     fragmentos,
+    temporalFragments,
     tags,
     temas,
     tonos,
     activos,
     pasivos,
     tipo,
+    selectedText,
+    selectedRange,
     isLoading,
     error,
     isFinalizingArticle,
     finalizarCategorizacion,
     cambiarEstadoArticulo,
     createNewFragmento,
+    updateExistingFragmento,
     deleteExistingFragmento,
     fetchArticuloData,
+    handleTextSelection,
+    removeTemporalFragment,
+    clearTemporalFragments,
   } = useFragmentos(id || '', proyectoId || '');
 
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [showFragmentModal, setShowFragmentModal] = useState(false);
   const [sidebarActiveTab, setSidebarActiveTab] = useState('info');
   const [transcriptionFontSize, setTranscriptionFontSize] = useState(14);
-  const [formData, setFormData] = useState({
-    categoria: '',
-    subcategoria: '',
-    tono: '',
-    sentimiento: '',
-    tags: '',
-  });
 
   const handleFragmentClick = (fragmento: any) => {
     const fragmentElement = document.getElementById(`fragment-${fragmento.id}`);
@@ -58,6 +57,17 @@ export const CategorizacionArticulo = () => {
       setTimeout(() => {
         fragmentElement.style.boxShadow = 'none';
       }, 2000);
+    }
+
+    setSidebarActiveTab('categorization');
+
+    if (fragmento.isTemporary || fragmento.categoria === 'temporal') {
+      const tempFragment = temporalFragments.find((f) => f.id === fragmento.id);
+      if (tempFragment) {
+        toast.success(
+          'Fragmento temporal seleccionado. Selecciona un tema y tonalidad para guardarlo.'
+        );
+      }
     }
   };
 
@@ -93,6 +103,7 @@ export const CategorizacionArticulo = () => {
   const handleTextSelectionLocal = (
     event: React.MouseEvent<HTMLDivElement>
   ) => {
+    handleTextSelection();
     const selection = window.getSelection();
 
     if (!selection || selection.rangeCount === 0) {
@@ -105,15 +116,14 @@ export const CategorizacionArticulo = () => {
       return;
     }
 
-    const selectedText = selection.toString().trim();
+    const selectedTextStr = selection.toString().trim();
 
-    if (selectedText.length > 2) {
+    if (selectedTextStr.length > 2) {
       const range = selection.getRangeAt(0);
       const preCaretRange = range.cloneRange();
       preCaretRange.selectNodeContents(articleContent);
       preCaretRange.setEnd(range.startContainer, range.startOffset);
       const startIndex = preCaretRange.toString().length;
-      const endIndex = startIndex + selectedText.length;
 
       const fragmentosParaValidacion = fragmentos.map((frag) => ({
         id: parseInt(frag.id) || Date.now(),
@@ -125,7 +135,7 @@ export const CategorizacionArticulo = () => {
       if (
         isOverlappingFragment({
           startIndex,
-          length: selectedText.length,
+          length: selectedTextStr.length,
           allFragments: fragmentosParaValidacion,
         })
       ) {
@@ -136,22 +146,9 @@ export const CategorizacionArticulo = () => {
         return;
       }
 
-      const newFragmentData = {
-        texto: selectedText,
-        posicion_inicio: startIndex,
-        posicion_fin: endIndex,
-        categoria: 'General',
-        subcategoria: '',
-        tags: [],
-        autor: articuloData?.autor || 'Unknown',
-        medio: articuloData?.medio?.nombre || 'Unknown',
-        tono: 'Neutro',
-        sentimiento: 'Neutro',
-      };
-
-      createNewFragmento(newFragmentData);
-
-      selection.removeAllRanges();
+      toast.success(
+        'Texto seleccionado. Ve a "Categorización → Por fragmentos" para crear el fragmento.'
+      );
     }
   };
 
@@ -192,9 +189,11 @@ export const CategorizacionArticulo = () => {
             <ArticleContent
               texto={articuloData.texto}
               fragmentos={fragmentos}
+              temporalFragments={temporalFragments}
               activeSection={activeSection}
               toggleSection={toggleSection}
               onTextSelection={handleTextSelectionLocal}
+              onFragmentClick={handleFragmentClick}
               fontSize={transcriptionFontSize}
             />
           </div>
@@ -207,6 +206,7 @@ export const CategorizacionArticulo = () => {
           transcriptionFontSize={transcriptionFontSize}
           setTranscriptionFontSize={setTranscriptionFontSize}
           fragmentos={fragmentos}
+          temporalFragments={temporalFragments}
           onFragmentClick={handleFragmentClick}
           onDeleteFragment={deleteExistingFragmento}
           tags={tags}
@@ -217,6 +217,12 @@ export const CategorizacionArticulo = () => {
           tipo={tipo}
           proyectoId={proyectoId}
           onRefreshData={fetchArticuloData}
+          selectedText={selectedText}
+          selectedRange={selectedRange}
+          onCreateFragment={createNewFragmento}
+          onUpdateFragment={updateExistingFragmento}
+          removeTemporalFragment={removeTemporalFragment}
+          clearTemporalFragments={clearTemporalFragments}
         />
       </div>
     </div>

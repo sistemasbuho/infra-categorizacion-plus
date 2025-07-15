@@ -1,40 +1,53 @@
 import { useRef } from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
-import { FaPen, FaPencilRuler, FaPenFancy, FaPenNib } from 'react-icons/fa';
 
 interface Fragmento {
   id: string;
   posicion_inicio: number;
   posicion_fin: number;
   categoria: string;
+  isTemporary?: boolean;
 }
 
 interface ArticleContentProps {
   texto: string;
   fragmentos: Fragmento[];
+  temporalFragments: Fragmento[];
   activeSection: string | null;
   toggleSection: (section: string) => void;
   onTextSelection: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onFragmentClick: (fragmento: Fragmento) => void;
   fontSize: number;
 }
 
 export const ArticleContent = ({
   texto,
   fragmentos,
+  temporalFragments,
   activeSection,
   toggleSection,
   onTextSelection,
+  onFragmentClick,
   fontSize,
 }: ArticleContentProps) => {
   const { theme } = useTheme();
   const articleTextRef = useRef<HTMLDivElement>(null);
 
-  const getHighlightedText = (text: string) => {
-    // Validar que text sea válido
-    if (!text || typeof text !== 'string') return '';
-    if (!fragmentos || fragmentos.length === 0) return text;
+  (window as any).handleFragmentClick = (fragmentId: string) => {
+    const allFragments = [...fragmentos, ...temporalFragments];
+    const fragment = allFragments.find((f) => f.id === fragmentId);
+    if (fragment) {
+      onFragmentClick(fragment);
+    }
+  };
 
-    const fragments = [...fragmentos].sort(
+  const getHighlightedText = (text: string) => {
+    if (!text || typeof text !== 'string') return '';
+
+    const allFragments = [...fragmentos, ...temporalFragments];
+    if (allFragments.length === 0) return text;
+
+    const fragments = [...allFragments].sort(
       (a, b) => (b.posicion_inicio || 0) - (a.posicion_inicio || 0)
     );
     let highlightedText = text;
@@ -46,7 +59,6 @@ export const ArticleContent = ({
       const startIndex = fragment.posicion_inicio || 0;
       const endIndex = fragment.posicion_fin || startIndex;
 
-      // Validar que los índices sean válidos
       if (
         startIndex < 0 ||
         endIndex < 0 ||
@@ -60,11 +72,23 @@ export const ArticleContent = ({
       const highlighted = highlightedText.substring(startIndex, endIndex);
       const after = highlightedText.substring(endIndex);
 
+      const isTemporary =
+        fragment.isTemporary || fragment.categoria === 'temporal';
+      const style = isTemporary
+        ? 'background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 2px solid #a855f7; user-select: none; opacity: 0.8;'
+        : 'background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 2px solid #a855f7; user-select: none;';
+
+      const title = isTemporary
+        ? 'Fragmento temporal - Haz clic para categorizarlo&#10;Requiere seleccionar tema y tonalidad'
+        : `Fragmento categorizado - Categoría: ${
+            fragment.categoria || 'Sin categoría'
+          }&#10;Clic para ver detalles&#10;Esta porción ya está fragmentada y no se puede seleccionar nuevamente`;
+
       highlightedText = `${before}<mark id="fragment-${
         fragment.id || 'unknown'
-      }" style="background-color: #e9d5ff; color: #581c87; padding: 2px 4px; border-radius: 3px; cursor: pointer; border: 2px solid #a855f7; user-select: none;" title="Fragmento categorizado - Categoría: ${
-        fragment.categoria || 'Sin categoría'
-      }&#10;Clic para ver detalles&#10;Esta porción ya está fragmentada y no se puede seleccionar nuevamente">${highlighted}</mark>${after}`;
+      }" style="${style}" title="${title}" onclick="handleFragmentClick('${
+        fragment.id
+      }')">${highlighted}</mark>${after}`;
     });
 
     return highlightedText || '';

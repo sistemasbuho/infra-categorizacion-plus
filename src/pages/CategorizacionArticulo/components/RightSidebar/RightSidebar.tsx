@@ -20,6 +20,7 @@ interface RightSidebarProps {
   transcriptionFontSize: number;
   setTranscriptionFontSize: (size: number) => void;
   fragmentos: any[];
+  temporalFragments: any[];
   onFragmentClick: (fragmento: any) => void;
   onDeleteFragment: (fragmentoId: string) => void;
   tags?: any[];
@@ -30,6 +31,12 @@ interface RightSidebarProps {
   tipo?: any[];
   proyectoId?: string;
   onRefreshData?: () => void;
+  selectedText?: string;
+  selectedRange?: { start: number; end: number } | null;
+  onCreateFragment?: (fragmentoData: any) => void;
+  onUpdateFragment?: (fragmentoId: string, fragmentoData: any) => void;
+  removeTemporalFragment?: (temporalId: string) => void;
+  clearTemporalFragments?: () => void;
 }
 
 export const RightSidebar = ({
@@ -39,6 +46,7 @@ export const RightSidebar = ({
   transcriptionFontSize,
   setTranscriptionFontSize,
   fragmentos,
+  temporalFragments,
   onFragmentClick,
   onDeleteFragment,
   tags,
@@ -47,10 +55,14 @@ export const RightSidebar = ({
   activos,
   pasivos,
   onRefreshData,
+  selectedText,
+  selectedRange,
+  onCreateFragment,
+  onUpdateFragment,
+  removeTemporalFragment,
 }: RightSidebarProps) => {
   const { theme } = useTheme();
   const [categorizationView, setCategorizationView] = useState('fragmentos');
-
   const [selectedTema, setSelectedTema] = useState<any[]>([]);
   const [selectedTag, setSelectedTag] = useState<any[]>([]);
   const [selectedActivo, setSelectedActivo] = useState<any[]>([]);
@@ -59,7 +71,6 @@ export const RightSidebar = ({
 
   const [selectedTemaGeneral, setSelectedTemaGeneral] = useState<any[]>([]);
   const [selectedTagGeneral, setSelectedTagGeneral] = useState<any[]>([]);
-  const [selectedTipo, setSelectedTipo] = useState<any[]>([]);
 
   const [selectedTipoPublicacion, setSelectedTipoPublicacion] = useState<any>(
     () => {
@@ -91,6 +102,7 @@ export const RightSidebar = ({
   });
 
   const [selectedPrograma, setSelectedPrograma] = useState<any>(null);
+  const [selectedFragmento, setSelectedFragmento] = useState<any>(null);
 
   const [fechaArticulo, setFechaArticulo] = useState<string>(() => {
     try {
@@ -192,6 +204,139 @@ export const RightSidebar = ({
     toast.success('Cambios cancelados');
   };
 
+  const handleFragmentSelection = (fragmento: any) => {
+    if (selectedFragmento?.id === fragmento.id) {
+      setSelectedFragmento(null);
+      onFragmentClick(null);
+
+      setSelectedTema([]);
+      setSelectedTag([]);
+      setSelectedActivo([]);
+      setSelectedPasivo([]);
+      setSelectedTono([]);
+
+      return;
+    }
+
+    setSelectedFragmento(fragmento);
+    onFragmentClick(fragmento);
+
+    if (fragmento.isTemporary || fragmento.categoria === 'temporal') {
+      setSelectedTema([]);
+      setSelectedTag([]);
+      setSelectedActivo([]);
+      setSelectedPasivo([]);
+      setSelectedTono([]);
+
+      return;
+    }
+
+    const temaOptions = (fragmento.temas || [])
+      .map((tema: any) => {
+        if (typeof tema === 'object' && tema.id && tema.nombre) {
+          return tema;
+        }
+        if (typeof tema === 'string') {
+          return temas?.find((t) => t.id === tema) || null;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    const tagOptions = (fragmento.tag || fragmento.tags || [])
+      .map((tag: any) => {
+        if (typeof tag === 'object' && tag.id && tag.nombre) {
+          return tag;
+        }
+        if (typeof tag === 'string') {
+          return tags?.find((t) => t.id === tag) || null;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    const activoOptions = (fragmento.activo_data || fragmento.activo || [])
+      .map((activo: any) => {
+        if (typeof activo === 'object' && activo.id && activo.nombre) {
+          return activo;
+        }
+        if (typeof activo === 'string') {
+          return activos?.find((a) => a.id === activo) || null;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    const pasivoOptions = (fragmento.pasivo_data || fragmento.pasivo || [])
+      .map((pasivo: any) => {
+        if (typeof pasivo === 'object' && pasivo.id && pasivo.nombre) {
+          return pasivo;
+        }
+        if (typeof pasivo === 'string') {
+          return pasivos?.find((p) => p.id === pasivo) || null;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    let tonoOption = null;
+    const tonoData = fragmento.tonoOriginal || fragmento.tono;
+    if (tonoData) {
+      if (typeof tonoData === 'object' && tonoData.id && tonoData.nombre) {
+        tonoOption = tonoData;
+      } else if (typeof tonoData === 'string') {
+        tonoOption =
+          tonos?.find((t) => t.id === tonoData || t.nombre === tonoData) ||
+          null;
+      }
+    }
+
+    const transformedTemas = temaOptions.map((tema: any) => ({
+      id: tema.id,
+      nombre: tema.nombre,
+      value: tema.id,
+      label: tema.nombre,
+    }));
+
+    const transformedTags = tagOptions.map((tag: any) => ({
+      id: tag.id,
+      nombre: tag.nombre,
+      value: tag.id,
+      label: tag.nombre,
+    }));
+
+    const transformedActivos = activoOptions.map((activo: any) => ({
+      id: activo.id,
+      nombre: activo.nombre,
+      value: activo.id,
+      label: activo.nombre,
+    }));
+
+    const transformedPasivos = pasivoOptions.map((pasivo: any) => ({
+      id: pasivo.id,
+      nombre: pasivo.nombre,
+      value: pasivo.id,
+      label: pasivo.nombre,
+    }));
+
+    const transformedTono = tonoOption
+      ? [
+          {
+            id: tonoOption.id,
+            nombre: tonoOption.nombre,
+            value: tonoOption.id,
+            label: tonoOption.nombre,
+          },
+        ]
+      : [];
+
+    setSelectedTema(transformedTemas);
+    setSelectedTag(transformedTags);
+    setSelectedActivo(transformedActivos);
+    setSelectedPasivo(transformedPasivos);
+    setSelectedTono(transformedTono);
+  };
+
   const handleSaveFragmentCategorization = async () => {
     try {
       if (selectedTema.length === 0) {
@@ -199,23 +344,90 @@ export const RightSidebar = ({
         return;
       }
 
-      console.log('Guardando categorización por fragmento:', {
-        tema: selectedTema,
-        tag: selectedTag,
-        activo: selectedActivo,
-        pasivo: selectedPasivo,
-        tono: selectedTono,
-        tipo: selectedTipo,
-      });
+      if (selectedTono.length === 0) {
+        toast.error('Por favor seleccione una tonalidad');
+        return;
+      }
 
-      toast.success('Categorización por fragmento guardada exitosamente');
+      const fragmentoData = {
+        tema_ids: selectedTema.map((t: any) => t.id),
+        tag_ids: selectedTag.map((t: any) => t.id),
+        activo: selectedActivo.map((a: any) => a.id),
+        pasivo: selectedPasivo.map((p: any) => p.id),
+        tono_id: selectedTono[0]?.id,
+      };
 
+      if (selectedFragmento) {
+        if (
+          selectedFragmento.isTemporary ||
+          selectedFragmento.categoria === 'temporal'
+        ) {
+          const createData = {
+            texto: selectedFragmento.texto,
+            indice_inicial: selectedFragmento.posicion_inicio.toString(),
+            indice_final: selectedFragmento.posicion_fin.toString(),
+            tema_ids: fragmentoData.tema_ids,
+            tag_ids: fragmentoData.tag_ids,
+            tono_id: fragmentoData.tono_id,
+            activo: fragmentoData.activo,
+            pasivo: fragmentoData.pasivo,
+          };
+
+          if (onCreateFragment) {
+            await onCreateFragment(createData);
+          }
+
+          if (removeTemporalFragment) {
+            removeTemporalFragment(selectedFragmento.id);
+          }
+        } else {
+          const updateData = {
+            texto: selectedFragmento.texto,
+            tema_ids: fragmentoData.tema_ids,
+            tag_ids: fragmentoData.tag_ids,
+            tono_id: fragmentoData.tono_id,
+            activo: fragmentoData.activo,
+            pasivo: fragmentoData.pasivo,
+          };
+
+          if (onUpdateFragment) {
+            await onUpdateFragment(selectedFragmento.id, updateData);
+          }
+        }
+      } else if (selectedText && selectedRange) {
+        const createData = {
+          texto: selectedText,
+          indice_inicial: selectedRange.start.toString(),
+          indice_final: selectedRange.end.toString(),
+          tema_ids: fragmentoData.tema_ids,
+          tag_ids: fragmentoData.tag_ids,
+          tono_id: fragmentoData.tono_id,
+          activo: fragmentoData.activo,
+          pasivo: fragmentoData.pasivo,
+        };
+
+        if (onCreateFragment) {
+          await onCreateFragment(createData);
+        }
+      } else {
+        toast.error('Por favor seleccione texto o un fragmento existente');
+        return;
+      }
+
+      // Limpiar selecciones
       setSelectedTema([]);
       setSelectedTag([]);
       setSelectedActivo([]);
       setSelectedPasivo([]);
       setSelectedTono([]);
-      setSelectedTipo([]);
+      setSelectedFragmento(null);
+
+      // Refrescar datos
+      if (onRefreshData) {
+        onRefreshData();
+      }
+
+      toast.success('Fragmento guardado exitosamente');
     } catch (error) {
       console.error('Error al guardar categorización por fragmento:', error);
       toast.error('Error al guardar la categorización por fragmento');
@@ -256,12 +468,22 @@ export const RightSidebar = ({
   };
 
   const handleCancelFragmentCategorization = () => {
+    if (
+      selectedFragmento &&
+      (selectedFragmento.isTemporary ||
+        selectedFragmento.categoria === 'temporal')
+    ) {
+      if (removeTemporalFragment) {
+        removeTemporalFragment(selectedFragmento.id);
+      }
+    }
+
     setSelectedTema([]);
     setSelectedTag([]);
     setSelectedActivo([]);
     setSelectedPasivo([]);
     setSelectedTono([]);
-    setSelectedTipo([]);
+    setSelectedFragmento(null);
     toast.success('Categorización por fragmento cancelada');
   };
 
@@ -545,10 +767,10 @@ export const RightSidebar = ({
                     }}
                   >
                     <FaList className="w-4 h-4 text-blue-500" />
-                    Fragmentos ({fragmentos.length})
+                    Fragmentos ({fragmentos.length + temporalFragments.length})
                   </h4>
 
-                  {fragmentos.length === 0 ? (
+                  {fragmentos.length === 0 && temporalFragments.length === 0 ? (
                     <div className="text-center py-6">
                       <div
                         className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center"
@@ -583,31 +805,58 @@ export const RightSidebar = ({
                     </div>
                   ) : (
                     <div className="space-y-3 max-h-96 overflow-y-auto">
-                      {fragmentos.map((fragmento, index) => (
-                        <div
-                          key={fragmento.id}
-                          className="border rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200"
-                          style={{
-                            backgroundColor:
-                              theme === 'dark' ? '#1f2937' : '#ffffff',
-                            borderColor:
-                              theme === 'dark' ? '#4b5563' : '#e5e7eb',
-                          }}
-                          onClick={() => onFragmentClick(fragmento)}
-                        >
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                                style={{
-                                  backgroundColor:
-                                    theme === 'dark' ? '#7c3aed' : '#a855f7',
-                                  color: '#ffffff',
-                                }}
-                              >
-                                {index + 1}
-                              </div>
-                              <span
+                      {[...fragmentos, ...temporalFragments].map(
+                        (fragmento, index) => {
+                          const isSelected =
+                            selectedFragmento?.id === fragmento.id;
+                          const isTemporary =
+                            fragmento.isTemporary ||
+                            fragmento.categoria === 'temporal';
+
+                          return (
+                            <div
+                              key={fragmento.id}
+                              className={`border rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200 ${
+                                isSelected
+                                  ? 'ring-2 ring-blue-500 ring-opacity-50'
+                                  : ''
+                              }`}
+                              style={{
+                                backgroundColor: isSelected
+                                  ? theme === 'dark'
+                                    ? '#1e3a8a'
+                                    : '#dbeafe'
+                                  : theme === 'dark'
+                                  ? '#1f2937'
+                                  : '#ffffff',
+                                borderColor: isSelected
+                                  ? theme === 'dark'
+                                    ? '#3b82f6'
+                                    : '#3b82f6'
+                                  : theme === 'dark'
+                                  ? '#4b5563'
+                                  : '#e5e7eb',
+                              }}
+                              onClick={() => handleFragmentSelection(fragmento)}
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                                    style={{
+                                      backgroundColor: isTemporary
+                                        ? theme === 'dark'
+                                          ? '#f59e0b'
+                                          : '#fbbf24'
+                                        : theme === 'dark'
+                                        ? '#7c3aed'
+                                        : '#a855f7',
+                                      color: '#ffffff',
+                                    }}
+                                  >
+                                    {isTemporary ? 'T' : index + 1}
+                                  </div>
+                                  {/* <span
                                 className="text-xs font-medium"
                                 style={{
                                   color:
@@ -615,64 +864,125 @@ export const RightSidebar = ({
                                 }}
                               >
                                 {fragmento.categoria}
-                              </span>
+                              </span> */}
+                                  <p
+                                    className="text-sm line-clamp-2"
+                                    style={{
+                                      color:
+                                        theme === 'dark'
+                                          ? '#d1d5db'
+                                          : '#374151',
+                                    }}
+                                  >
+                                    {fragmento.texto}
+                                  </p>
+                                </div>
+                                <span
+                                  className="text-xs"
+                                  style={{
+                                    color:
+                                      theme === 'dark' ? '#6b7280' : '#9ca3af',
+                                  }}
+                                >
+                                  {fragmento.posicion_inicio}-
+                                  {fragmento.posicion_fin}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-2 mt-2">
+                                {!isTemporary && (
+                                  <span
+                                    className="text-xs px-2 py-1 rounded-full"
+                                    style={{
+                                      backgroundColor:
+                                        theme === 'dark'
+                                          ? '#065f46'
+                                          : '#d1fae5',
+                                      color:
+                                        theme === 'dark'
+                                          ? '#a7f3d0'
+                                          : '#065f46',
+                                    }}
+                                  >
+                                    {fragmento.tono?.nombre || fragmento.tono}
+                                  </span>
+                                )}
+                                {isTemporary && (
+                                  <span
+                                    className="text-xs px-2 py-1 rounded-full"
+                                    style={{
+                                      backgroundColor:
+                                        theme === 'dark'
+                                          ? '#7c2d12'
+                                          : '#fed7aa',
+                                      color:
+                                        theme === 'dark'
+                                          ? '#fed7aa'
+                                          : '#7c2d12',
+                                    }}
+                                  >
+                                    Sin categorizar
+                                  </span>
+                                )}
+                                {!isTemporary &&
+                                  (fragmento.tag || fragmento.tags) &&
+                                  (fragmento.tag || fragmento.tags).length >
+                                    0 && (
+                                    <span
+                                      className="text-xs px-2 py-1 rounded-full"
+                                      style={{
+                                        backgroundColor:
+                                          theme === 'dark'
+                                            ? '#1e40af'
+                                            : '#dbeafe',
+                                        color:
+                                          theme === 'dark'
+                                            ? '#93c5fd'
+                                            : '#1e40af',
+                                      }}
+                                    >
+                                      {(fragmento.tag || fragmento.tags).length}{' '}
+                                      tag
+                                      {(fragmento.tag || fragmento.tags)
+                                        .length > 1
+                                        ? 's'
+                                        : ''}
+                                    </span>
+                                  )}
+                                {!isTemporary && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onDeleteFragment(fragmento.id);
+                                    }}
+                                    className="ml-auto text-red-500 hover:text-red-600 transition-colors duration-200 p-1 cursor-pointer"
+                                    title="Eliminar fragmento"
+                                  >
+                                    <FaTrash className="w-3 h-3" />
+                                  </button>
+                                )}
+                                {isTemporary && (
+                                  <span
+                                    className="ml-auto text-xs px-2 py-1 rounded-full"
+                                    style={{
+                                      backgroundColor:
+                                        theme === 'dark'
+                                          ? '#f59e0b'
+                                          : '#fbbf24',
+                                      color:
+                                        theme === 'dark'
+                                          ? '#1f2937'
+                                          : '#ffffff',
+                                    }}
+                                  >
+                                    Temporal
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                            <span
-                              className="text-xs"
-                              style={{
-                                color: theme === 'dark' ? '#6b7280' : '#9ca3af',
-                              }}
-                            >
-                              {fragmento.posicion_inicio}-
-                              {fragmento.posicion_fin}
-                            </span>
-                          </div>
-                          <p
-                            className="text-sm line-clamp-3"
-                            style={{
-                              color: theme === 'dark' ? '#d1d5db' : '#374151',
-                            }}
-                          >
-                            {fragmento.texto}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span
-                              className="text-xs px-2 py-1 rounded-full"
-                              style={{
-                                backgroundColor:
-                                  theme === 'dark' ? '#065f46' : '#d1fae5',
-                                color: theme === 'dark' ? '#a7f3d0' : '#065f46',
-                              }}
-                            >
-                              {fragmento.tono}
-                            </span>
-                            {fragmento.tags && fragmento.tags.length > 0 && (
-                              <span
-                                className="text-xs px-2 py-1 rounded-full"
-                                style={{
-                                  backgroundColor:
-                                    theme === 'dark' ? '#1e40af' : '#dbeafe',
-                                  color:
-                                    theme === 'dark' ? '#93c5fd' : '#1e40af',
-                                }}
-                              >
-                                {fragmento.tags.length} tag
-                                {fragmento.tags.length > 1 ? 's' : ''}
-                              </span>
-                            )}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteFragment(fragmento.id);
-                              }}
-                              className="ml-auto text-red-500 hover:text-red-600 transition-colors duration-200 p-1 cursor-pointer"
-                              title="Eliminar fragmento"
-                            >
-                              <FaTrash className="w-3 h-3" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                          );
+                        }
+                      )}
                     </div>
                   )}
                 </div>
@@ -1097,25 +1407,73 @@ export const RightSidebar = ({
                 <div
                   className="border rounded-lg p-4 text-center"
                   style={{
-                    backgroundColor: theme === 'dark' ? '#1e40af' : '#dbeafe',
-                    borderColor: theme === 'dark' ? '#3b82f6' : '#60a5fa',
+                    backgroundColor: selectedFragmento
+                      ? theme === 'dark'
+                        ? '#065f46'
+                        : '#d1fae5'
+                      : selectedText
+                      ? theme === 'dark'
+                        ? '#1e40af'
+                        : '#dbeafe'
+                      : theme === 'dark'
+                      ? '#78350f'
+                      : '#fef3c7',
+                    borderColor: selectedFragmento
+                      ? theme === 'dark'
+                        ? '#059669'
+                        : '#10b981'
+                      : selectedText
+                      ? theme === 'dark'
+                        ? '#3b82f6'
+                        : '#60a5fa'
+                      : theme === 'dark'
+                      ? '#92400e'
+                      : '#f59e0b',
                   }}
                 >
                   <p
                     className="text-sm font-medium"
                     style={{
-                      color: theme === 'dark' ? '#93c5fd' : '#1e40af',
+                      color: selectedFragmento
+                        ? theme === 'dark'
+                          ? '#a7f3d0'
+                          : '#065f46'
+                        : selectedText
+                        ? theme === 'dark'
+                          ? '#93c5fd'
+                          : '#1e40af'
+                        : theme === 'dark'
+                        ? '#fde68a'
+                        : '#92400e',
                     }}
                   >
-                    Categorización por fragmentos
+                    {selectedFragmento
+                      ? 'Editando fragmento'
+                      : selectedText
+                      ? 'Crear nuevo fragmento'
+                      : 'Selecciona un fragmento o texto'}
                   </p>
                   <p
                     className="text-xs mt-1"
                     style={{
-                      color: theme === 'dark' ? '#60a5fa' : '#3b82f6',
+                      color: selectedFragmento
+                        ? theme === 'dark'
+                          ? '#10b981'
+                          : '#059669'
+                        : selectedText
+                        ? theme === 'dark'
+                          ? '#60a5fa'
+                          : '#3b82f6'
+                        : theme === 'dark'
+                        ? '#f59e0b'
+                        : '#d97706',
                     }}
                   >
-                    Selecciona las categorías para aplicar al texto seleccionado
+                    {selectedFragmento
+                      ? 'Modifica las categorías y guarda los cambios'
+                      : selectedText
+                      ? 'Asigna categorías al texto seleccionado'
+                      : 'Haz clic en un fragmento para editarlo o selecciona texto'}
                   </p>
                 </div>
 
@@ -1146,9 +1504,21 @@ export const RightSidebar = ({
                   </button>
                   <button
                     onClick={handleSaveFragmentCategorization}
-                    className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg"
+                    disabled={
+                      selectedTema.length === 0 || selectedTono.length === 0
+                    }
+                    className={`flex-1 py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      selectedTema.length === 0 || selectedTono.length === 0
+                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transform hover:scale-105 hover:shadow-lg'
+                    }`}
                   >
-                    Guardar
+                    {(selectedFragmento && selectedFragmento.isTemporary) ||
+                    selectedFragmento?.categoria === 'temporal'
+                      ? 'Crear fragmento'
+                      : selectedFragmento
+                      ? 'Actualizar'
+                      : 'Crear fragmento'}
                   </button>
                 </div>
               </div>

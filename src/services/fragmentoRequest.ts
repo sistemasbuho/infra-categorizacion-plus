@@ -33,6 +33,8 @@ export interface FragmentoAPI {
   width: number | null;
   activo?: any[];
   pasivo?: any[];
+  activo_data?: any[];
+  pasivo_data?: any[];
 }
 
 export interface ArticuloAPI {
@@ -106,30 +108,48 @@ export async function getFragmentosCategorizacion(
   return await categorizationPlusRequest<ArticuloCategorizacion>(config);
 }
 
-export async function createFragmento(
-  fragmento: Omit<FragmentoCategorizacion, 'id' | 'created_at' | 'updated_at'>
-) {
+export async function createFragmento(fragmentoData: {
+  articulo_id: string;
+  texto: string;
+  indice_inicial: string;
+  indice_final: string;
+  tema_ids: string[];
+  tono_id: string;
+  tag_ids: string[];
+  pasivo: string[];
+  activo: string[];
+}) {
   config = {
     method: 'POST',
-    url: 'fragmentos/categorizacion-articulo/',
-    data: fragmento,
+    url: 'fragmentos/',
+    data: fragmentoData,
   };
-  return await categorizationPlusRequest<FragmentoCategorizacion>(config);
+  return await categorizationPlusRequest<any>(config);
 }
 
-export async function updateFragmento(fragmento: FragmentoCategorizacion) {
+export async function updateFragmento(
+  fragmentoId: string,
+  fragmentoData: {
+    texto: string;
+    tema_ids: string[];
+    tag_ids: string[];
+    tono_id: string;
+    activo: string[];
+    pasivo: string[];
+  }
+) {
   config = {
     method: 'PATCH',
-    url: `fragmentos/categorizacion-articulo/${fragmento.id}/`,
-    data: fragmento,
+    url: `fragmentos/${fragmentoId}/`,
+    data: fragmentoData,
   };
-  return await categorizationPlusRequest<FragmentoCategorizacion>(config);
+  return await categorizationPlusRequest<any>(config);
 }
 
 export async function deleteFragmento(fragmentoId: string) {
   config = {
     method: 'DELETE',
-    url: `fragmentos/categorizacion-articulo/${fragmentoId}/`,
+    url: `fragmentos/${fragmentoId}/`,
   };
   return await categorizationPlusRequest<void>(config);
 }
