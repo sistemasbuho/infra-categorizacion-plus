@@ -840,9 +840,9 @@ export const RightSidebar = ({
                               onClick={() => handleFragmentSelection(fragmento)}
                             >
                               <div className="flex items-start justify-between mb-2">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-start gap-2 flex-1 min-w-0">
                                   <div
-                                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                                     style={{
                                       backgroundColor: isTemporary
                                         ? theme === 'dark'
@@ -856,17 +856,8 @@ export const RightSidebar = ({
                                   >
                                     {isTemporary ? 'T' : index + 1}
                                   </div>
-                                  {/* <span
-                                className="text-xs font-medium"
-                                style={{
-                                  color:
-                                    theme === 'dark' ? '#9ca3af' : '#6b7280',
-                                }}
-                              >
-                                {fragmento.categoria}
-                              </span> */}
                                   <p
-                                    className="text-sm line-clamp-2"
+                                    className="text-sm line-clamp-2 flex-1"
                                     style={{
                                       color:
                                         theme === 'dark'
@@ -878,7 +869,7 @@ export const RightSidebar = ({
                                   </p>
                                 </div>
                                 <span
-                                  className="text-xs"
+                                  className="text-xs ml-2 flex-shrink-0"
                                   style={{
                                     color:
                                       theme === 'dark' ? '#6b7280' : '#9ca3af',
@@ -949,21 +940,27 @@ export const RightSidebar = ({
                                         : ''}
                                     </span>
                                   )}
-                                {!isTemporary && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isTemporary) {
+                                      removeTemporalFragment?.(fragmento.id);
+                                    } else {
                                       onDeleteFragment(fragmento.id);
-                                    }}
-                                    className="ml-auto text-red-500 hover:text-red-600 transition-colors duration-200 p-1 cursor-pointer"
-                                    title="Eliminar fragmento"
-                                  >
-                                    <FaTrash className="w-3 h-3" />
-                                  </button>
-                                )}
+                                    }
+                                  }}
+                                  className="ml-auto text-red-500 hover:text-red-600 transition-colors duration-200 p-1 cursor-pointer"
+                                  title={
+                                    isTemporary
+                                      ? 'Eliminar fragmento temporal'
+                                      : 'Eliminar fragmento'
+                                  }
+                                >
+                                  <FaTrash className="w-3 h-3" />
+                                </button>
                                 {isTemporary && (
                                   <span
-                                    className="ml-auto text-xs px-2 py-1 rounded-full"
+                                    className="text-xs px-2 py-1 rounded-full"
                                     style={{
                                       backgroundColor:
                                         theme === 'dark'
