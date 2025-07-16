@@ -215,8 +215,7 @@ export async function updateArticuloHeader(
 ) {
   config = {
     method: 'PATCH',
-    url: 'fragmentos/categorizacion-articulo/',
-    params: { articulo_id },
+    url: `encabezado-articulo/${articulo_id}/actualizar-encabezado/`,
     data: headerData,
   };
   return await categorizationPlusRequest<ArticuloAPI>(config);

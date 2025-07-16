@@ -214,7 +214,7 @@ export const RightSidebar = ({
       }
 
       if (selectedTipoPublicacion) {
-        headerData.tipo_publicacion = selectedTipoPublicacion.nombre;
+        headerData.tipo_publicacion = selectedTipoPublicacion.id;
       }
 
       if (selectedMedio) {
@@ -694,14 +694,19 @@ export const RightSidebar = ({
                 </label>
                 <input
                   type="datetime-local"
-                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800"
+                  className="w-full p-3 border rounded-lg transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 disabled:opacity-60 disabled:hover:border-gray-300 dark:disabled:hover:border-gray-600"
                   value={fechaArticulo}
                   onChange={handleFechaChange}
                   style={{
                     backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
                     borderColor: theme === 'dark' ? '#4b5563' : '#d1d5db',
                     color: theme === 'dark' ? '#ffffff' : '#374151',
+                    ...(true && {
+                      opacity: '0.6',
+                      backgroundColor: theme === 'dark' ? '#2d3748' : '#f9fafb',
+                    }),
                   }}
+                  disabled
                 />
               </div>
 
