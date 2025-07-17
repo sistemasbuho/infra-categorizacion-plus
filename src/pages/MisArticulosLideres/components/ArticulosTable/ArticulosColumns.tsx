@@ -76,16 +76,50 @@ export const createArticulosColumns = (
   }),
   columnHelper.accessor('titulo', {
     header: 'Titular',
-    cell: (i) => i.getValue() || 'Sin datos',
-  }),
-  columnHelper.accessor('tipo_publicacion', {
-    header: 'Tipo publicación',
-    cell: (i) => i.getValue() || 'Sin datos',
+    cell: (i) => {
+      const value = i.getValue() || 'Sin datos';
+      return (
+        <div
+          className="max-w-xs truncate"
+          title={value}
+          style={{ maxWidth: '200px' }}
+        >
+          {value}
+        </div>
+      );
+    },
   }),
   columnHelper.display({
-    id: 'medio',
-    header: 'Medio',
-    cell: ({ row }) => row.original.medio?.url || 'Sin datos',
+    id: 'tipo_publicacion',
+    header: 'Tipo publicación',
+    cell: ({ row }) => {
+      const value = row.original.tipo_publicacion?.nombre || 'Sin datos';
+      return (
+        <div
+          className="max-w-xs truncate"
+          title={value}
+          style={{ maxWidth: '100px' }}
+        >
+          {value}
+        </div>
+      );
+    },
+  }),
+  columnHelper.display({
+    id: 'programa',
+    header: 'Programa',
+    cell: ({ row }) => {
+      const value = row.original.programa?.nombre || 'Sin datos';
+      return (
+        <div
+          className="max-w-xs truncate"
+          title={value}
+          style={{ maxWidth: '120px' }}
+        >
+          {value}
+        </div>
+      );
+    },
   }),
   columnHelper.display({
     id: 'proyecto',
@@ -93,30 +127,21 @@ export const createArticulosColumns = (
     cell: ({ row }) => {
       const proyectos = row.original.proyectos;
       if (!proyectos || proyectos.length === 0) return 'Sin datos';
-      return (
+      const value =
         proyectos
           .map((p: any) => p.proyecto?.nombre)
           .filter(Boolean)
-          .join(', ') || 'Sin datos'
+          .join(', ') || 'Sin datos';
+      return (
+        <div
+          className="max-w-xs truncate"
+          title={value}
+          style={{ maxWidth: '150px' }}
+        >
+          {value}
+        </div>
       );
     },
-  }),
-  columnHelper.display({
-    id: 'asignado_a',
-    header: 'Asignado a',
-    cell: ({ row }) => {
-      const asignado = row.original.asignado_a;
-      return asignado
-        ? typeof asignado === 'string'
-          ? asignado
-          : asignado.email || asignado.nombre || 'Sin datos'
-        : 'Sin datos';
-    },
-  }),
-  columnHelper.display({
-    id: 'autor',
-    header: 'Autor',
-    cell: ({ row }) => row.original.autor?.autor || 'Sin datos',
   }),
   columnHelper.display({
     id: 'url',

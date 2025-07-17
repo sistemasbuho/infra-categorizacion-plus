@@ -24,7 +24,10 @@ export interface Articulo {
   resumen: string;
   titulo: string;
   url_articulo: string;
-  tipo_publicacion: string | null;
+  tipo_publicacion: { id: string; nombre: string } | null;
+  programa: { id: string; nombre: string } | null;
+  tag_general: string[];
+  tema_general: string[];
   proyectos: Array<{
     proyecto: {
       id: string;
