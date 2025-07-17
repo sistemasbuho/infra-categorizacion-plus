@@ -6,6 +6,7 @@ export type FiltrosTemas = {
   proyecto_id?: string;
   created_gte?: string;
   created_lte?: string;
+  activo?: string;
 };
 
 type PanelDeFiltrosProps = {
@@ -17,6 +18,7 @@ type PanelDeFiltrosProps = {
   showNombre?: boolean;
   showProyecto?: boolean;
   showFechaCreado?: boolean;
+  showEstado?: boolean;
 };
 
 const PanelDeFiltros: React.FC<PanelDeFiltrosProps> = ({
@@ -24,9 +26,11 @@ const PanelDeFiltros: React.FC<PanelDeFiltrosProps> = ({
   filtros,
   onChangeFiltro,
   onClear,
+  onApply,
   showNombre = true,
   showProyecto = true,
   showFechaCreado = true,
+  showEstado = false,
 }) => {
   const { theme } = useTheme();
 
@@ -162,6 +166,39 @@ const PanelDeFiltros: React.FC<PanelDeFiltrosProps> = ({
         </>
       )}
 
+      {showEstado && (
+        <div className="col-span-3">
+          <label
+            className="block font-medium mb-1"
+            style={{ color: theme === 'dark' ? '#ffffff' : '#374151' }}
+          >
+            Estado
+          </label>
+          <select
+            value={filtros.activo || ''}
+            onChange={(e) => onChangeFiltro('activo', e.target.value)}
+            className="w-full p-2 rounded transition-colors"
+            style={{
+              backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
+              color: theme === 'dark' ? '#ffffff' : '#111827',
+              border: `1px solid ${theme === 'dark' ? '#4b5563' : '#d1d5db'}`,
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor =
+                theme === 'dark' ? '#3b82f6' : '#2563eb';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor =
+                theme === 'dark' ? '#4b5563' : '#d1d5db';
+            }}
+          >
+            <option value="">Todos</option>
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+        </div>
+      )}
+
       <div className="col-span-12 flex justify-end gap-4 mt-2">
         <button
           type="button"
@@ -182,6 +219,28 @@ const PanelDeFiltros: React.FC<PanelDeFiltrosProps> = ({
         >
           Limpiar
         </button>
+        {onApply && (
+          <button
+            type="button"
+            onClick={onApply}
+            className="px-4 py-2 rounded transition"
+            style={{
+              backgroundColor: theme === 'dark' ? '#3b82f6' : '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor =
+                theme === 'dark' ? '#2563eb' : '#1d4ed8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor =
+                theme === 'dark' ? '#3b82f6' : '#2563eb';
+            }}
+          >
+            Aplicar
+          </button>
+        )}
       </div>
     </div>
   );

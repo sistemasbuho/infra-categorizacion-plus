@@ -12,6 +12,7 @@ import {
   FaUserTie,
   FaNewspaper,
   FaLayerGroup,
+  FaProjectDiagram,
 } from 'react-icons/fa';
 import { MisArticulosLideres } from '../pages/MisArticulosLideres/MisArticulosLideres';
 import { Tags } from '../pages/Tags/Tags';
@@ -20,6 +21,8 @@ import { CategorizacionArticulo } from '../pages/CategorizacionArticulo/Categori
 import { Temas } from '../pages/Temas/Temas';
 import Home from '../pages/Home/Home';
 import { MisArticulos } from '../pages/MisArticulos/MisArticulos';
+import { Proyectos } from '../pages/Proyectos/Proyectos';
+import { ProyectoDetalle } from '../pages/Proyectos/components/ProyectoDetalle/ProyectoDetalle';
 
 export type RouteElement = {
   path: string;
@@ -44,6 +47,23 @@ export const routes: RouteElement[] = [
     icon: FaHome,
     label: 'Home',
     roles: [1, 2],
+    showInSidebar: false,
+  },
+  {
+    path: '/proyectos',
+    element: Proyectos,
+    icon: FaProjectDiagram,
+    label: 'Proyectos',
+    roles: [1, 2],
+    section: 'proyectos',
+  },
+  {
+    path: '/proyectos/:id',
+    element: ProyectoDetalle,
+    icon: FaProjectDiagram,
+    label: 'Detalle del Proyecto',
+    roles: [1, 2],
+    section: 'proyectos',
     showInSidebar: false,
   },
   {
@@ -145,6 +165,11 @@ export const routes: RouteElement[] = [
 ];
 
 export const menuSections: MenuSection[] = [
+  {
+    id: 'proyectos',
+    title: 'PROYECTOS',
+    routes: routes.filter((route) => route.section === 'proyectos'),
+  },
   {
     id: 'articulos',
     title: 'ARTICULOS',
