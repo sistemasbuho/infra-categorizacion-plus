@@ -120,6 +120,14 @@ export async function getProyectos(
   return categorizationPlusRequest<Proyecto[]>(config);
 }
 
+export async function getProyecto(id: string): Promise<Proyecto> {
+  const config: AxiosRequestConfig = {
+    method: 'GET',
+    url: `proyecto-categorizacion/${id}/`,
+  };
+  return categorizationPlusRequest<Proyecto>(config);
+}
+
 export async function createProyecto(proyectoData: {
   proyecto_id: string;
   nombre: string;
@@ -143,6 +151,7 @@ export async function updateProyecto(
     keyword?: Keyword;
     colaboradores?: number[];
     tags?: string[];
+    activo?: boolean;
   }>
 ): Promise<Proyecto> {
   const config: AxiosRequestConfig = {
