@@ -2,10 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import useToken from './hooks/useToken';
+import useToken from './shared/hooks/useToken';
 import Sidebar from './shared/components/ui/Sidebar';
-import { routes } from './routes/routes';
-import { ProtectedRoutes } from './auth/ProtectedRoutes';
+import { routes } from './shared/routes/routes';
+import { ProtectedRoutes } from './shared/auth/ProtectedRoutes';
 import Home from './pages/Home/Home';
 import { Login } from './pages/Login/Login';
 

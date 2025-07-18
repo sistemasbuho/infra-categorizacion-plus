@@ -1,8 +1,8 @@
 import { IoSaveSharp, IoCheckmarkCircle, IoClose } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
-import { TemaResponse } from '../../../hooks/useTemas';
+import { TemaResponse } from '../hooks/useTemas';
 import { useState, useEffect, useRef } from 'react';
-import { searchProyectos } from '../../../services/temaRequest';
+import { searchProyectos } from '../services/temaRequest';
 import { useTheme } from '../../../shared/context/ThemeContext';
 
 export type LocalTema = {

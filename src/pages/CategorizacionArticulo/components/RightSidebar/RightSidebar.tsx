@@ -9,7 +9,7 @@ import {
   buscarAutores,
   buscarProgramas,
   updateCategorizacionGeneral,
-} from '../../../../services/fragmentoRequest';
+} from '../../services/fragmentoRequest';
 import { AsyncReactSelect } from '../../../../shared/components/ui/AsyncReactSelect';
 import Select from 'react-select';
 

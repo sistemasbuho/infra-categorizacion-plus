@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { getVarSsn } from '../shared/utils/funcs';
+import { getVarSsn } from '../utils/funcs';
 
 const AuthContext = createContext<any>(undefined);
 

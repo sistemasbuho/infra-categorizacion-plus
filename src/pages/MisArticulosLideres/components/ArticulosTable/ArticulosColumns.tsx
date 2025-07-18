@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link } from '../../../../shared/components/ui/Link';
 import { Button } from '../../../../shared/components/ui/Button';
-import { Articulo } from '../../../../hooks/useArticulosLideres';
+import { Articulo } from '../../hooks/useArticulosLideres';
 
 const columnHelper = createColumnHelper<Articulo>();
 

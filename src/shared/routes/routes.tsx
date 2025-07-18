@@ -14,15 +14,15 @@ import {
   FaLayerGroup,
   FaProjectDiagram,
 } from 'react-icons/fa';
-import { MisArticulosLideres } from '../pages/MisArticulosLideres/MisArticulosLideres';
-import { Tags } from '../pages/Tags/Tags';
+import { MisArticulosLideres } from '../../pages/MisArticulosLideres/MisArticulosLideres';
+import { Tags } from '../../pages/Tags/Tags';
 import { IoChatboxOutline } from 'react-icons/io5';
-import { CategorizacionArticulo } from '../pages/CategorizacionArticulo/CategorizacionArticulo';
-import { Temas } from '../pages/Temas/Temas';
-import Home from '../pages/Home/Home';
-import { MisArticulos } from '../pages/MisArticulos/MisArticulos';
-import { Proyectos } from '../pages/Proyectos/Proyectos';
-import { ProyectoDetalle } from '../pages/ProyectoDetalle/ProyectoDetalle';
+import { CategorizacionArticulo } from '../../pages/CategorizacionArticulo/CategorizacionArticulo';
+import { Temas } from '../../pages/Temas/Temas';
+import Home from '../../pages/Home/Home';
+import { MisArticulos } from '../../pages/MisArticulos/MisArticulos';
+import { Proyectos } from '../../pages/Proyectos/Proyectos';
+import { ProyectoDetalle } from '../../pages/ProyectoDetalle/ProyectoDetalle';
 
 export type RouteElement = {
   path: string;

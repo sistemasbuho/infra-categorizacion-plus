@@ -5,7 +5,7 @@ import {
 } from '@react-oauth/google';
 import { useNavigate } from 'react-router';
 import { decodedToken } from './utils/isValidToken';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../shared/auth/AuthContext';
 import { setLogin } from '../../shared/utils/funcs';
 
 export const Login = () => {

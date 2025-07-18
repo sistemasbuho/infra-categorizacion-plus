@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  createTema,
-  deleteTema,
-  getTemas,
-  updateTema,
-} from '../services/temaRequest';
-import { LocalTema } from '../pages/Temas/components/TemaForm';
+import { LocalTema } from '../components/TemaForm';
+import { createTema, getTemas } from '../services/temaRequest';
+import { updateTema } from '../services/temaRequest';
+import { deleteTema } from '../services/temaRequest';
 
 export type TemaResponse = {
   id: string;

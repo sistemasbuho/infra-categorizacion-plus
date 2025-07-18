@@ -5,9 +5,9 @@ import {
   createFragmento,
   updateFragmento,
   deleteFragmento,
-} from '../services/fragmentoRequest';
+} from '../../CategorizacionArticulo/services/fragmentoRequest';
 import { changeEstadoArticulo } from '../services/articulosLideresRequest';
-import { isOverlappingFragment } from '../shared/utils/funcs';
+import { isOverlappingFragment } from '../../../shared/utils/funcs';
 
 interface Fragmento {
   id: string;

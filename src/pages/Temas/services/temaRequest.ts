@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
-import { categorizationPlusRequest } from './axiosRequest';
+import { categorizationPlusRequest } from '../../../shared/services/axiosRequest';
 import { TemaResponse, PaginatedResponse } from '../hooks/useTemas';
-import { LocalTema } from '../pages/Temas/components/TemaForm';
+import { LocalTema } from '../components/TemaForm';
 
 let config: AxiosRequestConfig = {};
 

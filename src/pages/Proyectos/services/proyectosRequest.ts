@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { categorizationPlusRequest } from '../../../services/axiosRequest';
+import { categorizationPlusRequest } from '../../../shared/services/axiosRequest';
 
 export interface TagInfo {
   id: string;

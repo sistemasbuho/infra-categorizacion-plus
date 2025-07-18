@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
-import { categorizationPlusRequest } from './axiosRequest';
 import { Articulo, PaginatedResponse } from '../hooks/useArticulosLideres';
+import { categorizationPlusRequest } from '../../../shared/services/axiosRequest';
 
 let config: AxiosRequestConfig = {};
 

@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { categorizationPlusRequest } from './axiosRequest';
+import { categorizationPlusRequest } from '../../../shared/services/axiosRequest';
 import { TagResponse, PaginatedResponse } from '../hooks/useTags';
 
 let config: AxiosRequestConfig = {};

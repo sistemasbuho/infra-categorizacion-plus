@@ -1,6 +1,6 @@
 import { IoSaveSharp } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
-import { TagResponse } from '../../../hooks/useTags';
+import { TagResponse } from '../hooks/useTags';
 import { useTheme } from '../../../shared/context/ThemeContext';
 
 type TagFormData = {

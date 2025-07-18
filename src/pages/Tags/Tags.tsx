@@ -5,7 +5,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from 'react-icons/fa';
-import { TagResponse, useTags } from '../../hooks/useTags';
+import { TagResponse, useTags } from './hooks/useTags';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '../../shared/components/ui/Skeleton';
 import { Button } from '../../shared/components/ui/Button';

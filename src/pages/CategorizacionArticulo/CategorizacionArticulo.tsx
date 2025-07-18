@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../shared/context/ThemeContext';
-import { useFragmentos } from '../../hooks/useFragmentos';
+import { useFragmentos } from '../MisArticulosLideres/hooks/useFragmentos';
 import Loader from '../../shared/components/ui/Loader';
 import { ArticleHeader } from './components/ArticleHeader/ArticleHeader';
 import { ArticleInfo } from './components/ArticleInfo/ArticleInfo';

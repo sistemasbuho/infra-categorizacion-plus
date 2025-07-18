@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '../../../../shared/context/ThemeContext';
-import { Articulo } from '../../../../hooks/useArticulosLideres';
+import { Articulo } from '../../hooks/useArticulosLideres';
 import { createArticulosColumns } from './ArticulosColumns';
 import { Skeleton } from '../../../../shared/components/ui/Skeleton';
 import TableBase from '../../../../shared/components/ui/TableBase';

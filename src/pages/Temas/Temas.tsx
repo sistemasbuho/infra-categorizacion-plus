@@ -5,7 +5,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from 'react-icons/fa';
-import { TemaResponse, useTemas } from '../../hooks/useTemas';
+import { TemaResponse, useTemas } from './hooks/useTemas';
 import { ColumnDef } from '@tanstack/react-table';
 import { Skeleton } from '../../shared/components/ui/Skeleton';
 import DrawerModal from '../../shared/components/ui/DrawerModal';

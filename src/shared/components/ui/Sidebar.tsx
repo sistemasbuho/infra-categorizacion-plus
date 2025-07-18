@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router';
-import { menuSections } from '../../../routes/routes';
+import { menuSections } from '../../routes/routes';
 import { FaBars, FaMoon, FaSun } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
-import { Articulo, useArticulosLideres } from '../../hooks/useArticulosLideres';
+import { Articulo, useArticulosLideres } from './hooks/useArticulosLideres';
 import { Button } from '../../shared/components/ui/Button';
 import { Paginacion } from '../../shared/components/ui/Paginacion';
 import toast from 'react-hot-toast';

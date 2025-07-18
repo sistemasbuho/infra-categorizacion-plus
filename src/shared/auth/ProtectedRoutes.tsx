@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getVarSsn } from '../shared/utils/funcs';
+import { getVarSsn } from '../utils/funcs';
 
 export const ProtectedRoutes = ({ roles, children }) => {
   const session = getVarSsn();
