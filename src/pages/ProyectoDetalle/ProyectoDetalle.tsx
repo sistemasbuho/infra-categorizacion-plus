@@ -67,7 +67,16 @@ export const ProyectoDetalle: React.FC = () => {
     }
   };
 
-  const handleUpdateProyecto = async (updates: Partial<Proyecto>) => {
+  const handleUpdateProyecto = async (
+    updates: Partial<{
+      proyecto_id: string;
+      nombre: string;
+      keyword?: Keyword | string[];
+      colaboradores?: number[];
+      tags?: string[];
+      activo?: boolean;
+    }>
+  ) => {
     if (!proyecto) return;
 
     try {
@@ -90,15 +99,45 @@ export const ProyectoDetalle: React.FC = () => {
           apiUpdates.keyword = updates.keyword;
         }
       }
+      if (updates.colaboradores !== undefined) {
+        apiUpdates.colaboradores = updates.colaboradores;
+      }
+      if (updates.tags !== undefined) {
+        apiUpdates.tags = updates.tags;
+      }
       if (updates.activo !== undefined) {
         apiUpdates.activo = updates.activo;
       }
 
       await updateProyecto(proyecto.id, apiUpdates);
 
-      setProyecto((prev) => (prev ? { ...prev, ...updates } : null));
+      setProyecto((prev) => {
+        if (!prev) return null;
+        const updatedProyecto = { ...prev };
+
+        if (updates.nombre !== undefined) {
+          updatedProyecto.nombre = updates.nombre;
+        }
+        if (updates.keyword !== undefined) {
+          if (Array.isArray(updates.keyword)) {
+            updatedProyecto.keyword = { palabras_clave: updates.keyword };
+          } else {
+            updatedProyecto.keyword = updates.keyword;
+          }
+        }
+        if (updates.activo !== undefined) {
+          updatedProyecto.activo = updates.activo;
+        }
+
+        return updatedProyecto;
+      });
 
       toast.success('Proyecto actualizado correctamente');
+
+      if (id) {
+        const proyectoActualizado = await getProyecto(id);
+        setProyecto(proyectoActualizado);
+      }
     } catch (err: any) {
       console.error('Error updating proyecto:', err);
       toast.error('Error al actualizar el proyecto');

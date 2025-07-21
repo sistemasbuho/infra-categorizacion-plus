@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
-import { FaEdit, FaSave, FaTimes, FaPlus, FaTrash } from 'react-icons/fa';
-import { Proyecto } from '../../Proyectos/services/proyectosRequest';
+import {
+  FaEdit,
+  FaSave,
+  FaTimes,
+  FaPlus,
+  FaTrash,
+  FaUserTie,
+} from 'react-icons/fa';
+import { IoClose, IoCheckmarkCircle } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import {
+  Proyecto,
+  Colaborador,
+  ColaboradorInfo,
+  searchColaboradores,
+} from '../../Proyectos/services/proyectosRequest';
+import { AsyncReactSelect } from '../../../shared/components/ui/AsyncReactSelect';
 
 interface ProyectoDetailsProps {
   proyecto: Proyecto;
@@ -13,12 +28,23 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   theme,
   onUpdateProyecto,
 }) => {
+  const navigate = useNavigate();
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [editingNombre, setEditingNombre] = useState(proyecto.nombre);
   const [editingKeywords, setEditingKeywords] = useState<string[]>(() => {
     return Array.isArray(proyecto.keyword)
       ? proyecto.keyword
       : proyecto.keyword?.palabras_clave || [];
+  });
+  const [editingColaboradores, setEditingColaboradores] = useState<
+    Colaborador[]
+  >(() => {
+    return proyecto.colaboradores_info.map((colabInfo) => ({
+      id: colabInfo.id,
+      username: colabInfo.email.split('@')[0],
+      email: colabInfo.email,
+      nombre_completo: colabInfo.nombre,
+    }));
   });
   const [saving, setSaving] = useState(false);
   const cardStyle = {
@@ -55,6 +81,15 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     setEditingSection(section);
     if (section === 'detalles') {
       setEditingNombre(proyecto.nombre);
+      const colaboradoresConvertidos = proyecto.colaboradores_info.map(
+        (colabInfo) => ({
+          id: colabInfo.id,
+          username: colabInfo.email.split('@')[0],
+          email: colabInfo.email,
+          nombre_completo: colabInfo.nombre,
+        })
+      );
+      setEditingColaboradores(colaboradoresConvertidos);
     } else if (section === 'keywords') {
       const keywords = Array.isArray(proyecto.keyword)
         ? proyecto.keyword
@@ -70,6 +105,15 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       ? proyecto.keyword
       : proyecto.keyword?.palabras_clave || [];
     setEditingKeywords([...keywords]);
+    const colaboradoresConvertidos = proyecto.colaboradores_info.map(
+      (colabInfo) => ({
+        id: colabInfo.id,
+        username: colabInfo.email.split('@')[0],
+        email: colabInfo.email,
+        nombre_completo: colabInfo.nombre,
+      })
+    );
+    setEditingColaboradores(colaboradoresConvertidos);
   };
 
   const handleSave = async (section: string) => {
@@ -77,10 +121,18 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
 
     try {
       setSaving(true);
-      let updates: Partial<Proyecto> = {};
+      let updates: Partial<{
+        proyecto_id: string;
+        nombre: string;
+        keyword?: { palabras_clave: string[] };
+        colaboradores?: number[];
+        tags?: string[];
+        activo?: boolean;
+      }> = {};
 
       if (section === 'detalles') {
         updates.nombre = editingNombre;
+        updates.colaboradores = editingColaboradores.map((c) => c.id);
       } else if (section === 'keywords') {
         updates.keyword = { palabras_clave: editingKeywords };
       }
@@ -92,6 +144,18 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     } finally {
       setSaving(false);
     }
+  };
+
+  const addColaborador = (colaborador: Colaborador) => {
+    if (!editingColaboradores.find((c) => c.id === colaborador.id)) {
+      setEditingColaboradores([...editingColaboradores, colaborador]);
+    }
+  };
+
+  const removeColaborador = (colaboradorId: number) => {
+    setEditingColaboradores(
+      editingColaboradores.filter((c) => c.id !== colaboradorId)
+    );
   };
 
   const addKeyword = () => {
@@ -259,6 +323,127 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       : 'No hay palabras clave definidas';
   };
 
+  const renderColaboradores = (colaboradores: ColaboradorInfo[]) => (
+    <div className="flex flex-wrap gap-2">
+      {colaboradores.length > 0 ? (
+        colaboradores.map((colaborador) => (
+          <span
+            key={colaborador.id}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded text-sm"
+            style={{
+              backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
+              color: theme === 'dark' ? '#d1d5db' : '#374151',
+            }}
+          >
+            <IoCheckmarkCircle className="text-green-500" />
+            {colaborador.nombre}
+          </span>
+        ))
+      ) : (
+        <span
+          className="text-sm"
+          style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+        >
+          No hay colaboradores asignados
+        </span>
+      )}
+    </div>
+  );
+
+  const renderEditableColaboradores = () => {
+    if (editingSection === 'detalles') {
+      return (
+        <div className="space-y-4">
+          <AsyncReactSelect
+            placeholder="Buscar colaborador..."
+            value={null}
+            onChange={(colaborador) => {
+              if (colaborador) {
+                addColaborador(colaborador);
+              }
+            }}
+            searchFunction={searchColaboradores}
+            optionLabelKey="nombre_completo"
+            optionValueKey="id"
+            noOptionsMessage="No se encontraron colaboradores"
+            isClearable={false}
+          />
+
+          {editingColaboradores.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {editingColaboradores.map((colaborador) => (
+                <span
+                  key={colaborador.id}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded text-sm"
+                  style={{
+                    backgroundColor: theme === 'dark' ? '#4b5563' : '#e5e7eb',
+                    color: theme === 'dark' ? '#ffffff' : '#374151',
+                  }}
+                >
+                  <IoCheckmarkCircle className="text-green-500" />
+                  {colaborador.nombre_completo}
+                  <button
+                    type="button"
+                    onClick={() => removeColaborador(colaborador.id)}
+                    className="ml-1 hover:text-red-500 transition-colors"
+                  >
+                    <IoClose size={14} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return renderColaboradores(proyecto.colaboradores_info);
+  };
+
+  const handleAsignarArticulos = () => {
+    navigate(`/asignar-articulos?proyecto_id=${proyecto.id}`);
+  };
+
+  const renderAsignarCard = () => (
+    <div className="border rounded-lg overflow-hidden" style={cardStyle}>
+      <div
+        className="flex justify-between items-center p-4 border-b"
+        style={headerStyle}
+      >
+        <h3 className="font-semibold text-lg">Asignar Artículos</h3>
+        <div
+          className="w-3 h-3 rounded-full"
+          style={{
+            backgroundColor: theme === 'dark' ? '#10b981' : '#059669',
+          }}
+        />
+      </div>
+      <div className="p-6">
+        <div className="text-center">
+          <button
+            onClick={handleAsignarArticulos}
+            className="flex items-center gap-3 mx-auto px-6 py-3 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
+            style={{
+              backgroundColor: '#3b82f6',
+              color: '#ffffff',
+            }}
+          >
+            <FaUserTie size={16} />
+            <span className="font-medium">Asignar Artículos</span>
+          </button>
+          <p
+            className="text-sm mt-3"
+            style={{
+              color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+            }}
+          >
+            Gestionar la asignación de artículos para este proyecto
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
       {renderCard(
@@ -267,6 +452,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         <>
           {renderField('ID', proyecto.id)}
           {renderField('NOMBRE', renderEditableNombre())}
+          {renderField('COLABORADORES', renderEditableColaboradores())}
         </>
       )}
 
@@ -275,6 +461,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         'keywords',
         <>{renderField('PALABRAS CLAVE', renderEditableKeywords())}</>
       )}
+
+      {renderAsignarCard()}
     </div>
   );
 };

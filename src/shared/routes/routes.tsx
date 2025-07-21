@@ -23,6 +23,7 @@ import Home from '../../pages/Home/Home';
 import { MisArticulos } from '../../pages/MisArticulos/MisArticulos';
 import { Proyectos } from '../../pages/Proyectos/Proyectos';
 import { ProyectoDetalle } from '../../pages/ProyectoDetalle/ProyectoDetalle';
+import { AsignarArticulos } from '../../pages/AsignarArticulos/AsignarArticulos';
 
 export type RouteElement = {
   path: string;
@@ -84,11 +85,12 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/asignar-articulos',
-    element: Home, // Placeholder
+    element: AsignarArticulos,
     icon: FaUserTie,
     label: 'Asignar Articulos',
     roles: [1, 2],
-    section: 'articulos',
+    section: 'proyectos',
+    showInSidebar: false,
   },
   {
     path: '/temas',
