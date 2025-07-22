@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useTheme } from '../../shared/context/ThemeContext';
 import {
-  Proyecto,
+  ProyectoCompleto,
   Keyword,
   getProyecto,
   updateProyecto,
@@ -17,7 +17,7 @@ export const ProyectoDetalle: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const [proyecto, setProyecto] = useState<Proyecto | null>(null);
+  const [proyecto, setProyecto] = useState<ProyectoCompleto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
@@ -52,9 +52,21 @@ export const ProyectoDetalle: React.FC = () => {
 
     try {
       setUpdatingStatus(true);
-      await updateProyecto(proyecto.id, { activo: newStatus });
+      await updateProyecto(proyecto.proyecto_categorizacion.id, {
+        activo: newStatus,
+      });
 
-      setProyecto((prev) => (prev ? { ...prev, activo: newStatus } : null));
+      setProyecto((prev) =>
+        prev
+          ? {
+              ...prev,
+              proyecto_categorizacion: {
+                ...prev.proyecto_categorizacion,
+                activo: newStatus,
+              },
+            }
+          : null
+      );
 
       toast.success(
         `Proyecto ${newStatus ? 'activado' : 'desactivado'} correctamente`
@@ -108,29 +120,11 @@ export const ProyectoDetalle: React.FC = () => {
       if (updates.activo !== undefined) {
         apiUpdates.activo = updates.activo;
       }
+      if (updates.proyecto_id !== undefined) {
+        apiUpdates.proyecto_id = updates.proyecto_id;
+      }
 
-      await updateProyecto(proyecto.id, apiUpdates);
-
-      setProyecto((prev) => {
-        if (!prev) return null;
-        const updatedProyecto = { ...prev };
-
-        if (updates.nombre !== undefined) {
-          updatedProyecto.nombre = updates.nombre;
-        }
-        if (updates.keyword !== undefined) {
-          if (Array.isArray(updates.keyword)) {
-            updatedProyecto.keyword = { palabras_clave: updates.keyword };
-          } else {
-            updatedProyecto.keyword = updates.keyword;
-          }
-        }
-        if (updates.activo !== undefined) {
-          updatedProyecto.activo = updates.activo;
-        }
-
-        return updatedProyecto;
-      });
+      await updateProyecto(proyecto.proyecto_categorizacion.id, apiUpdates);
 
       toast.success('Proyecto actualizado correctamente');
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Proyecto } from '../../Proyectos/services/proyectosRequest';
+import { ProyectoCompleto } from '../../Proyectos/services/proyectosRequest';
 
 interface ProyectoHeaderProps {
-  proyecto: Proyecto;
+  proyecto: ProyectoCompleto;
   theme: string;
   handleStatusChange: (newStatus: boolean) => void;
   updatingStatus: boolean;
@@ -36,7 +36,9 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
           }}
         >
           <FaArrowLeft size={16} />
-          <span className="font-medium">{proyecto.nombre}</span>
+          <span className="font-medium">
+            {proyecto.proyecto_categorizacion.nombre}
+          </span>
         </Link>
       </div>
 
@@ -46,7 +48,7 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
             <div
               className="w-3 h-3 rounded-full"
               style={{
-                backgroundColor: proyecto.activo
+                backgroundColor: proyecto.proyecto_categorizacion.activo
                   ? theme === 'dark'
                     ? '#10b981'
                     : '#059669'
@@ -58,7 +60,7 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
             <span
               className="font-medium"
               style={{
-                color: proyecto.activo
+                color: proyecto.proyecto_categorizacion.activo
                   ? theme === 'dark'
                     ? '#10b981'
                     : '#059669'
@@ -67,13 +69,16 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
                   : '#6b7280',
               }}
             >
-              Estado: {proyecto.activo ? 'Activo' : 'Inactivo'}
+              Estado:{' '}
+              {proyecto.proyecto_categorizacion.activo ? 'Activo' : 'Inactivo'}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleStatusChange(!proyecto.activo)}
+              onClick={() =>
+                handleStatusChange(!proyecto.proyecto_categorizacion.activo)
+              }
               disabled={updatingStatus}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
                 updatingStatus
@@ -81,7 +86,7 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
                   : 'cursor-pointer'
               }`}
               style={{
-                backgroundColor: proyecto.activo
+                backgroundColor: proyecto.proyecto_categorizacion.activo
                   ? theme === 'dark'
                     ? '#10b981'
                     : '#059669'
@@ -92,7 +97,9 @@ export const ProyectoHeader: React.FC<ProyectoHeaderProps> = ({
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                  proyecto.activo ? 'translate-x-6' : 'translate-x-1'
+                  proyecto.proyecto_categorizacion.activo
+                    ? 'translate-x-6'
+                    : 'translate-x-1'
                 }`}
               />
             </button>

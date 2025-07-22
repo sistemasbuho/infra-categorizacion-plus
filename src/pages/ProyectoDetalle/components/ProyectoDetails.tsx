@@ -10,17 +10,28 @@ import {
 import { IoClose, IoCheckmarkCircle } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import {
-  Proyecto,
+  ProyectoCompleto,
   Colaborador,
   ColaboradorInfo,
   searchColaboradores,
+  ProyectoELT,
+  searchProyectosELT,
 } from '../../Proyectos/services/proyectosRequest';
 import { AsyncReactSelect } from '../../../shared/components/ui/AsyncReactSelect';
 
 interface ProyectoDetailsProps {
-  proyecto: Proyecto;
+  proyecto: ProyectoCompleto;
   theme: string;
-  onUpdateProyecto: (updates: Partial<Proyecto>) => Promise<void>;
+  onUpdateProyecto: (
+    updates: Partial<{
+      proyecto_id: string;
+      nombre: string;
+      keyword?: { palabras_clave: string[] };
+      colaboradores?: number[];
+      tags?: string[];
+      activo?: boolean;
+    }>
+  ) => Promise<void>;
 }
 
 export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
@@ -30,21 +41,29 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
 }) => {
   const navigate = useNavigate();
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [editingNombre, setEditingNombre] = useState(proyecto.nombre);
+  const [editingNombre, setEditingNombre] = useState(
+    proyecto.proyecto_categorizacion.nombre
+  );
+  const [selectedProyectoELT, setSelectedProyectoELT] = useState<ProyectoELT>({
+    id: proyecto.proyecto_etl.id,
+    nombre: proyecto.proyecto_etl.nombre,
+  });
   const [editingKeywords, setEditingKeywords] = useState<string[]>(() => {
-    return Array.isArray(proyecto.keyword)
-      ? proyecto.keyword
-      : proyecto.keyword?.palabras_clave || [];
+    return Array.isArray(proyecto.proyecto_categorizacion.keyword)
+      ? proyecto.proyecto_categorizacion.keyword
+      : proyecto.proyecto_categorizacion.keyword?.palabras_clave || [];
   });
   const [editingColaboradores, setEditingColaboradores] = useState<
     Colaborador[]
   >(() => {
-    return proyecto.colaboradores_info.map((colabInfo) => ({
-      id: colabInfo.id,
-      username: colabInfo.email.split('@')[0],
-      email: colabInfo.email,
-      nombre_completo: colabInfo.nombre,
-    }));
+    return proyecto.proyecto_categorizacion.colaboradores_info.map(
+      (colabInfo) => ({
+        id: colabInfo.id,
+        username: colabInfo.email.split('@')[0],
+        email: colabInfo.email,
+        nombre_completo: colabInfo.nombre,
+      })
+    );
   });
   const [saving, setSaving] = useState(false);
   const cardStyle = {
@@ -80,39 +99,48 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   const handleStartEdit = (section: string) => {
     setEditingSection(section);
     if (section === 'detalles') {
-      setEditingNombre(proyecto.nombre);
-      const colaboradoresConvertidos = proyecto.colaboradores_info.map(
-        (colabInfo) => ({
-          id: colabInfo.id,
-          username: colabInfo.email.split('@')[0],
-          email: colabInfo.email,
-          nombre_completo: colabInfo.nombre,
-        })
-      );
+      setEditingNombre(proyecto.proyecto_categorizacion.nombre);
+      const colaboradoresConvertidos =
+        proyecto.proyecto_categorizacion.colaboradores_info.map(
+          (colabInfo) => ({
+            id: colabInfo.id,
+            username: colabInfo.email.split('@')[0],
+            email: colabInfo.email,
+            nombre_completo: colabInfo.nombre,
+          })
+        );
       setEditingColaboradores(colaboradoresConvertidos);
+    } else if (section === 'proyecto_etl') {
+      setSelectedProyectoELT({
+        id: proyecto.proyecto_etl.id,
+        nombre: proyecto.proyecto_etl.nombre,
+      });
     } else if (section === 'keywords') {
-      const keywords = Array.isArray(proyecto.keyword)
-        ? proyecto.keyword
-        : proyecto.keyword?.palabras_clave || [];
+      const keywords = Array.isArray(proyecto.proyecto_categorizacion.keyword)
+        ? proyecto.proyecto_categorizacion.keyword
+        : proyecto.proyecto_categorizacion.keyword?.palabras_clave || [];
       setEditingKeywords([...keywords]);
     }
   };
 
   const handleCancelEdit = () => {
     setEditingSection(null);
-    setEditingNombre(proyecto.nombre);
-    const keywords = Array.isArray(proyecto.keyword)
-      ? proyecto.keyword
-      : proyecto.keyword?.palabras_clave || [];
+    setEditingNombre(proyecto.proyecto_categorizacion.nombre);
+    setSelectedProyectoELT({
+      id: proyecto.proyecto_etl.id,
+      nombre: proyecto.proyecto_etl.nombre,
+    });
+    const keywords = Array.isArray(proyecto.proyecto_categorizacion.keyword)
+      ? proyecto.proyecto_categorizacion.keyword
+      : proyecto.proyecto_categorizacion.keyword?.palabras_clave || [];
     setEditingKeywords([...keywords]);
-    const colaboradoresConvertidos = proyecto.colaboradores_info.map(
-      (colabInfo) => ({
+    const colaboradoresConvertidos =
+      proyecto.proyecto_categorizacion.colaboradores_info.map((colabInfo) => ({
         id: colabInfo.id,
         username: colabInfo.email.split('@')[0],
         email: colabInfo.email,
         nombre_completo: colabInfo.nombre,
-      })
-    );
+      }));
     setEditingColaboradores(colaboradoresConvertidos);
   };
 
@@ -133,6 +161,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       if (section === 'detalles') {
         updates.nombre = editingNombre;
         updates.colaboradores = editingColaboradores.map((c) => c.id);
+      } else if (section === 'proyecto_etl') {
+        updates.proyecto_id = selectedProyectoELT.id;
       } else if (section === 'keywords') {
         updates.keyword = { palabras_clave: editingKeywords };
       }
@@ -269,7 +299,26 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         />
       );
     }
-    return proyecto.nombre;
+    return proyecto.proyecto_categorizacion.nombre;
+  };
+
+  const renderEditableNombreETL = () => {
+    if (editingSection === 'proyecto_etl') {
+      return (
+        <AsyncReactSelect
+          placeholder="Buscar proyecto ETL..."
+          value={selectedProyectoELT}
+          onChange={(proyecto) => setSelectedProyectoELT(proyecto)}
+          searchFunction={searchProyectosELT}
+          optionLabelKey="nombre"
+          optionValueKey="id"
+          noOptionsMessage="No se encontraron proyectos ETL"
+          isClearable={false}
+          menuPortalTarget={true}
+        />
+      );
+    }
+    return proyecto.proyecto_etl.nombre;
   };
 
   const renderEditableKeywords = () => {
@@ -314,9 +363,9 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       );
     }
 
-    const keywords = Array.isArray(proyecto.keyword)
-      ? proyecto.keyword
-      : proyecto.keyword?.palabras_clave || [];
+    const keywords = Array.isArray(proyecto.proyecto_categorizacion.keyword)
+      ? proyecto.proyecto_categorizacion.keyword
+      : proyecto.proyecto_categorizacion.keyword?.palabras_clave || [];
 
     return keywords.length > 0
       ? renderKeywords(keywords)
@@ -367,6 +416,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
             optionValueKey="id"
             noOptionsMessage="No se encontraron colaboradores"
             isClearable={false}
+            menuPortalTarget={true}
           />
 
           {editingColaboradores.length > 0 && (
@@ -397,11 +447,15 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       );
     }
 
-    return renderColaboradores(proyecto.colaboradores_info);
+    return renderColaboradores(
+      proyecto.proyecto_categorizacion.colaboradores_info
+    );
   };
 
   const handleAsignarArticulos = () => {
-    navigate(`/asignar-articulos?proyecto_id=${proyecto.id}`);
+    navigate(
+      `/asignar-articulos?proyecto_id=${proyecto.proyecto_categorizacion.id}`
+    );
   };
 
   const renderAsignarCard = () => (
@@ -445,24 +499,37 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-      {renderCard(
-        'Detalles',
-        'detalles',
-        <>
-          {renderField('ID', proyecto.id)}
-          {renderField('NOMBRE', renderEditableNombre())}
-          {renderField('COLABORADORES', renderEditableColaboradores())}
-        </>
-      )}
+    <div className="space-y-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderCard(
+          'Detalles',
+          'detalles',
+          <>
+            {renderField('ID', proyecto.proyecto_categorizacion.id)}
+            {renderField('NOMBRE', renderEditableNombre())}
+            {renderField('COLABORADORES', renderEditableColaboradores())}
+          </>
+        )}
 
-      {renderCard(
-        'Críterios de aceptación',
-        'keywords',
-        <>{renderField('PALABRAS CLAVE', renderEditableKeywords())}</>
-      )}
+        {renderCard(
+          'Proyecto ETL',
+          'proyecto_etl',
+          <>
+            {renderField('ID', proyecto.proyecto_etl.id)}
+            {renderField('NOMBRE', renderEditableNombreETL())}
+          </>
+        )}
+      </div>
 
-      {renderAsignarCard()}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderCard(
+          'Críterios de aceptación',
+          'keywords',
+          <>{renderField('PALABRAS CLAVE', renderEditableKeywords())}</>
+        )}
+
+        {renderAsignarCard()}
+      </div>
     </div>
   );
 };

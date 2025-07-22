@@ -43,6 +43,34 @@ export interface Keyword {
   palabras_clave: string[];
 }
 
+export interface ProyectoETL {
+  id: string;
+  nombre: string;
+  descripcion: string | null;
+  estado: boolean;
+  created_at: string;
+}
+
+export interface ProyectoCategorizacion {
+  id: string;
+  tags_info: TagInfo[];
+  colaboradores_info: ColaboradorInfo[];
+  created_at: string;
+  modified_at: string;
+  proyecto_id: string;
+  keyword: string[] | Keyword;
+  nombre: string;
+  activo: boolean;
+  created_by: number | null;
+  modified_by: number | null;
+}
+
+export interface ProyectoCompleto {
+  proyecto_categorizacion: ProyectoCategorizacion;
+  proyecto_etl: ProyectoETL;
+}
+
+// Mantenemos la interfaz original para compatibilidad con listados
 export interface Proyecto {
   id: string;
   tags_info: TagInfo[];
@@ -120,12 +148,12 @@ export async function getProyectos(
   return categorizationPlusRequest<Proyecto[]>(config);
 }
 
-export async function getProyecto(id: string): Promise<Proyecto> {
+export async function getProyecto(id: string): Promise<ProyectoCompleto> {
   const config: AxiosRequestConfig = {
     method: 'GET',
     url: `proyecto-categorizacion/${id}/`,
   };
-  return categorizationPlusRequest<Proyecto>(config);
+  return categorizationPlusRequest<ProyectoCompleto>(config);
 }
 
 export async function createProyecto(proyectoData: {

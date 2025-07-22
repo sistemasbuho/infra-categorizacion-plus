@@ -164,6 +164,7 @@ export const AsignarFormulario = ({
                   optionValueKey="id"
                   isClearable
                   noOptionsMessage="No se encontraron usuarios"
+                  menuPortalTarget={true}
                 />
               </div>
 
@@ -221,6 +222,7 @@ export const AsignarFormulario = ({
                   optionValueKey="id"
                   isClearable
                   noOptionsMessage="No se encontraron usuarios"
+                  menuPortalTarget={true}
                 />
               </div>
 
@@ -283,6 +285,7 @@ export const AsignarFormulario = ({
                   optionValueKey="id"
                   isClearable
                   noOptionsMessage="No se encontraron usuarios"
+                  menuPortalTarget={true}
                 />
               </div>
 
@@ -406,6 +409,7 @@ export const AsignarFormulario = ({
                   optionValueKey="id"
                   isClearable
                   noOptionsMessage="No se encontraron usuarios"
+                  menuPortalTarget={true}
                 />
               </div>
 

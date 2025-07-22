@@ -14,6 +14,7 @@ interface AsyncReactSelectProps {
   className?: string;
   isClearable?: boolean;
   noOptionsMessage?: string;
+  menuPortalTarget?: boolean;
 }
 
 export const AsyncReactSelect = ({
@@ -28,6 +29,7 @@ export const AsyncReactSelect = ({
   className = '',
   isClearable = true,
   noOptionsMessage = 'No se encontraron resultados',
+  menuPortalTarget = false,
 }: AsyncReactSelectProps) => {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +111,7 @@ export const AsyncReactSelect = ({
       border: `1px solid ${theme === 'dark' ? '#4b5563' : '#d1d5db'}`,
       boxShadow:
         '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      zIndex: 9999,
     }),
     option: (provided: any, state: any) => ({
       ...provided,
@@ -176,6 +179,7 @@ export const AsyncReactSelect = ({
         loadingMessage={() => 'Buscando...'}
         className="react-select-container"
         classNamePrefix="react-select"
+        menuPortalTarget={menuPortalTarget ? document.body : undefined}
       />
     </div>
   );
