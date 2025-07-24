@@ -67,10 +67,9 @@ export interface ProyectoCategorizacion {
 
 export interface ProyectoCompleto {
   proyecto_categorizacion: ProyectoCategorizacion;
-  proyecto_etl: ProyectoETL;
+  proyecto_etl: ProyectoETL | null;
 }
 
-// Mantenemos la interfaz original para compatibilidad con listados
 export interface Proyecto {
   id: string;
   tags_info: TagInfo[];

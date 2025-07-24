@@ -18,6 +18,7 @@ import {
   searchProyectosELT,
 } from '../../Proyectos/services/proyectosRequest';
 import { AsyncReactSelect } from '../../../shared/components/ui/AsyncReactSelect';
+import { CrearFormulario } from './CrearFormulario';
 
 interface ProyectoDetailsProps {
   proyecto: ProyectoCompleto;
@@ -45,8 +46,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     proyecto.proyecto_categorizacion.nombre
   );
   const [selectedProyectoELT, setSelectedProyectoELT] = useState<ProyectoELT>({
-    id: proyecto.proyecto_etl.id,
-    nombre: proyecto.proyecto_etl.nombre,
+    id: proyecto.proyecto_etl?.id || '',
+    nombre: proyecto.proyecto_etl?.nombre || '',
   });
   const [editingKeywords, setEditingKeywords] = useState<string[]>(() => {
     return Array.isArray(proyecto.proyecto_categorizacion.keyword)
@@ -66,6 +67,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     );
   });
   const [saving, setSaving] = useState(false);
+  const [isFormularioModalOpen, setIsFormularioModalOpen] = useState(false);
+
   const cardStyle = {
     backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
     borderColor: theme === 'dark' ? '#374151' : '#e5e7eb',
@@ -112,8 +115,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       setEditingColaboradores(colaboradoresConvertidos);
     } else if (section === 'proyecto_etl') {
       setSelectedProyectoELT({
-        id: proyecto.proyecto_etl.id,
-        nombre: proyecto.proyecto_etl.nombre,
+        id: proyecto.proyecto_etl?.id || '',
+        nombre: proyecto.proyecto_etl?.nombre || '',
       });
     } else if (section === 'keywords') {
       const keywords = Array.isArray(proyecto.proyecto_categorizacion.keyword)
@@ -127,8 +130,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     setEditingSection(null);
     setEditingNombre(proyecto.proyecto_categorizacion.nombre);
     setSelectedProyectoELT({
-      id: proyecto.proyecto_etl.id,
-      nombre: proyecto.proyecto_etl.nombre,
+      id: proyecto.proyecto_etl?.id || '',
+      nombre: proyecto.proyecto_etl?.nombre || '',
     });
     const keywords = Array.isArray(proyecto.proyecto_categorizacion.keyword)
       ? proyecto.proyecto_categorizacion.keyword
@@ -318,7 +321,13 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         />
       );
     }
-    return proyecto.proyecto_etl.nombre;
+    return (
+      proyecto.proyecto_etl?.nombre || (
+        <span style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}>
+          No hay proyecto ETL asignado
+        </span>
+      )
+    );
   };
 
   const renderEditableKeywords = () => {
@@ -498,6 +507,50 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     </div>
   );
 
+  const handleCrearFormulario = () => {
+    setIsFormularioModalOpen(true);
+  };
+
+  const renderCrearFormularioCard = () => (
+    <div className="border rounded-lg overflow-hidden" style={cardStyle}>
+      <div
+        className="flex justify-between items-center p-4 border-b"
+        style={headerStyle}
+      >
+        <h3 className="font-semibold text-lg">Crear Formulario</h3>
+        <div
+          className="w-3 h-3 rounded-full"
+          style={{
+            backgroundColor: theme === 'dark' ? '#10b981' : '#059669',
+          }}
+        />
+      </div>
+      <div className="p-6">
+        <div className="text-center">
+          <button
+            onClick={handleCrearFormulario}
+            className="flex items-center gap-3 mx-auto px-6 py-3 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
+            style={{
+              backgroundColor: '#3b82f6',
+              color: '#ffffff',
+            }}
+          >
+            <FaPlus size={16} />
+            <span className="font-medium">Crear Formulario</span>
+          </button>
+          <p
+            className="text-sm mt-3"
+            style={{
+              color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+            }}
+          >
+            Crear un formulario para este proyecto
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6 mt-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -515,7 +568,16 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
           'Proyecto ETL',
           'proyecto_etl',
           <>
-            {renderField('ID', proyecto.proyecto_etl.id)}
+            {renderField(
+              'ID',
+              proyecto.proyecto_etl?.id || (
+                <span
+                  style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+                >
+                  No hay proyecto ETL asignado
+                </span>
+              )
+            )}
             {renderField('NOMBRE', renderEditableNombreETL())}
           </>
         )}
@@ -530,6 +592,17 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
 
         {renderAsignarCard()}
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderCrearFormularioCard()}
+      </div>
+
+      <CrearFormulario
+        theme={theme}
+        isFormularioModalOpen={isFormularioModalOpen}
+        setIsFormularioModalOpen={setIsFormularioModalOpen}
+        proyectoId={proyecto.proyecto_categorizacion.id}
+      />
     </div>
   );
 };
