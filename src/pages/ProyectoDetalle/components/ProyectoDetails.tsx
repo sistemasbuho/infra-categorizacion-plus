@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaEdit,
   FaSave,
@@ -19,6 +19,11 @@ import {
 } from '../../Proyectos/services/proyectosRequest';
 import { AsyncReactSelect } from '../../../shared/components/ui/AsyncReactSelect';
 import { CrearFormulario } from './CrearFormulario';
+import {
+  obtenerFormulario,
+  FormularioResponse,
+} from '../services/formularioRequest';
+import { toast } from 'react-hot-toast';
 
 interface ProyectoDetailsProps {
   proyecto: ProyectoCompleto;
@@ -31,6 +36,7 @@ interface ProyectoDetailsProps {
       colaboradores?: number[];
       tags?: string[];
       activo?: boolean;
+      redes?: boolean;
     }>
   ) => Promise<void>;
 }
@@ -68,6 +74,34 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   });
   const [saving, setSaving] = useState(false);
   const [isFormularioModalOpen, setIsFormularioModalOpen] = useState(false);
+  const [formularioExistente, setFormularioExistente] =
+    useState<FormularioResponse | null>(null);
+  const [loadingFormulario, setLoadingFormulario] = useState(false);
+  const [editingRedes, setEditingRedes] = useState(
+    proyecto.proyecto_categorizacion.redes || false
+  );
+
+  useEffect(() => {
+    const formularioId = proyecto.proyecto_categorizacion.formulario;
+    if (formularioId && proyecto.proyecto_categorizacion.redes) {
+      obtenerFormularioExistente(formularioId);
+    }
+  }, [
+    proyecto.proyecto_categorizacion.formulario,
+    proyecto.proyecto_categorizacion.redes,
+  ]);
+
+  const obtenerFormularioExistente = async (formularioId: string) => {
+    setLoadingFormulario(true);
+    try {
+      const formulario = await obtenerFormulario(formularioId);
+      setFormularioExistente(formulario);
+    } catch (error) {
+      console.error('Error al obtener formulario:', error);
+    } finally {
+      setLoadingFormulario(false);
+    }
+  };
 
   const cardStyle = {
     backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
@@ -103,6 +137,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     setEditingSection(section);
     if (section === 'detalles') {
       setEditingNombre(proyecto.proyecto_categorizacion.nombre);
+      setEditingRedes(proyecto.proyecto_categorizacion.redes || false);
       const colaboradoresConvertidos =
         proyecto.proyecto_categorizacion.colaboradores_info.map(
           (colabInfo) => ({
@@ -129,6 +164,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   const handleCancelEdit = () => {
     setEditingSection(null);
     setEditingNombre(proyecto.proyecto_categorizacion.nombre);
+    setEditingRedes(proyecto.proyecto_categorizacion.redes || false);
     setSelectedProyectoELT({
       id: proyecto.proyecto_etl?.id || '',
       nombre: proyecto.proyecto_etl?.nombre || '',
@@ -159,11 +195,13 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         colaboradores?: number[];
         tags?: string[];
         activo?: boolean;
+        redes?: boolean;
       }> = {};
 
       if (section === 'detalles') {
         updates.nombre = editingNombre;
         updates.colaboradores = editingColaboradores.map((c) => c.id);
+        updates.redes = editingRedes;
       } else if (section === 'proyecto_etl') {
         updates.proyecto_id = selectedProyectoELT.id;
       } else if (section === 'keywords') {
@@ -461,6 +499,55 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     );
   };
 
+  const renderEditableRedes = () => {
+    if (editingSection === 'detalles') {
+      return (
+        <div className="flex items-center gap-3">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={editingRedes}
+              onChange={(e) => setEditingRedes(e.target.checked)}
+              className="sr-only"
+            />
+            <div
+              className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
+                editingRedes
+                  ? 'bg-blue-600'
+                  : theme === 'dark'
+                  ? 'bg-gray-600'
+                  : 'bg-gray-200'
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 ${
+                  editingRedes ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </div>
+            <span className="ml-3 text-sm font-medium">
+              {editingRedes ? 'Proyecto de redes' : 'Proyecto estándar'}
+            </span>
+          </label>
+        </div>
+      );
+    }
+
+    const isRedes = proyecto.proyecto_categorizacion.redes;
+    return (
+      <div className="flex items-center gap-2">
+        <div
+          className={`w-3 h-3 rounded-full ${
+            isRedes ? 'bg-green-500' : 'bg-gray-400'
+          }`}
+        />
+        <span className="text-sm">
+          {isRedes ? 'Proyecto de redes' : 'Proyecto estándar'}
+        </span>
+      </div>
+    );
+  };
+
   const handleAsignarArticulos = () => {
     navigate(
       `/asignar-articulos?proyecto_id=${proyecto.proyecto_categorizacion.id}`
@@ -511,45 +598,110 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     setIsFormularioModalOpen(true);
   };
 
-  const renderCrearFormularioCard = () => (
-    <div className="border rounded-lg overflow-hidden" style={cardStyle}>
-      <div
-        className="flex justify-between items-center p-4 border-b"
-        style={headerStyle}
-      >
-        <h3 className="font-semibold text-lg">Crear Formulario</h3>
+  const handleEditarFormulario = () => {
+    if (formularioExistente) {
+      toast('Función de edición en desarrollo');
+      // TODO: Implementar edición del formulario
+    }
+  };
+
+  const renderCrearFormularioCard = () => {
+    const hasFormulario =
+      proyecto.proyecto_categorizacion.formulario && formularioExistente;
+
+    return (
+      <div className="border rounded-lg overflow-hidden" style={cardStyle}>
         <div
-          className="w-3 h-3 rounded-full"
-          style={{
-            backgroundColor: theme === 'dark' ? '#10b981' : '#059669',
-          }}
-        />
-      </div>
-      <div className="p-6">
-        <div className="text-center">
-          <button
-            onClick={handleCrearFormulario}
-            className="flex items-center gap-3 mx-auto px-6 py-3 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
+          className="flex justify-between items-center p-4 border-b"
+          style={headerStyle}
+        >
+          <h3 className="font-semibold text-lg">
+            {hasFormulario ? 'Formulario' : 'Crear Formulario'}
+          </h3>
+          <div
+            className="w-3 h-3 rounded-full"
             style={{
-              backgroundColor: '#3b82f6',
-              color: '#ffffff',
+              backgroundColor: hasFormulario
+                ? theme === 'dark'
+                  ? '#10b981'
+                  : '#059669'
+                : theme === 'dark'
+                ? '#f59e0b'
+                : '#d97706',
             }}
-          >
-            <FaPlus size={16} />
-            <span className="font-medium">Crear Formulario</span>
-          </button>
-          <p
-            className="text-sm mt-3"
-            style={{
-              color: theme === 'dark' ? '#9ca3af' : '#6b7280',
-            }}
-          >
-            Crear un formulario para este proyecto
-          </p>
+          />
+        </div>
+        <div className="p-6">
+          {loadingFormulario ? (
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+              <p
+                className="text-sm mt-3"
+                style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+              >
+                Cargando formulario...
+              </p>
+            </div>
+          ) : hasFormulario ? (
+            <div>
+              <div className="mb-4">
+                <h4 className="font-medium mb-2">
+                  {formularioExistente.nombre}
+                </h4>
+                <p
+                  className="text-sm"
+                  style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+                >
+                  {formularioExistente.descripcion}
+                </p>
+                <p
+                  className="text-xs mt-2"
+                  style={{ color: theme === 'dark' ? '#9ca3af' : '#6b7280' }}
+                >
+                  {formularioExistente.campos.length} campos
+                </p>
+              </div>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={handleEditarFormulario}
+                  className="flex items-center gap-2 px-4 py-2 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
+                  style={{
+                    backgroundColor: '#f59e0b',
+                    color: '#ffffff',
+                  }}
+                >
+                  <FaEdit size={14} />
+                  <span className="font-medium">Editar</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center">
+              <button
+                onClick={handleCrearFormulario}
+                className="flex items-center gap-3 mx-auto px-6 py-3 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
+                style={{
+                  backgroundColor: '#3b82f6',
+                  color: '#ffffff',
+                }}
+              >
+                <FaPlus size={16} />
+                <span className="font-medium">Crear Formulario</span>
+              </button>
+              <p
+                className="text-sm mt-3"
+                style={{
+                  color: theme === 'dark' ? '#9ca3af' : '#6b7280',
+                }}
+              >
+                Crear un formulario para este proyecto
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="space-y-6 mt-6">
@@ -561,6 +713,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
             {renderField('ID', proyecto.proyecto_categorizacion.id)}
             {renderField('NOMBRE', renderEditableNombre())}
             {renderField('COLABORADORES', renderEditableColaboradores())}
+            {renderField('REDES', renderEditableRedes())}
           </>
         )}
 
@@ -593,16 +746,20 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
         {renderAsignarCard()}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {renderCrearFormularioCard()}
-      </div>
+      {proyecto.proyecto_categorizacion.redes && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {renderCrearFormularioCard()}
+        </div>
+      )}
 
-      <CrearFormulario
-        theme={theme}
-        isFormularioModalOpen={isFormularioModalOpen}
-        setIsFormularioModalOpen={setIsFormularioModalOpen}
-        proyectoId={proyecto.proyecto_categorizacion.id}
-      />
+      {proyecto.proyecto_categorizacion.redes && (
+        <CrearFormulario
+          theme={theme}
+          isFormularioModalOpen={isFormularioModalOpen}
+          setIsFormularioModalOpen={setIsFormularioModalOpen}
+          proyectoId={proyecto.proyecto_categorizacion.id}
+        />
+      )}
     </div>
   );
 };

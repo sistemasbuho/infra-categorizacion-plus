@@ -63,6 +63,8 @@ export interface ProyectoCategorizacion {
   activo: boolean;
   created_by: number | null;
   modified_by: number | null;
+  formulario?: string | null;
+  redes?: boolean;
 }
 
 export interface ProyectoCompleto {
@@ -82,6 +84,7 @@ export interface Proyecto {
   activo: boolean;
   created_by: number | null;
   modified_by: number | null;
+  redes?: boolean;
 }
 
 let config: AxiosRequestConfig = {};
@@ -161,6 +164,7 @@ export async function createProyecto(proyectoData: {
   keyword?: Keyword;
   colaboradores?: number[];
   tags?: string[];
+  redes?: boolean;
 }): Promise<Proyecto> {
   config = {
     method: 'POST',
@@ -179,6 +183,7 @@ export async function updateProyecto(
     colaboradores?: number[];
     tags?: string[];
     activo?: boolean;
+    redes?: boolean;
   }>
 ): Promise<Proyecto> {
   const config: AxiosRequestConfig = {

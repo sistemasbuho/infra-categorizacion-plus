@@ -87,6 +87,7 @@ export const ProyectoDetalle: React.FC = () => {
       colaboradores?: number[];
       tags?: string[];
       activo?: boolean;
+      redes?: boolean;
     }>
   ) => {
     if (!proyecto) return;
@@ -99,6 +100,7 @@ export const ProyectoDetalle: React.FC = () => {
         colaboradores?: number[];
         tags?: string[];
         activo?: boolean;
+        redes?: boolean;
       }> = {};
 
       if (updates.nombre !== undefined) {
@@ -122,6 +124,9 @@ export const ProyectoDetalle: React.FC = () => {
       }
       if (updates.proyecto_id !== undefined) {
         apiUpdates.proyecto_id = updates.proyecto_id;
+      }
+      if (updates.redes !== undefined) {
+        apiUpdates.redes = updates.redes;
       }
 
       await updateProyecto(proyecto.proyecto_categorizacion.id, apiUpdates);

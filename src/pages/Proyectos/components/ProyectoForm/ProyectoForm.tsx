@@ -13,6 +13,7 @@ interface ProyectoFormData {
   };
   colaboradores: number[];
   tags: string[];
+  redes?: boolean;
 }
 
 interface ProyectoFormDefaultValue {
@@ -23,6 +24,7 @@ interface ProyectoFormDefaultValue {
   };
   colaboradores?: number[];
   tags?: string[];
+  redes?: boolean;
   colaboradores_info?: import('../../services/proyectosRequest').ColaboradorInfo[];
   tags_info?: import('../../services/proyectosRequest').TagInfo[];
 }
@@ -61,6 +63,7 @@ export const ProyectoForm: React.FC<Props> = ({
       keyword: { palabras_clave: [] },
       colaboradores: [],
       tags: [],
+      redes: false,
     },
   });
 
@@ -92,6 +95,9 @@ export const ProyectoForm: React.FC<Props> = ({
   const [selectedProyectoELT, setSelectedProyectoELT] =
     useState<ProyectoELT | null>(null);
 
+  // Estado para redes
+  const [isRedes, setIsRedes] = useState<boolean>(defaultValue?.redes || false);
+
   useEffect(() => {
     if (defaultValue?.proyecto_id && !selectedProyectoELT) {
       setSelectedProyectoELT({
@@ -122,6 +128,12 @@ export const ProyectoForm: React.FC<Props> = ({
   }, [defaultValue]);
 
   useEffect(() => {
+    if (defaultValue?.redes !== undefined) {
+      setIsRedes(defaultValue.redes);
+    }
+  }, [defaultValue?.redes]);
+
+  useEffect(() => {
     setValue('keyword', { palabras_clave: keywords });
   }, [keywords, setValue]);
 
@@ -144,6 +156,10 @@ export const ProyectoForm: React.FC<Props> = ({
       setValue('proyecto_id', selectedProyectoELT.id);
     }
   }, [selectedProyectoELT, setValue]);
+
+  useEffect(() => {
+    setValue('redes', isRedes);
+  }, [isRedes, setValue]);
 
   const handleColaboradorSearch = async (searchTerm: string) => {
     if (searchTerm.length >= 2) {
@@ -226,6 +242,7 @@ export const ProyectoForm: React.FC<Props> = ({
       keyword: { palabras_clave: keywords },
       colaboradores: selectedColaboradores.map((c) => c.id),
       tags: selectedTags.map((t) => t.id),
+      redes: isRedes,
     });
   });
 
@@ -291,6 +308,43 @@ export const ProyectoForm: React.FC<Props> = ({
             {errors.nombre.message}
           </p>
         )}
+      </div>
+
+      <div>
+        <label
+          className="block text-sm font-medium mb-3"
+          style={{ color: theme === 'dark' ? '#ffffff' : '#374151' }}
+        >
+          Tipo de Proyecto
+        </label>
+        <div className="flex items-center gap-3">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isRedes}
+              onChange={(e) => setIsRedes(e.target.checked)}
+              className="sr-only"
+            />
+            <div
+              className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
+                isRedes
+                  ? 'bg-blue-600'
+                  : theme === 'dark'
+                  ? 'bg-gray-600'
+                  : 'bg-gray-200'
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200 ${
+                  isRedes ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </div>
+            <span className="ml-3 text-sm font-medium">
+              {isRedes ? 'Proyecto de redes' : 'Proyecto estándar'}
+            </span>
+          </label>
+        </div>
       </div>
 
       <div>

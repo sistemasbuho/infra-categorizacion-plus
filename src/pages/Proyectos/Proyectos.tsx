@@ -116,6 +116,7 @@ export const Proyectos = () => {
     keyword?: import('./services/proyectosRequest').Keyword;
     colaboradores?: number[];
     tags?: string[];
+    redes?: boolean;
   }) => {
     try {
       await createProyecto(proyectoData);
@@ -137,6 +138,7 @@ export const Proyectos = () => {
     keyword?: import('./services/proyectosRequest').Keyword;
     colaboradores?: number[];
     tags?: string[];
+    redes?: boolean;
   }) => {
     try {
       if (selectedProyecto) {
@@ -340,6 +342,7 @@ export const Proyectos = () => {
                   tags: selectedProyecto.tags_info?.map((t) => t.id) || [],
                   colaboradores_info: selectedProyecto.colaboradores_info || [],
                   tags_info: selectedProyecto.tags_info || [],
+                  redes: selectedProyecto.redes || false,
                 }
               : undefined
           }

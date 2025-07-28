@@ -35,3 +35,13 @@ export async function crearFormulario(
   };
   return categorizationPlusRequest<FormularioResponse>(config);
 }
+
+export async function obtenerFormulario(
+  formularioId: string
+): Promise<FormularioResponse> {
+  const config: AxiosRequestConfig = {
+    method: 'GET',
+    url: `redes/obtener-formulario/?formulario_id=${formularioId}`,
+  };
+  return categorizationPlusRequest<FormularioResponse>(config);
+}
