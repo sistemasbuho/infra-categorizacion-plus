@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../../../shared/components/ui/Button';
 import {
   FaPlus,
@@ -8,16 +8,27 @@ import {
   FaList,
   FaHashtag,
   FaCheck,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import { IoSaveSharp, IoDocumentText } from 'react-icons/io5';
 import { toast } from 'react-hot-toast';
-import { crearFormulario, FormularioData } from '../services/formularioRequest';
+import {
+  crearFormulario,
+  actualizarFormulario,
+  FormularioData,
+  FormularioUpdateData,
+  FormularioResponse,
+} from '../services/formularioRequest';
 
 interface CrearFormularioProps {
   theme: string;
   isFormularioModalOpen: boolean;
   setIsFormularioModalOpen: (isOpen: boolean) => void;
   proyectoId: string;
+  // Props para edición
+  modoEdicion?: boolean;
+  formularioExistente?: FormularioResponse | null;
+  onFormularioUpdated?: () => void;
 }
 
 export const CrearFormulario = ({
@@ -25,9 +36,16 @@ export const CrearFormulario = ({
   isFormularioModalOpen,
   setIsFormularioModalOpen,
   proyectoId,
+  modoEdicion = false,
+  formularioExistente = null,
+  onFormularioUpdated,
 }: CrearFormularioProps) => {
-  const [formularioNombre, setFormularioNombre] = useState('');
-  const [formularioDescripcion, setFormularioDescripcion] = useState('');
+  const [formularioNombre, setFormularioNombre] = useState(
+    modoEdicion && formularioExistente ? formularioExistente.nombre : ''
+  );
+  const [formularioDescripcion, setFormularioDescripcion] = useState(
+    modoEdicion && formularioExistente ? formularioExistente.descripcion : ''
+  );
   const [saving, setSaving] = useState(false);
   const [formularioCampos, setFormularioCampos] = useState<
     Array<{
@@ -36,8 +54,40 @@ export const CrearFormulario = ({
       tipo: 'text' | 'select';
       obligatorio: boolean;
       opciones: string;
+      activo: boolean;
+      esExistente: boolean;
     }>
-  >([]);
+  >(
+    modoEdicion && formularioExistente
+      ? formularioExistente.campos.map((campo) => ({
+          id: campo.id,
+          nombre_campo: campo.nombre_campo,
+          tipo: campo.tipo,
+          obligatorio: campo.obligatorio,
+          opciones: campo.opciones || '',
+          activo: campo.activo,
+          esExistente: true,
+        }))
+      : []
+  );
+
+  useEffect(() => {
+    if (formularioExistente) {
+      setFormularioNombre(formularioExistente.nombre);
+      setFormularioDescripcion(formularioExistente.descripcion);
+      setFormularioCampos(
+        formularioExistente.campos.map((campo) => ({
+          id: campo.id,
+          nombre_campo: campo.nombre_campo,
+          tipo: campo.tipo,
+          obligatorio: campo.obligatorio,
+          opciones: campo.opciones || '',
+          activo: campo.activo,
+          esExistente: true,
+        }))
+      );
+    }
+  }, [formularioExistente]);
 
   const handleCloseFormularioModal = () => {
     setIsFormularioModalOpen(false);
@@ -53,12 +103,31 @@ export const CrearFormulario = ({
       tipo: 'text' as const,
       obligatorio: false,
       opciones: '',
+      activo: true,
+      esExistente: false,
     };
     setFormularioCampos([...formularioCampos, nuevoCampo]);
   };
 
   const eliminarCampo = (id: string) => {
-    setFormularioCampos(formularioCampos.filter((campo) => campo.id !== id));
+    const campo = formularioCampos.find((c) => c.id === id);
+    if (campo?.esExistente) {
+      setFormularioCampos(
+        formularioCampos.map((campo) =>
+          campo.id === id ? { ...campo, activo: false } : campo
+        )
+      );
+    } else {
+      setFormularioCampos(formularioCampos.filter((campo) => campo.id !== id));
+    }
+  };
+
+  const reactivarCampo = (id: string) => {
+    setFormularioCampos(
+      formularioCampos.map((campo) =>
+        campo.id === id ? { ...campo, activo: true } : campo
+      )
+    );
   };
 
   const actualizarCampo = (
@@ -78,14 +147,15 @@ export const CrearFormulario = ({
       return;
     }
 
-    if (formularioCampos.length === 0) {
-      toast.error('Debe agregar al menos un campo');
+    const camposActivos = formularioCampos.filter((campo) => campo.activo);
+    if (camposActivos.length === 0) {
+      toast.error('Debe tener al menos un campo activo');
       return;
     }
 
-    for (const campo of formularioCampos) {
+    for (const campo of camposActivos) {
       if (!campo.nombre_campo.trim()) {
-        toast.error('Todos los campos deben tener un nombre');
+        toast.error('Todos los campos activos deben tener un nombre');
         return;
       }
       if (campo.tipo === 'select' && !campo.opciones.trim()) {
@@ -97,24 +167,56 @@ export const CrearFormulario = ({
     setSaving(true);
 
     try {
-      const formularioData: FormularioData = {
-        nombre: formularioNombre.trim(),
-        descripcion: formularioDescripcion.trim(),
-        proyecto_id: proyectoId,
-        campos: formularioCampos.map(({ id, ...campo }) => ({
-          nombre_campo: campo.nombre_campo.trim(),
-          tipo: campo.tipo,
-          opciones: campo.tipo === 'select' ? campo.opciones.trim() : null,
-          obligatorio: campo.obligatorio,
-        })),
-      };
+      if (modoEdicion && formularioExistente) {
+        const formularioUpdateData: FormularioUpdateData = {
+          formulario_id: formularioExistente.formulario_id,
+          nombre: formularioNombre.trim(),
+          descripcion: formularioDescripcion.trim(),
+          campos: formularioCampos.map((campo) => ({
+            id: campo.esExistente ? campo.id : undefined,
+            nombre_campo: campo.nombre_campo.trim(),
+            tipo: campo.tipo,
+            opciones: campo.tipo === 'select' ? campo.opciones.trim() : null,
+            obligatorio: campo.obligatorio,
+            activo: campo.activo,
+          })),
+        };
 
-      await crearFormulario(formularioData);
-      toast.success('Formulario creado exitosamente');
+        await actualizarFormulario(formularioUpdateData);
+        toast.success('Formulario actualizado exitosamente');
+        if (onFormularioUpdated) {
+          onFormularioUpdated();
+        }
+      } else {
+        const formularioData: FormularioData = {
+          nombre: formularioNombre.trim(),
+          descripcion: formularioDescripcion.trim(),
+          proyecto_id: proyectoId,
+          campos: camposActivos.map(
+            ({ id, esExistente, activo, ...campo }) => ({
+              nombre_campo: campo.nombre_campo.trim(),
+              tipo: campo.tipo,
+              opciones: campo.tipo === 'select' ? campo.opciones.trim() : null,
+              obligatorio: campo.obligatorio,
+            })
+          ),
+        };
+
+        await crearFormulario(formularioData);
+        toast.success('Formulario creado exitosamente');
+        if (onFormularioUpdated) {
+          onFormularioUpdated();
+        }
+      }
+
       handleCloseFormularioModal();
     } catch (error) {
-      console.error('Error al crear formulario:', error);
-      toast.error('Error al crear el formulario');
+      console.error('Error al guardar formulario:', error);
+      toast.error(
+        modoEdicion
+          ? 'Error al actualizar el formulario'
+          : 'Error al crear el formulario'
+      );
     } finally {
       setSaving(false);
     }
@@ -190,7 +292,7 @@ export const CrearFormulario = ({
                 className="text-xl font-bold"
                 style={{ color: theme === 'dark' ? '#f9fafb' : '#1f2937' }}
               >
-                Crear formulario
+                {modoEdicion ? 'Editar formulario' : 'Crear formulario'}
               </h3>
               <p
                 className="text-sm"
@@ -199,7 +301,9 @@ export const CrearFormulario = ({
                   opacity: 0.8,
                 }}
               >
-                Crear nuevo formulario dinámico
+                {modoEdicion
+                  ? 'Modificar formulario existente'
+                  : 'Crear nuevo formulario dinámico'}
               </p>
             </div>
           </div>
@@ -334,9 +438,57 @@ export const CrearFormulario = ({
                 {formularioCampos.map((campo, index) => (
                   <div
                     key={campo.id}
-                    className="rounded-xl p-6 mb-6 border hover:shadow-lg transition-all duration-200"
-                    style={cardStyle}
+                    className={`rounded-xl p-6 mb-6 border hover:shadow-lg transition-all duration-200 ${
+                      !campo.activo ? 'opacity-60' : ''
+                    }`}
+                    style={{
+                      ...cardStyle,
+                      backgroundColor: !campo.activo
+                        ? theme === 'dark'
+                          ? '#1f2937'
+                          : '#f3f4f6'
+                        : cardStyle.backgroundColor,
+                      borderStyle: !campo.activo ? 'dashed' : 'solid',
+                    }}
                   >
+                    {!campo.activo && (
+                      <div
+                        className="flex items-center justify-between p-3 mb-4 rounded-lg border"
+                        style={{
+                          backgroundColor:
+                            theme === 'dark'
+                              ? 'rgba(239, 68, 68, 0.1)'
+                              : '#fef2f2',
+                          borderColor: theme === 'dark' ? '#dc2626' : '#fecaca',
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <FaEyeSlash className="text-red-500" />
+                          <span
+                            className="text-sm font-medium"
+                            style={{
+                              color: theme === 'dark' ? '#fca5a5' : '#dc2626',
+                            }}
+                          >
+                            Campo desactivado
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => reactivarCampo(campo.id)}
+                          className="px-3 py-1 rounded-md text-sm font-medium transition-colors hover:bg-green-100 dark:hover:bg-green-900/20"
+                          style={{
+                            backgroundColor:
+                              theme === 'dark'
+                                ? 'rgba(16, 185, 129, 0.1)'
+                                : '#ecfdf5',
+                            color: theme === 'dark' ? '#34d399' : '#059669',
+                          }}
+                        >
+                          Reactivar
+                        </button>
+                      </div>
+                    )}
+
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
@@ -363,13 +515,33 @@ export const CrearFormulario = ({
                             Obligatorio
                           </span>
                         )}
+                        {campo.esExistente && (
+                          <span
+                            className="text-xs px-2 py-1 rounded-full"
+                            style={{
+                              backgroundColor:
+                                theme === 'dark' ? '#1e3a8a' : '#dbeafe',
+                              color: theme === 'dark' ? '#93c5fd' : '#1e40af',
+                            }}
+                          >
+                            Existente
+                          </span>
+                        )}
                       </div>
                       <button
                         onClick={() => eliminarCampo(campo.id)}
                         className="p-2 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
-                        title="Eliminar campo"
+                        title={
+                          campo.esExistente
+                            ? 'Desactivar campo'
+                            : 'Eliminar campo'
+                        }
                       >
-                        <FaTrash size={14} />
+                        {campo.esExistente ? (
+                          <FaEyeSlash size={14} />
+                        ) : (
+                          <FaTrash size={14} />
+                        )}
                       </button>
                     </div>
 
@@ -623,7 +795,13 @@ export const CrearFormulario = ({
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
           >
             <IoSaveSharp className="mr-2" size={16} />
-            {saving ? 'Guardando...' : 'Guardar formulario'}
+            {saving
+              ? modoEdicion
+                ? 'Actualizando...'
+                : 'Guardando...'
+              : modoEdicion
+              ? 'Actualizar formulario'
+              : 'Guardar formulario'}
           </Button>
         </div>
       </div>

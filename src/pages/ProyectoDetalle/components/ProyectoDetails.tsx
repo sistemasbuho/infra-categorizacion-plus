@@ -23,7 +23,6 @@ import {
   obtenerFormulario,
   FormularioResponse,
 } from '../services/formularioRequest';
-import { toast } from 'react-hot-toast';
 
 interface ProyectoDetailsProps {
   proyecto: ProyectoCompleto;
@@ -39,12 +38,14 @@ interface ProyectoDetailsProps {
       redes?: boolean;
     }>
   ) => Promise<void>;
+  onRefreshProyecto?: () => Promise<void>;
 }
 
 export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   proyecto,
   theme,
   onUpdateProyecto,
+  onRefreshProyecto,
 }) => {
   const navigate = useNavigate();
   const [editingSection, setEditingSection] = useState<string | null>(null);
@@ -74,6 +75,8 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
   });
   const [saving, setSaving] = useState(false);
   const [isFormularioModalOpen, setIsFormularioModalOpen] = useState(false);
+  const [isEditFormularioModalOpen, setIsEditFormularioModalOpen] =
+    useState(false);
   const [formularioExistente, setFormularioExistente] =
     useState<FormularioResponse | null>(null);
   const [loadingFormulario, setLoadingFormulario] = useState(false);
@@ -600,8 +603,18 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
 
   const handleEditarFormulario = () => {
     if (formularioExistente) {
-      toast('Función de edición en desarrollo');
-      // TODO: Implementar edición del formulario
+      setIsEditFormularioModalOpen(true);
+    }
+  };
+
+  const handleFormularioUpdated = async () => {
+    if (onRefreshProyecto) {
+      await onRefreshProyecto();
+    } else {
+      const formularioId = proyecto.proyecto_categorizacion.formulario;
+      if (formularioId) {
+        obtenerFormularioExistente(formularioId);
+      }
     }
   };
 
@@ -758,6 +771,20 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
           isFormularioModalOpen={isFormularioModalOpen}
           setIsFormularioModalOpen={setIsFormularioModalOpen}
           proyectoId={proyecto.proyecto_categorizacion.id}
+          onFormularioUpdated={handleFormularioUpdated}
+        />
+      )}
+
+      {/* Modal de edición de formulario */}
+      {proyecto.proyecto_categorizacion.redes && formularioExistente && (
+        <CrearFormulario
+          theme={theme}
+          isFormularioModalOpen={isEditFormularioModalOpen}
+          setIsFormularioModalOpen={setIsEditFormularioModalOpen}
+          proyectoId={proyecto.proyecto_categorizacion.id}
+          modoEdicion={true}
+          formularioExistente={formularioExistente}
+          onFormularioUpdated={handleFormularioUpdated}
         />
       )}
     </div>

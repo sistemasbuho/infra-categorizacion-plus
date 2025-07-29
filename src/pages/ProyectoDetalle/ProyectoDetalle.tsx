@@ -22,28 +22,28 @@ export const ProyectoDetalle: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
+  const fetchProyecto = async () => {
+    if (!id) {
+      setError('ID de proyecto no válido');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const proyectoData = await getProyecto(id);
+      setProyecto(proyectoData);
+    } catch (err: any) {
+      console.error('Error fetching proyecto:', err);
+      setError('Error al cargar el proyecto');
+      toast.error('Error al cargar el proyecto');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProyecto = async () => {
-      if (!id) {
-        setError('ID de proyecto no válido');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-        const proyectoData = await getProyecto(id);
-        setProyecto(proyectoData);
-      } catch (err: any) {
-        console.error('Error fetching proyecto:', err);
-        setError('Error al cargar el proyecto');
-        toast.error('Error al cargar el proyecto');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProyecto();
   }, [id]);
 
@@ -246,6 +246,7 @@ export const ProyectoDetalle: React.FC = () => {
           proyecto={proyecto}
           theme={theme}
           onUpdateProyecto={handleUpdateProyecto}
+          onRefreshProyecto={fetchProyecto}
         />
       </div>
     </div>
