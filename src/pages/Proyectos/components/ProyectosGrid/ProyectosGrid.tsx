@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
 import { useTheme } from '../../../../shared/context/ThemeContext';
 import { Proyecto } from '../../services/proyectosRequest';
 
@@ -86,13 +86,12 @@ export const ProyectosGrid: React.FC<ProyectosGridProps> = ({
           <div
             key={proyecto.id}
             onClick={() => onProyectoClick(proyecto)}
-            className="relative aspect-[4/3] rounded-lg border cursor-pointer transform transition-all duration-200 hover:scale-105 hover:shadow-lg group"
+            className="relative aspect-[4/3] rounded-lg border-2 cursor-pointer transform transition-all duration-200 hover:scale-105 hover:shadow-lg group"
             style={{
               backgroundColor: theme === 'dark' ? '#374151' : '#ffffff',
               borderColor: theme === 'dark' ? '#4b5563' : '#e5e7eb',
             }}
           >
-            {/* Actions Panel - always visible */}
             <div className="absolute top-2 right-2 flex items-center gap-1">
               {onEditProyecto && (
                 <button
@@ -150,8 +149,7 @@ export const ProyectosGrid: React.FC<ProyectosGridProps> = ({
               )}
             </div>
 
-            {/* Status Indicator */}
-            <div className="absolute top-3 left-3">
+            <div className="absolute top-3 left-3 flex items-center gap-2">
               <div
                 className="w-3 h-3 rounded-full"
                 style={{
@@ -165,6 +163,18 @@ export const ProyectosGrid: React.FC<ProyectosGridProps> = ({
                 }}
                 title={proyecto.activo ? 'Activo' : 'Inactivo'}
               />
+
+              {proyecto.redes && (
+                <div
+                  className="flex items-center justify-center w-6 h-6 rounded-full"
+                  style={{
+                    backgroundColor: theme === 'dark' ? '#3b82f6' : '#2563eb',
+                  }}
+                  title="Proyecto de Redes Sociales"
+                >
+                  <FaShareAlt className="w-3 h-3 text-white" />
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-center h-full p-4 pt-10 pb-4">

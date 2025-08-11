@@ -24,6 +24,9 @@ import { MisArticulos } from '../../pages/MisArticulos/MisArticulos';
 import { Proyectos } from '../../pages/Proyectos/Proyectos';
 import { ProyectoDetalle } from '../../pages/ProyectoDetalle/ProyectoDetalle';
 import { AsignarArticulos } from '../../pages/AsignarArticulos/AsignarArticulos';
+import { AsignarRedes } from '../../pages/AsignarRedes/AsignarRedes';
+import { ListarPublicacionesLideres } from '../../pages/ListarPublicacionesLideres/ListarPublicacionesLideres';
+import { CategorizacionRedes } from '../../pages/CategorizacionRedes/CategorizacionRedes';
 
 export type RouteElement = {
   path: string;
@@ -93,6 +96,15 @@ export const routes: RouteElement[] = [
     showInSidebar: false,
   },
   {
+    path: '/asignar-redes',
+    element: AsignarRedes,
+    icon: FaUserTie,
+    label: 'Asignar Redes',
+    roles: [1, 2],
+    section: 'proyectos',
+    showInSidebar: false,
+  },
+  {
     path: '/temas',
     element: Temas,
     icon: FaLayerGroup,
@@ -109,16 +121,8 @@ export const routes: RouteElement[] = [
     section: 'articulos',
   },
   {
-    path: '/matriz',
-    element: Home,
-    icon: FaTable,
-    label: 'Matriz',
-    roles: [1, 2],
-    section: 'social',
-  },
-  {
     path: '/lista-publicaciones-lider',
-    element: Home,
+    element: ListarPublicacionesLideres,
     icon: FaBullhorn,
     label: 'Lista publicaciones lid...',
     roles: [1, 2],
@@ -132,35 +136,35 @@ export const routes: RouteElement[] = [
     roles: [1, 2],
     section: 'social',
   },
-  {
-    path: '/asignar-publicaciones',
-    element: Home,
-    icon: FaShareAlt,
-    label: 'Asignar Publicaciones',
-    roles: [1, 2],
-    section: 'social',
-  },
-  {
-    path: '/calidad-articulos',
-    element: Home,
-    icon: FaCheckCircle,
-    label: 'Articulos',
-    roles: [1, 2],
-    section: 'calidad',
-  },
-  {
-    path: '/indicadores',
-    element: Home,
-    icon: FaTachometerAlt,
-    label: 'Indicadores',
-    roles: [1, 2],
-    section: 'calidad',
-  },
+  // {
+  //   path: '/calidad-articulos',
+  //   element: Home,
+  //   icon: FaCheckCircle,
+  //   label: 'Articulos',
+  //   roles: [1, 2],
+  //   section: 'calidad',
+  // },
+  // {
+  //   path: '/indicadores',
+  //   element: Home,
+  //   icon: FaTachometerAlt,
+  //   label: 'Indicadores',
+  //   roles: [1, 2],
+  //   section: 'calidad',
+  // },
   {
     path: '/categorizacion-articulo/articulo_id/:id/proyecto_id/:proyectoId',
     element: CategorizacionArticulo,
     icon: IoChatboxOutline,
     label: 'Categorización de Artículo',
+    roles: [1, 2],
+    showInSidebar: false,
+  },
+  {
+    path: '/categorizacion-redes/publicacion_id/:id/proyecto_id/:proyectoId',
+    element: CategorizacionRedes,
+    icon: FaShareAlt,
+    label: 'Categorización de Redes',
     roles: [1, 2],
     showInSidebar: false,
   },
@@ -182,9 +186,9 @@ export const menuSections: MenuSection[] = [
     title: 'SOCIAL',
     routes: routes.filter((route) => route.section === 'social'),
   },
-  {
-    id: 'calidad',
-    title: 'CALIDAD',
-    routes: routes.filter((route) => route.section === 'calidad'),
-  },
+  // {
+  //   id: 'calidad',
+  //   title: 'CALIDAD',
+  //   routes: routes.filter((route) => route.section === 'calidad'),
+  // },
 ];

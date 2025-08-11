@@ -25,7 +25,6 @@ export const Proyectos = () => {
     null
   );
 
-  //Controles de modales
   const [activeModal, setActiveModal] = useState<
     'create' | 'edit' | 'delete' | null
   >(null);
@@ -50,7 +49,6 @@ export const Proyectos = () => {
     searchColaboradores,
     searchProyectosELT,
     getTags,
-    // setPage,
     setSearchTerm,
     setSearchTermFechaDesde,
     setSearchTermFechaHasta,
@@ -180,10 +178,6 @@ export const Proyectos = () => {
     }
   };
 
-  // const handlePageChange = (newPage: number) => {
-  //   setPage(newPage);
-  // };
-
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
@@ -221,7 +215,6 @@ export const Proyectos = () => {
       />
 
       <div className="space-y-6">
-        {/* Search Input */}
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
             <FaSearch
@@ -257,7 +250,6 @@ export const Proyectos = () => {
           </div>
         </div>
 
-        {/* Stats */}
         <div
           className="p-4 rounded-lg border"
           style={{
@@ -281,7 +273,6 @@ export const Proyectos = () => {
           </div>
         </div>
 
-        {/* Grid */}
         <div className="rounded-lg">
           <ProyectosGrid
             proyectos={proyectos}
@@ -294,7 +285,6 @@ export const Proyectos = () => {
           />
         </div>
 
-        {/* Pagination */}
         {/* {totalPages > 1 && (
           <div className="flex justify-center">
             <Paginacion
@@ -307,7 +297,6 @@ export const Proyectos = () => {
         )} */}
       </div>
 
-      {/* Modals */}
       <DrawerModal
         open={activeModal === 'create'}
         setOpen={closeModal}

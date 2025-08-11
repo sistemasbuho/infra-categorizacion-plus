@@ -557,13 +557,24 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
     );
   };
 
-  const renderAsignarCard = () => (
+  const handleAsignarRedes = () => {
+    navigate(
+      `/asignar-redes?proyecto_id=${proyecto.proyecto_categorizacion.proyecto_id}`
+    );
+  };
+
+  const renderAsignarCard = (
+    title: string,
+    buttonText: string,
+    description: string,
+    onClickHandler: () => void
+  ) => (
     <div className="border rounded-lg overflow-hidden" style={cardStyle}>
       <div
         className="flex justify-between items-center p-4 border-b"
         style={headerStyle}
       >
-        <h3 className="font-semibold text-lg">Asignar Artículos</h3>
+        <h3 className="font-semibold text-lg">{title}</h3>
         <div
           className="w-3 h-3 rounded-full"
           style={{
@@ -574,7 +585,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
       <div className="p-6">
         <div className="text-center">
           <button
-            onClick={handleAsignarArticulos}
+            onClick={onClickHandler}
             className="flex items-center gap-3 mx-auto px-6 py-3 rounded-md hover:opacity-80 transition-opacity cursor-pointer"
             style={{
               backgroundColor: '#3b82f6',
@@ -582,7 +593,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
             }}
           >
             <FaUserTie size={16} />
-            <span className="font-medium">Asignar Artículos</span>
+            <span className="font-medium">{buttonText}</span>
           </button>
           <p
             className="text-sm mt-3"
@@ -590,7 +601,7 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
               color: theme === 'dark' ? '#9ca3af' : '#6b7280',
             }}
           >
-            Gestionar la asignación de artículos para este proyecto
+            {description}
           </p>
         </div>
       </div>
@@ -756,7 +767,19 @@ export const ProyectoDetails: React.FC<ProyectoDetailsProps> = ({
           <>{renderField('PALABRAS CLAVE', renderEditableKeywords())}</>
         )}
 
-        {renderAsignarCard()}
+        {proyecto.proyecto_categorizacion.redes
+          ? renderAsignarCard(
+              'Asignar Redes',
+              'Asignar Redes',
+              'Gestionar la asignación de redes para este proyecto',
+              handleAsignarRedes
+            )
+          : renderAsignarCard(
+              'Asignar Artículos',
+              'Asignar Artículos',
+              'Gestionar la asignación de artículos para este proyecto',
+              handleAsignarArticulos
+            )}
       </div>
 
       {proyecto.proyecto_categorizacion.redes && (
