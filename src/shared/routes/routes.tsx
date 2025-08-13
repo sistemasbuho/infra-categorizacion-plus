@@ -4,11 +4,8 @@ import {
   FaCrown,
   FaTags,
   FaThList,
-  FaTable,
   FaBullhorn,
   FaShareAlt,
-  FaCheckCircle,
-  FaTachometerAlt,
   FaUserTie,
   FaNewspaper,
   FaLayerGroup,
@@ -27,6 +24,7 @@ import { AsignarArticulos } from '../../pages/AsignarArticulos/AsignarArticulos'
 import { AsignarRedes } from '../../pages/AsignarRedes/AsignarRedes';
 import { ListarPublicacionesLideres } from '../../pages/ListarPublicacionesLideres/ListarPublicacionesLideres';
 import { CategorizacionRedes } from '../../pages/CategorizacionRedes/CategorizacionRedes';
+import { ListarPublicaciones } from '../../pages/ListarPublicaciones/ListarPublicaciones';
 
 export type RouteElement = {
   path: string;
@@ -130,7 +128,7 @@ export const routes: RouteElement[] = [
   },
   {
     path: '/lista-publicaciones',
-    element: Home,
+    element: ListarPublicaciones,
     icon: FaThList,
     label: 'Lista Publicaciones',
     roles: [1, 2],
