@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  changeEstadoPublicacion,
-  getPublicaciones,
-} from '../services/publicacionesRequest';
+import { changeEstadoPublicacion } from '../services/publicacionesRequest';
 import { useSearchParams } from 'react-router-dom';
+import { AxiosRequestConfig } from 'axios';
+import { categorizationPlusRequest } from '../../../shared/services/axiosRequest';
 
 export interface Publicacion {
   id: string;
@@ -72,6 +71,23 @@ export const usePublicaciones = () => {
     next: null,
     previous: null,
   });
+
+  async function getPublicaciones(
+    page: number,
+    pageSize: number,
+    filters: Record<string, string> = {}
+  ): Promise<PaginatedResponse<Publicacion>> {
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      url: 'redes/usuario-publicaciones',
+      params: {
+        page,
+        page_size: pageSize,
+        ...filters,
+      },
+    };
+    return categorizationPlusRequest<PaginatedResponse<Publicacion>>(config);
+  }
 
   const fetchPublicaciones = useCallback(() => {
     setIsLoading(true);

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getArticulos } from '../services/articulosRequests';
+import { changeEstadoArticulo } from '../../MisArticulosLideres/services/articulosLideresRequest';
 
 export interface Articulo {
   articulo_id: string;
@@ -106,6 +107,11 @@ export const useArticulos = () => {
     setSearchParams(params);
   };
 
+  const changeEstado = async (id: string, borrado: boolean, motivo: string) => {
+    await changeEstadoArticulo(id, borrado, motivo);
+    await fetchArticulos();
+  };
+
   return {
     articulos,
     isLoading,
@@ -116,5 +122,6 @@ export const useArticulos = () => {
     setPageSize,
     filters,
     setFilters,
+    changeEstado,
   };
 };

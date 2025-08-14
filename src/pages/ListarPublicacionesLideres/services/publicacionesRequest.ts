@@ -12,7 +12,7 @@ export async function getPublicacionesLideres(
 ): Promise<PaginatedResponse<Publicacion>> {
   const config: AxiosRequestConfig = {
     method: 'GET',
-    url: 'redes/listar-publicaciones',
+    url: 'redes/',
     params: {
       page,
       page_size: pageSize,
