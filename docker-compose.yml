@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./back
+    build: ./back/categorizacion_plus   # Ajuste a la ruta correcta del Dockerfile
     container_name: backend_app
     command: gunicorn categorizacion_plus.wsgi:application --bind 0.0.0.0:8000
     ports:
@@ -9,14 +9,14 @@ services:
       VIRTUAL_HOST: 'api.categorizacionplus.buho.media'
       VIRTUAL_PORT: '5001'
       LETSENCRYPT_HOST: 'api.categorizacionplus.buho.media'
-      LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'    
+      LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
     env_file:
       - ./back/categorizacion_plus/.env
     networks:
       - app-network
 
   frontend:
-    build: ./front
+    build: ./front/prototipo-categorizacion  # Manteniendo la ruta actual
     container_name: frontend_app
     ports:
       - "80:80"
@@ -27,7 +27,6 @@ services:
       VIRTUAL_HOST: 'categorizacion_plus.buho.media'
       LETSENCRYPT_HOST: 'categorizacion_plus.buho.media'
       LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
-    
     networks:
       - app-network
 
