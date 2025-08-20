@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./backend
+    build: ./back
     container_name: backend_app
     command: gunicorn categorizacion_plus.wsgi:application --bind 0.0.0.0:8000
     ports:
@@ -16,7 +16,7 @@ services:
       - app-network
 
   frontend:
-    build: ./frontend/prototipo-categorizacion
+    build: ./front
     container_name: frontend_app
     ports:
       - "80:80"
