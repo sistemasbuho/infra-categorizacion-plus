@@ -1,0 +1,36 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend_app
+    command: gunicorn categorizacion_plus.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      VIRTUAL_HOST: 'api.categorizacionplus.buho.media'
+      VIRTUAL_PORT: '5001'
+      LETSENCRYPT_HOST: 'api.categorizacionplus.buho.media'
+      LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'    
+    env_file:
+      - ./backend/.env
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend/prototipo-categorizacion
+    container_name: frontend_app
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      VIRTUAL_PORT: '81'
+      VIRTUAL_HOST: 'categorizacion_plus.buho.media'
+      LETSENCRYPT_HOST: 'categorizacion_plus.buho.media'
+      LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
+    
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
