@@ -1,35 +1,47 @@
 services:
-  backend:
-    build: ./back/categorizacion_plus   # Ajuste a la ruta correcta del Dockerfile
+  backend-app:
+    build:
+      context: ./back/categorizacion_plus
+      dockerfile: Dockerfile
     container_name: backend_app
+    image: buho/backend-categorizacion
     command: gunicorn categorizacion_plus.wsgi:application --bind 0.0.0.0:8000
-    ports:
-      - "8000:8000"
+    volumes:
+      - ./back/categorizacion_plus:/app
     environment:
       VIRTUAL_HOST: 'api.categorizacionplus.buho.media'
       VIRTUAL_PORT: '5001'
       LETSENCRYPT_HOST: 'api.categorizacionplus.buho.media'
       LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
-    env_file:
-      - ./back/categorizacion_plus/.env
+      C_FORCE_ROOT: 1
+      LC_ALL: 'C.UTF-8'
+      LANG: 'C.UTF-8'
+      TZ: 'America/Bogota'
     networks:
-      - app-network
+      - default
+      - nginx_proxy
 
-  frontend:
-    build: ./front/prototipo-categorizacion  # Manteniendo la ruta actual
+  frontend-app:
+    build:
+      context: ./front/prototipo-categorizacion
+      dockerfile: Dockerfile
     container_name: frontend_app
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+    image: buho/frontend-categorizacion
+    volumes:
+      - ./front/prototipo-categorizacion/my_custom_config/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./front/prototipo-categorizacion/dist:/usr/share/nginx/html
     environment:
-      VIRTUAL_PORT: '81'
       VIRTUAL_HOST: 'categorizacion_plus.buho.media'
+      VIRTUAL_PORT: '81'
       LETSENCRYPT_HOST: 'categorizacion_plus.buho.media'
       LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'
+    depends_on:
+      - backend-app
     networks:
-      - app-network
+      - default
+      - nginx_proxy
 
 networks:
-  app-network:
-    driver: bridge
+  default:
+  nginx_proxy:
+    external: true
