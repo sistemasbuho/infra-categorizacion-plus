@@ -11,7 +11,7 @@ services:
       LETSENCRYPT_HOST: 'api.categorizacionplus.buho.media'
       LETSENCRYPT_EMAIL: 'sistemas.buho@gnilat.com'    
     env_file:
-      - ./backend/.env
+      - ./back/.env
     networks:
       - app-network
 
